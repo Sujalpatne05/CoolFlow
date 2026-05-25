@@ -14,7 +14,6 @@ import {
   Truck,
   BookOpen,
   UserCog,
-  ClipboardList,
   Wallet,
   Settings2,
 } from "lucide-react";
@@ -82,7 +81,6 @@ const getMenuGroups = (role: string | null) => {
       items: [
         { title: "Inventory", url: "/inventory", icon: Package, roles: ["admin", "manager"] },
         { title: "Payroll", url: "/payroll", icon: Users, roles: ["admin", "manager"] },
-        { title: "Tasks", url: "/tasks", icon: ClipboardList, roles: ["admin", "manager"] },
         { title: "CRM", url: "/crm", icon: UserCog, roles: ["admin", "manager"] },
       ],
     },

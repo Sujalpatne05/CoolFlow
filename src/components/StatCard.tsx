@@ -61,33 +61,6 @@ export function SupportStatCard() {
   );
 }
 
-// Dark mode toggle button
-export function ThemeToggle() {
-  const [dark, setDark] = useState(false);
-
-  const handleToggle = () => {
-    setDark(!dark);
-    document.documentElement.classList.toggle("dark", !dark);
-  };
-
-  return (
-    <button
-      onClick={handleToggle}
-      className="flex items-center gap-2 px-2 py-1 rounded-full bg-sidebar-accent text-sidebar-primary-foreground shadow transition-all hover:bg-primary/80"
-      style={{ fontSize: 12 }}
-      aria-label="Toggle theme"
-    >
-      <span>{dark ? "🌙 Dark" : "☀️ Light"}</span>
-      <span className="w-5 h-5 flex items-center justify-center bg-card rounded-full border">
-        {dark ? "🌙" : "☀️"}
-      </span>
-    </button>
-  );
-}
-
-// Draggable AI Suggestion Panel
-// (AISuggestionPanel removed as per dashboard redesign)
-
 // Real-Time Notification Dropdown
 export function NotificationBell() {
   const [open, setOpen] = useState(false);

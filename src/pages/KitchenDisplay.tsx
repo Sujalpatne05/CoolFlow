@@ -1,11 +1,11 @@
 import { useState, useEffect, useRef } from "react";
 import { DashboardLayout } from "@/components/DashboardLayout";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { toast } from "sonner";
-import { Clock, CheckCircle2, AlertCircle, ChefHat, Flame, Snowflake, Timer } from "lucide-react";
+import { Clock, CheckCircle2, AlertCircle, ChefHat, Flame, Snowflake, MessageSquare } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useNavigate } from "react-router-dom";
 import { buildAuthHeaders, clearAuthSession, isAuthError } from "@/lib/session";
@@ -26,6 +26,7 @@ type ApiOrder = {
   status?: "pending" | "preparing" | "ready" | "served";
   orderType?: string;
   created_at?: string;
+  notes?: string;
 };
 
 interface KitchenOrder {
@@ -38,6 +39,7 @@ interface KitchenOrder {
   timestamp: Date;
   estimatedTime: number;
   type: "dine-in" | "takeout" | "delivery";
+  notes?: string;
 }
 
 interface OrderItem {
@@ -132,6 +134,7 @@ export default function KitchenDisplay() {
           timestamp: order.created_at ? new Date(order.created_at) : new Date(),
           estimatedTime: 15,
           type: displayType as "dine-in" | "takeout" | "delivery",
+          notes: order.notes || "",
         };
       });
 
@@ -215,7 +218,8 @@ export default function KitchenDisplay() {
     return Math.floor((currentTime.getTime() - timestamp.getTime()) / 60000);
   };
 
-  const getStatusColor = (status: string) => {
+  const getStatusColor = (status: string, isOverdue: boolean = false) => {
+    if (isOverdue) return "bg-red-600";
     switch (status) {
       case "pending": return "bg-yellow-500";
       case "preparing": return "bg-blue-500";
@@ -259,8 +263,8 @@ export default function KitchenDisplay() {
     const isOverdue = elapsed > order.estimatedTime && !isCompleted;
 
     return (
-      <Card key={order.id} className={cn("relative overflow-hidden", order.priority === "urgent" && !isCompleted && "ring-2 ring-red-500", isOverdue && "ring-2 ring-orange-500", isCompleted && "opacity-75")}>
-        <div className={`absolute top-0 left-0 right-0 h-1 ${getStatusColor(order.status)}`} />
+      <Card key={order.id} className={cn("relative overflow-hidden", order.priority === "urgent" && !isCompleted && "ring-2 ring-red-500", isOverdue && "ring-2 ring-red-600 shadow-lg shadow-red-200", isCompleted && "opacity-75")}>
+        <div className={`absolute top-0 left-0 right-0 h-1 ${getStatusColor(order.status, isOverdue)}`} />
         <CardHeader className="pb-3">
           <div className="flex justify-between items-start">
             <div>
@@ -275,17 +279,36 @@ export default function KitchenDisplay() {
             </div>
             <div className="flex flex-col gap-2 items-end">
               {order.priority === "urgent" && !isCompleted && <Badge className="bg-red-500"><AlertCircle className="h-3 w-3 mr-1" />URGENT</Badge>}
-              <Badge className={getStatusColor(order.status)}>{order.status}</Badge>
+              <Badge className={getStatusColor(order.status, isOverdue)}>{order.status}</Badge>
             </div>
           </div>
         </CardHeader>
         <CardContent className="space-y-4">
-          <div className={cn("flex items-center gap-2 text-sm font-medium p-2 rounded", isOverdue ? "bg-red-50 text-red-700" : isCompleted ? "bg-green-50 text-green-700" : "bg-gray-50 text-gray-700")}>
-            <Timer className="h-4 w-4" />
-            <span>{elapsed} min elapsed</span>
-            {isOverdue && <span className="ml-auto font-bold">OVERDUE</span>}
-            {isCompleted && <span className="ml-auto font-bold flex items-center gap-1"><CheckCircle2 className="h-3 w-3" /> Done</span>}
+          {/* Order Time Display with Live Timer */}
+          <div className="flex items-center justify-between p-3 bg-blue-50 rounded-lg border border-blue-200">
+            <div className="flex items-center gap-2">
+              <Clock className="h-5 w-5 text-blue-600" />
+              <div>
+                <p className="text-xs text-blue-600 font-semibold">Order Received</p>
+                <p className="text-sm font-bold text-blue-900">{order.timestamp.toLocaleTimeString()}</p>
+              </div>
+            </div>
+            <div className="text-right">
+              <p className="text-xs text-blue-600 font-semibold">Time Elapsed</p>
+              <p className={cn("text-2xl font-bold tabular-nums", isOverdue ? "text-red-600" : "text-blue-900")}>{elapsed}m</p>
+            </div>
           </div>
+
+          {/* Overdue Alert */}
+          {isOverdue && (
+            <div className="flex items-center gap-2 p-3 bg-red-50 border-l-4 border-red-600 rounded">
+              <AlertCircle className="h-5 w-5 text-red-600 flex-shrink-0" />
+              <div>
+                <p className="text-sm font-bold text-red-700">Order Overdue!</p>
+                <p className="text-xs text-red-600">{elapsed - order.estimatedTime} min over standard time</p>
+              </div>
+            </div>
+          )}
 
           <div className="space-y-2">
             {order.items.map(item => (
@@ -307,15 +330,31 @@ export default function KitchenDisplay() {
             ))}
           </div>
 
+          {order.notes && (
+            <div className="p-4 bg-gradient-to-r from-amber-50 via-orange-50 to-red-50 border-l-4 border-orange-400 rounded-lg shadow-sm">
+              <div className="flex items-start gap-3">
+                <div className="flex-shrink-0 mt-0.5">
+                  <div className="flex items-center justify-center h-8 w-8 rounded-full bg-orange-100">
+                    <MessageSquare className="h-5 w-5 text-orange-600" />
+                  </div>
+                </div>
+                <div className="flex-1">
+                  <p className="text-xs font-semibold text-orange-600 mb-1.5 uppercase tracking-wider">Chef's Note</p>
+                  <p className="text-base font-semibold text-gray-800 break-words leading-relaxed">{order.notes}</p>
+                </div>
+              </div>
+            </div>
+          )}
+
           {!isCompleted && (
             <div className="flex gap-2 pt-2">
-              {order.status === "pending" && <Button className="flex-1" onClick={() => updateOrderStatus(order.id, "preparing")}>Start Order</Button>}
-              {order.status === "preparing" && <Button className="flex-1 bg-green-600 hover:bg-green-700" onClick={() => updateOrderStatus(order.id, "ready")}><CheckCircle2 className="h-4 w-4 mr-2" />Mark Ready</Button>}
-              {order.status === "ready" && (
-                <Button className="flex-1 bg-emerald-600 hover:bg-emerald-700" onClick={() => updateOrderStatus(order.id, order.type === "dine-in" ? "served" : "completed")}>
-                  {order.type === "dine-in" ? "Serve Order" : "Mark Completed"}
-                </Button>
-              )}
+              <Button 
+                className="flex-1 bg-emerald-600 hover:bg-emerald-700" 
+                onClick={() => updateOrderStatus(order.id, order.type === "dine-in" ? "served" : "completed")}
+              >
+                <CheckCircle2 className="h-4 w-4 mr-2" />
+                Serve Order
+              </Button>
             </div>
           )}
         </CardContent>

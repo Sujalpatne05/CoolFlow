@@ -4,6 +4,7 @@ import { readFileSync, writeFileSync, existsSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { requirePermission, extractUser } from "./middleware/permissions.mjs";
+import { printerService } from "./services/printer.mjs";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -126,7 +127,22 @@ const systemSettings = [
 const subscriptions = [];
 
 const restaurants = [
-  { id: 1, name: "Demo Restaurant", owner: "Platform Team", city: "Delhi", status: "Active", plan: "Standard", logo: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect fill='%23FF6B35' width='100' height='100'/%3E%3Ctext x='50' y='50' font-size='40' fill='white' text-anchor='middle' dy='.3em'%3E🍽️%3C/text%3E%3C/svg%3E", created_at: new Date().toISOString() },
+  { 
+    id: 1, 
+    name: "Demo Restaurant", 
+    owner: "Platform Team", 
+    city: "Delhi", 
+    status: "Active", 
+    plan: "Standard", 
+    logo: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect fill='%23FF6B35' width='100' height='100'/%3E%3Ctext x='50' y='50' font-size='40' fill='white' text-anchor='middle' dy='.3em'%3E🍽️%3C/text%3E%3C/svg%3E", 
+    created_at: new Date().toISOString(),
+    kitchen_printer_ip: "192.168.1.100",
+    kitchen_printer_port: 9100,
+    counter_printer_ip: "192.168.1.101",
+    counter_printer_port: 9100,
+    tax_rate: 5.00,
+    service_charge: 0.00
+  },
 ];
 
 // Load users from JSON file
@@ -452,7 +468,16 @@ const server = createServer(async (req, res) => {
         // This is a mock backend, so we don't have restaurant_id on orders yet
       }
 
-      send(res, 200, filteredOrders);
+      // Add table section to each order
+      const ordersWithSection = filteredOrders.map(order => {
+        const table = tables.find(t => t.table_number === order.table_number);
+        return {
+          ...order,
+          tableSection: table ? table.section : 'Main Hall',
+        };
+      });
+
+      send(res, 200, ordersWithSection);
       return;
     }
 
@@ -484,9 +509,34 @@ const server = createServer(async (req, res) => {
         orderType: String(body.orderType || "dine-in"),
         paymentStatus: (String(body.orderType || "dine-in") === "delivery" || String(body.orderType) === "take-away") ? "paid" : "unpaid",
         paymentMethod: body.paymentMethod ? String(body.paymentMethod) : null,
+        notes: body.notes ? String(body.notes) : "",
         created_at: new Date().toISOString(),
       };
       orders.unshift(order);
+      
+      // Print KoT if printer is enabled and order is dine-in
+      if ((order.orderType === "dine-in" || !order.orderType) && process.env.PRINTER_ENABLED === 'true') {
+        try {
+          const restaurant = restaurants.find(r => r.id === 1); // For mock, use first restaurant
+          if (restaurant) {
+            const printResult = await printerService.printKoT(
+              {
+                id: order.id,
+                table_number: order.table_number,
+                table_capacity: 4,
+                items: order.items,
+                notes: order.notes,
+                orderType: order.orderType
+              },
+              restaurant
+            );
+            console.log('[MOCK] KoT Print Result:', printResult);
+          }
+        } catch (printError) {
+          console.error('[MOCK] KoT printing error (non-blocking):', printError.message);
+        }
+      }
+      
       send(res, 201, order);
       return;
     }
@@ -511,6 +561,31 @@ const server = createServer(async (req, res) => {
       }
       if (body.paymentStatus) {
         order.paymentStatus = String(body.paymentStatus);
+        
+        // Print Bill when payment is marked as paid
+        if (body.paymentStatus === "paid" && process.env.PRINTER_ENABLED === 'true') {
+          try {
+            const restaurant = restaurants.find(r => r.id === 1); // For mock, use first restaurant
+            if (restaurant) {
+              const printResult = await printerService.printBill(
+                {
+                  id: order.id,
+                  table_number: order.table_number,
+                  items: order.items,
+                  total: order.total
+                },
+                {
+                  paymentMethod: body.paymentMethod || order.paymentMethod,
+                  amount: body.total || order.total
+                },
+                restaurant
+              );
+              console.log('[MOCK] Bill Print Result:', printResult);
+            }
+          } catch (printError) {
+            console.error('[MOCK] Bill printing error (non-blocking):', printError.message);
+          }
+        }
       }
       if (body.paymentMethod) {
         order.paymentMethod = String(body.paymentMethod);
@@ -1431,6 +1506,24 @@ const server = createServer(async (req, res) => {
       }
       if (body.status) {
         order.status = String(body.status);
+        
+        // Update table status based on order status
+        if (order.table_number) {
+          const table = tables.find((t) => t.table_number === order.table_number);
+          if (table) {
+            if (body.status === "served") {
+              // When order is served, table remains occupied (customer is eating)
+              table.status = "occupied";
+              table.current_order = order.id;
+              table.estimated_time = "Eating";
+            } else if (body.status === "completed") {
+              // When order is completed, table becomes available (customer left)
+              table.status = "available";
+              table.current_order = null;
+              table.estimated_time = null;
+            }
+          }
+        }
       }
       send(res, 200, order);
       return;

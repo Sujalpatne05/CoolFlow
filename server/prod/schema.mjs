@@ -65,6 +65,7 @@ export async function setupSchema() {
         order_type TEXT DEFAULT 'dine-in',
         payment_status TEXT DEFAULT 'unpaid',
         payment_method TEXT,
+        notes TEXT DEFAULT '',
         created_at TIMESTAMPTZ DEFAULT NOW(),
         updated_at TIMESTAMPTZ DEFAULT NOW()
       );
@@ -178,12 +179,20 @@ export async function setupSchema() {
     await client.query(`
       ALTER TABLE users ADD COLUMN IF NOT EXISTS temp_password TEXT;
     `);
+    // Add notes column to orders if not exists
+    await client.query(`
+      ALTER TABLE orders ADD COLUMN IF NOT EXISTS notes TEXT DEFAULT '';
+    `);
     // Add settings columns to restaurants if not exists
     await client.query(`
       ALTER TABLE restaurants ADD COLUMN IF NOT EXISTS tax_rate NUMERIC(5,2) DEFAULT 5.00;
       ALTER TABLE restaurants ADD COLUMN IF NOT EXISTS service_charge NUMERIC(5,2) DEFAULT 0.00;
       ALTER TABLE restaurants ADD COLUMN IF NOT EXISTS default_delivery_partner TEXT DEFAULT 'in-house';
       ALTER TABLE restaurants ADD COLUMN IF NOT EXISTS table_sections JSONB DEFAULT '[]';
+      ALTER TABLE restaurants ADD COLUMN IF NOT EXISTS kitchen_printer_ip TEXT;
+      ALTER TABLE restaurants ADD COLUMN IF NOT EXISTS kitchen_printer_port INTEGER DEFAULT 9100;
+      ALTER TABLE restaurants ADD COLUMN IF NOT EXISTS counter_printer_ip TEXT;
+      ALTER TABLE restaurants ADD COLUMN IF NOT EXISTS counter_printer_port INTEGER DEFAULT 9100;
     `);
     const existing = await client.query(`SELECT id FROM users WHERE email = 'superadmin@restrohub.com'`);
     if (existing.rows.length === 0) {

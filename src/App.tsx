@@ -28,7 +28,6 @@ import Index from "./pages/Dashboard";
 import Billing from "./pages/Billing";
 import BillSettlement from "./pages/BillSettlement";
 import Payroll from "./pages/Payroll";
-import Tasks from "./pages/Tasks";
 import MenuManagement from "./pages/MenuManagement";
 import Orders from "./pages/Orders";
 import Inventory from "./pages/Inventory";
@@ -102,9 +101,6 @@ const App = () => {
           } />
           <Route path="/payroll" element={
             (getRole() === "admin" || getRole() === "manager") ? <Payroll /> : <AdminLogin />
-          } />
-          <Route path="/tasks" element={
-            (getRole() === "admin" || getRole() === "manager" || getRole() === "staff") ? <Tasks /> : <AdminLogin />
           } />
           <Route path="/menu" element={
             (getRole() === "admin" || getRole() === "manager") ? <MenuManagement /> : <AdminLogin />

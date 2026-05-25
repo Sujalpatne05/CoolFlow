@@ -37,11 +37,14 @@ const BillSettlement: React.FC = () => {
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<typeof PAYMENT_METHODS[number]>("cash");
   const [processingOrderId, setProcessingOrderId] = useState<number | null>(null);
   const [expandedOrderId, setExpandedOrderId] = useState<number | null>(null);
+  const [taxRate, setTaxRate] = useState<number>(5);
+  const [serviceCharge, setServiceCharge] = useState<number>(0);
 
   // Fetch orders and tables
   useEffect(() => {
     fetchOrders();
     fetchTables();
+    fetchSettings();
     
     // Auto-refresh every 30 seconds
     const interval = setInterval(() => {
@@ -98,6 +101,16 @@ const BillSettlement: React.FC = () => {
     }
   };
 
+  const fetchSettings = async () => {
+    try {
+      const data = await apiRequest<{ tax_rate: number; service_charge: number }>("/settings", { method: "GET" }, true);
+      setTaxRate(Number(data.tax_rate ?? 5));
+      setServiceCharge(Number(data.service_charge ?? 0));
+    } catch (err) {
+      // Use defaults on error
+    }
+  };
+
   const handlePayment = async (orderId: number, tableNumber: number) => {
     setProcessingOrderId(orderId);
     try {
@@ -142,7 +155,10 @@ const BillSettlement: React.FC = () => {
   };
 
   const handlePrintBill = (tableNumber: number, tableOrders: Order[]) => {
-    const totalAmount = tableOrders.reduce((sum, o) => sum + Number(o.total), 0);
+    const subtotal = tableOrders.reduce((sum, o) => sum + Number(o.total), 0) / (1 + taxRate / 100);
+    const tax = subtotal * (taxRate / 100);
+    const svc = subtotal * (serviceCharge / 100);
+    const totalAmount = subtotal + tax + svc;
     
     printBill({
       orderId: tableOrders[0].id,
@@ -157,10 +173,10 @@ const BillSettlement: React.FC = () => {
           return { name: itemStr, price: 0, qty: 1 };
         })
       ),
-      subtotal: totalAmount,
-      tax: 0,
-      serviceCharge: 0,
-      total: totalAmount,
+      subtotal: Math.round(subtotal),
+      tax: Math.round(tax),
+      serviceCharge: Math.round(svc),
+      total: Math.round(totalAmount),
       restaurantName: getStoredRestaurantName() || "RestroHub",
       timestamp: new Date(),
     });
@@ -250,10 +266,35 @@ const BillSettlement: React.FC = () => {
                         ))}
                       </div>
 
+                      {/* Price Breakdown with Tax */}
+                      <div className="mb-4 pb-4 border-b space-y-2">
+                        <div className="flex justify-between text-sm">
+                          <span className="text-gray-700">Subtotal</span>
+                          <span className="font-semibold">₹{(totalAmount / (1 + taxRate / 100)).toFixed(2)}</span>
+                        </div>
+                        {taxRate > 0 && (
+                          <div className="bg-white rounded-lg p-2 border-2 border-orange-300">
+                            <div className="flex justify-between items-center">
+                              <div>
+                                <span className="text-orange-700 font-bold text-sm">Tax Applied</span>
+                                <p className="text-xs text-orange-600">({taxRate}%)</p>
+                              </div>
+                              <span className="font-bold text-orange-600">₹{(totalAmount * taxRate / (100 + taxRate)).toFixed(2)}</span>
+                            </div>
+                          </div>
+                        )}
+                        {serviceCharge > 0 && (
+                          <div className="flex justify-between text-sm">
+                            <span className="text-gray-700">Service Charge ({serviceCharge}%)</span>
+                            <span className="font-semibold">₹{(totalAmount * serviceCharge / (100 + serviceCharge)).toFixed(2)}</span>
+                          </div>
+                        )}
+                      </div>
+
                       {/* Total */}
                       <div className="mb-4 pb-4 border-b">
-                        <div className="flex justify-between items-center">
-                          <span className="font-semibold">Total Amount:</span>
+                        <div className="flex justify-between items-center bg-gradient-to-r from-orange-50 to-orange-100 p-3 rounded-lg">
+                          <span className="font-bold text-lg">Total Amount:</span>
                           <span className="text-2xl font-bold text-orange-600">
                             ₹{totalAmount.toFixed(2)}
                           </span>

@@ -34,6 +34,9 @@ export const apiRequest = async <T>(path: string, init: RequestInit = {}, requir
   const response = await fetch(`${API_BASE_URL}${path}`, {
     ...init,
     headers,
+  }).catch(err => {
+    // Suppress network errors from console
+    throw new Error("Network error: " + err.message);
   });
 
   if (isAuthError(response.status)) {
@@ -44,7 +47,7 @@ export const apiRequest = async <T>(path: string, init: RequestInit = {}, requir
 
   const data = await response.json().catch(() => null);
   if (!response.ok) {
-    throw new Error((data && data.error) || "Request failed");
+    throw new Error((data && data.error) || `Request failed with status ${response.status}`);
   }
 
   return data as T;

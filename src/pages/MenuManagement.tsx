@@ -9,6 +9,7 @@ import React, { Fragment, useEffect, useState } from "react";
 import { Transition, Dialog } from "@headlessui/react";
 import { useNavigate } from "react-router-dom";
 import * as XLSX from "xlsx";
+import { toast } from "@/components/ui/sonner";
 
 const DEFAULT_CATEGORIES = ["Starters", "Main Course", "Breads", "Rice", "Desserts", "Beverages"];
 const API_BASE_URL = (() => {
@@ -296,38 +297,94 @@ const MenuManagement = () => {
       // Parse Excel
       const reader = new FileReader();
       reader.onload = (event) => {
-        const data = new Uint8Array(event.target?.result as ArrayBuffer);
-        const workbook = XLSX.read(data, { type: 'array' });
-        const sheet = workbook.Sheets[workbook.SheetNames[0]];
-        const rows: any[] = XLSX.utils.sheet_to_json(sheet, { defval: '' });
-        // Normalize keys to lowercase
-        const normalized = rows.map(row => {
-          const obj: any = {};
-          Object.keys(row).forEach(k => { obj[k.toLowerCase().trim()] = row[k]; });
-          return obj;
-        }).filter(row => row.name);
-        setImportPreview(normalized);
-        setImportResult(null);
+        try {
+          const data = new Uint8Array(event.target?.result as ArrayBuffer);
+          const workbook = XLSX.read(data, { type: 'array' });
+          const sheet = workbook.Sheets[workbook.SheetNames[0]];
+          const rows: any[] = XLSX.utils.sheet_to_json(sheet, { defval: '' });
+          // Normalize keys to lowercase
+          const normalized = rows.map(row => {
+            const obj: any = {};
+            Object.keys(row).forEach(k => { obj[k.toLowerCase().trim()] = row[k]; });
+            return obj;
+          }).filter(row => row.name && row.name.toString().trim());
+          setImportPreview(normalized);
+          setImportResult(null);
+          if (normalized.length === 0) {
+            toast.error('No valid items found in the file');
+          }
+        } catch (error) {
+          toast.error('Error parsing Excel file');
+        }
       };
       reader.readAsArrayBuffer(file);
     } else {
-      // Parse CSV
+      // Parse CSV with proper quote handling
       const reader = new FileReader();
       reader.onload = (event) => {
-        const text = event.target?.result as string;
-        const lines = text.trim().split('\n');
-        const headers = lines[0].split(',').map(h => h.trim().toLowerCase().replace(/"/g, ''));
-        const rows = lines.slice(1).map(line => {
-          const values = line.split(',').map(v => v.trim().replace(/"/g, ''));
-          const obj: any = {};
-          headers.forEach((h, i) => { obj[h] = values[i] || ''; });
-          return obj;
-        }).filter(row => row.name);
-        setImportPreview(rows);
-        setImportResult(null);
+        try {
+          const text = event.target?.result as string;
+          const lines = text.trim().split('\n');
+          
+          // Parse CSV header
+          const headerLine = lines[0];
+          const headers = parseCSVLine(headerLine).map(h => h.toLowerCase().trim());
+          
+          // Parse CSV rows
+          const rows = lines.slice(1)
+            .filter(line => line.trim())
+            .map(line => {
+              const values = parseCSVLine(line);
+              const obj: any = {};
+              headers.forEach((h, i) => { obj[h] = values[i] || ''; });
+              return obj;
+            })
+            .filter(row => row.name && row.name.toString().trim());
+          
+          setImportPreview(rows);
+          setImportResult(null);
+          if (rows.length === 0) {
+            toast.error('No valid items found in the file');
+          }
+        } catch (error) {
+          toast.error('Error parsing CSV file');
+        }
       };
       reader.readAsText(file);
     }
+  };
+
+  // Helper function to parse CSV line with proper quote handling
+  const parseCSVLine = (line: string): string[] => {
+    const result: string[] = [];
+    let current = '';
+    let insideQuotes = false;
+
+    for (let i = 0; i < line.length; i++) {
+      const char = line[i];
+      const nextChar = line[i + 1];
+
+      if (char === '"') {
+        if (insideQuotes && nextChar === '"') {
+          // Escaped quote
+          current += '"';
+          i++;
+        } else {
+          // Toggle quote state
+          insideQuotes = !insideQuotes;
+        }
+      } else if (char === ',' && !insideQuotes) {
+        // End of field
+        result.push(current.trim());
+        current = '';
+      } else {
+        current += char;
+      }
+    }
+
+    // Add last field
+    result.push(current.trim());
+    return result;
   };
 
   // Submit bulk import

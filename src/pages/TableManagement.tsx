@@ -46,6 +46,10 @@ type ApiOrder = {
   table_number?: number | null;
   total: number | string;
   status: "pending" | "preparing" | "ready" | "served";
+  items?: string[];
+  created_at?: string;
+  paymentStatus?: string;
+  paymentMethod?: string;
 };
 
 type ApiTable = {
@@ -77,6 +81,8 @@ export default function TableManagement() {
 
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const [isQRDialogOpen, setIsQRDialogOpen] = useState(false);
+  const [isOrderDialogOpen, setIsOrderDialogOpen] = useState(false);
+  const [selectedOrderForView, setSelectedOrderForView] = useState<ApiOrder | null>(null);
   const [selectedTableForQR, setSelectedTableForQR] = useState<Table | null>(null);
   const [filterSection, setFilterSection] = useState<string>("all");
   const [filterStatus, setFilterStatus] = useState<string>("all");
@@ -412,6 +418,87 @@ export default function TableManagement() {
   return (
     <DashboardLayout>
       <div className="p-4 md:p-6 space-y-6">
+        {/* Order Details Dialog */}
+        <Dialog open={isOrderDialogOpen} onOpenChange={setIsOrderDialogOpen}>
+          <DialogContent className="max-w-md">
+            <DialogHeader>
+              <DialogTitle>Order Details</DialogTitle>
+              <DialogDescription>Order #{selectedOrderForView?.id}</DialogDescription>
+            </DialogHeader>
+            {selectedOrderForView && (
+              <div className="space-y-4 py-4">
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <p className="text-xs text-gray-600 font-semibold">Order ID</p>
+                    <p className="text-sm font-bold">ORD-{selectedOrderForView.id}</p>
+                  </div>
+                  <div>
+                    <p className="text-xs text-gray-600 font-semibold">Table</p>
+                    <p className="text-sm font-bold">Table {selectedOrderForView.table_number}</p>
+                  </div>
+                </div>
+
+                <div>
+                  <p className="text-xs text-gray-600 font-semibold mb-2">Status</p>
+                  <Badge className={`${
+                    selectedOrderForView.status === "pending" ? "bg-yellow-500" :
+                    selectedOrderForView.status === "preparing" ? "bg-blue-500" :
+                    selectedOrderForView.status === "ready" ? "bg-green-600" :
+                    "bg-gray-500"
+                  }`}>
+                    {selectedOrderForView.status.toUpperCase()}
+                  </Badge>
+                </div>
+
+                <div>
+                  <p className="text-xs text-gray-600 font-semibold mb-2">Items</p>
+                  <div className="bg-gray-50 rounded p-3 max-h-40 overflow-y-auto">
+                    {selectedOrderForView.items && selectedOrderForView.items.length > 0 ? (
+                      <ul className="space-y-1">
+                        {selectedOrderForView.items.map((item, idx) => (
+                          <li key={idx} className="text-sm text-gray-800">• {item}</li>
+                        ))}
+                      </ul>
+                    ) : (
+                      <p className="text-sm text-gray-500">No items</p>
+                    )}
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <p className="text-xs text-gray-600 font-semibold">Total Amount</p>
+                    <p className="text-lg font-bold text-green-600">Rs. {Number(selectedOrderForView.total).toLocaleString("en-IN")}</p>
+                  </div>
+                  <div>
+                    <p className="text-xs text-gray-600 font-semibold">Payment Status</p>
+                    <Badge className={selectedOrderForView.paymentStatus === "paid" ? "bg-green-100 text-green-800" : "bg-orange-100 text-orange-800"}>
+                      {selectedOrderForView.paymentStatus === "paid" ? "Paid" : "Unpaid"}
+                    </Badge>
+                  </div>
+                </div>
+
+                {selectedOrderForView.paymentMethod && (
+                  <div>
+                    <p className="text-xs text-gray-600 font-semibold">Payment Method</p>
+                    <p className="text-sm font-medium">{selectedOrderForView.paymentMethod.toUpperCase()}</p>
+                  </div>
+                )}
+
+                {selectedOrderForView.created_at && (
+                  <div>
+                    <p className="text-xs text-gray-600 font-semibold">Order Time</p>
+                    <p className="text-sm">{new Date(selectedOrderForView.created_at).toLocaleString()}</p>
+                  </div>
+                )}
+              </div>
+            )}
+            <DialogFooter>
+              <Button variant="outline" onClick={() => setIsOrderDialogOpen(false)}>Close</Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+
         {/* QR Code Dialog */}
         <Dialog open={isQRDialogOpen} onOpenChange={setIsQRDialogOpen}>
           <DialogContent className="max-w-md">
@@ -663,6 +750,22 @@ export default function TableManagement() {
                     <Receipt className="h-4 w-4 mr-2" />
                     Open Bill
                   </Button>
+                  {openBillsByTable.get(table.number) && (
+                    <Button
+                      variant="outline"
+                      size="icon"
+                      onClick={() => {
+                        const tableOrder = orders.find(o => o.table_number === table.number && o.status !== "served");
+                        if (tableOrder) {
+                          setSelectedOrderForView(tableOrder);
+                          setIsOrderDialogOpen(true);
+                        }
+                      }}
+                      title="View Order Details"
+                    >
+                      <Receipt className="h-4 w-4" />
+                    </Button>
+                  )}
                   <Button
                     variant="outline"
                     size="icon"

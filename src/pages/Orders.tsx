@@ -4,7 +4,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { StatCard } from "@/components/StatCard";
-import { ShoppingCart, Clock, CheckCircle, Truck } from "lucide-react";
+import { ShoppingCart, Clock, CheckCircle, Truck, Calendar, X } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { buildAuthHeaders, clearAuthSession, isAuthError } from "@/lib/session";
 
@@ -29,11 +29,13 @@ type ApiOrder = {
   paymentStatus?: string;
   paymentMethod?: string;
   created_at?: string;
+  tableSection?: string;
 };
 
 type Order = {
   id: number;
   tableNumber: number | null;
+  tableSection?: string;
   items: string[];
   total: number;
   status: OrderStatus;
@@ -55,6 +57,7 @@ export default function Orders() {
   const navigate = useNavigate();
   const [orders, setOrders] = useState<Order[]>([]);
   const [error, setError] = useState("");
+  const [selectedDate, setSelectedDate] = useState<Date | null>(null);
 
   const goToLogin = (message = "Session expired. Please login again.") => {
     setError(message);
@@ -95,6 +98,7 @@ export default function Orders() {
         return {
           id: order.id,
           tableNumber: order.table_number ?? null,
+          tableSection: order.tableSection || "Main Hall",
           items: Array.isArray(order.items) ? order.items : [],
           total: Number(order.total),
           status: displayStatus,
@@ -118,15 +122,49 @@ export default function Orders() {
   }, []);
 
   const stats = useMemo(
-    () => ({
-      pending: orders.filter((o) => o.status === "pending").length,
-      preparing: orders.filter((o) => o.status === "preparing").length,
-      ready: orders.filter((o) => o.status === "ready").length,
-      served: orders.filter((o) => o.status === "served").length,
-      completed: orders.filter((o) => o.status === "completed").length,
-    }),
-    [orders],
+    () => {
+      const filteredByDate = selectedDate 
+        ? orders.filter(o => {
+            const orderDate = new Date(o.createdAt);
+            const selectedDateStr = selectedDate.toDateString();
+            return orderDate.toDateString() === selectedDateStr;
+          })
+        : orders;
+
+      return {
+        pending: filteredByDate.filter((o) => o.status === "pending").length,
+        preparing: filteredByDate.filter((o) => o.status === "preparing").length,
+        ready: filteredByDate.filter((o) => o.status === "ready").length,
+        served: filteredByDate.filter((o) => o.status === "served").length,
+        completed: filteredByDate.filter((o) => o.status === "completed").length,
+        total: filteredByDate.length,
+      };
+    },
+    [orders, selectedDate],
   );
+
+  const getDateLabel = (date: Date) => {
+    const today = new Date();
+    const yesterday = new Date(today);
+    yesterday.setDate(yesterday.getDate() - 1);
+    const tomorrow = new Date(today);
+    tomorrow.setDate(tomorrow.getDate() + 1);
+
+    if (date.toDateString() === today.toDateString()) return "Today";
+    if (date.toDateString() === yesterday.toDateString()) return "Yesterday";
+    if (date.toDateString() === tomorrow.toDateString()) return "Tomorrow";
+    return date.toLocaleDateString("en-IN", { month: "short", day: "numeric" });
+  };
+
+  const handleQuickDate = (days: number) => {
+    const date = new Date();
+    date.setDate(date.getDate() - days);
+    setSelectedDate(date);
+  };
+
+  const clearFilters = () => {
+    setSelectedDate(null);
+  };
 
   const getOrderTypeLabel = (orderType?: string) => {
     switch (orderType) {
@@ -160,47 +198,85 @@ export default function Orders() {
   };
 
   const renderOrders = (filter: "all" | OrderStatus) => {
-    const list = filter === "all" ? orders : orders.filter((order) => order.status === filter);
+    let filteredByDate = orders;
+    
+    if (selectedDate) {
+      filteredByDate = orders.filter(o => {
+        const orderDate = new Date(o.createdAt);
+        const selectedDateStr = selectedDate.toDateString();
+        return orderDate.toDateString() === selectedDateStr;
+      });
+    }
+
+    const list = filter === "all" ? filteredByDate : filteredByDate.filter((order) => order.status === filter);
 
     if (list.length === 0) {
-      return <p className="text-xs sm:text-sm text-muted-foreground">No orders found.</p>;
+      const dateText = selectedDate ? `for ${getDateLabel(selectedDate)}` : "at this time";
+      return <p className="text-xs sm:text-sm text-muted-foreground">No orders found {dateText}.</p>;
     }
 
     return (
       <div className="grid gap-3 sm:gap-4">
         {list.map((order) => (
-          <Card key={order.id} className="shadow-card">
-            <CardContent className="p-3 sm:p-4">
-              <div className="flex flex-col gap-2 sm:gap-3">
-                <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-2 sm:gap-3">
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2 flex-wrap">
-                      <span className="font-bold text-sm sm:text-base">ORD-{order.id}</span>
-                      <Badge className={`${statusStyle[order.status]} text-xs`}>{order.status}</Badge>
-                      <Badge className={`${getOrderTypeColor(order.orderType)} text-xs`}>
-                        {getOrderTypeLabel(order.orderType)}
-                      </Badge>
+          <Card key={order.id} className="shadow-card overflow-hidden hover:shadow-lg transition-shadow duration-200">
+            <CardContent className="p-0">
+              <div className="flex gap-0">
+                {/* Large Table Number Badge on Left */}
+                {order.tableNumber !== null ? (
+                  <div className="bg-gradient-to-b from-red-500 to-red-600 text-white flex flex-col items-center justify-center flex-shrink-0 w-20 sm:w-24 rounded-r-lg shadow-md">
+                    <p className="text-xs font-semibold">TABLE</p>
+                    <p className="text-4xl sm:text-5xl font-bold leading-none">{order.tableNumber}</p>
+                  </div>
+                ) : (
+                  <div className="bg-gradient-to-b from-gray-400 to-gray-500 text-white flex items-center justify-center flex-shrink-0 w-20 sm:w-24 rounded-r-lg shadow-md">
+                    <p className="text-xs font-semibold">NO TABLE</p>
+                  </div>
+                )}
+
+                {/* Order Details */}
+                <div className="flex-1 p-3 sm:p-4 bg-gradient-to-r from-white to-gray-50">
+                  <div className="flex flex-col gap-2 sm:gap-3">
+                    {/* Header Row - Order ID and Amount */}
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 sm:gap-3">
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-2 flex-wrap">
+                          <span className="font-bold text-sm sm:text-base text-gray-900">ORD-{order.id}</span>
+                          <span className="text-xs text-gray-500">•</span>
+                          <span className="text-sm sm:text-base font-semibold text-green-600">Rs. {order.total.toLocaleString("en-IN")}</span>
+                        </div>
+                        <p className="text-xs text-gray-500 mt-1">{order.createdAt.toLocaleString()}</p>
+                      </div>
+                      <div className="flex items-center gap-1 flex-wrap justify-end">
+                        <Badge className={`${statusStyle[order.status]} text-xs font-semibold`}>{order.status.toUpperCase()}</Badge>
+                        <Badge className={`${getOrderTypeColor(order.orderType)} text-xs font-semibold`}>
+                          {getOrderTypeLabel(order.orderType)}
+                        </Badge>
+                      </div>
                     </div>
-                    <p className="text-xs text-muted-foreground mt-1">{order.createdAt.toLocaleString()}</p>
-                    {order.tableNumber !== null && (
-                      <p className="text-xs text-muted-foreground">Table {order.tableNumber}</p>
-                    )}
-                    <p className="text-xs sm:text-sm mt-2 break-words">{order.items.join(", ")}</p>
-                  </div>
-                  <div className="text-right flex-shrink-0">
-                    <p className="font-bold text-sm sm:text-base">Rs. {order.total.toLocaleString("en-IN")}</p>
-                  </div>
-                </div>
-                <div className="flex flex-col sm:flex-row gap-2 sm:gap-4 pt-2 border-t text-xs">
-                  <div className="min-w-0">
-                    <span className="text-muted-foreground">Payment: </span>
-                    <span className="font-semibold">{getPaymentMethodLabel(order.paymentMethod)}</span>
-                  </div>
-                  <div className="min-w-0">
-                    <span className="text-muted-foreground">Status: </span>
-                    <span className={`font-semibold ${order.paymentStatus === "paid" ? "text-green-600" : "text-orange-600"}`}>
-                      {order.paymentStatus === "paid" ? "Paid" : "Unpaid"}
-                    </span>
+
+                    {/* Items - with better styling */}
+                    <div className="bg-white rounded px-2 py-1.5 border border-gray-200">
+                      <p className="text-xs text-gray-600 font-semibold mb-1">Items:</p>
+                      <p className="text-xs sm:text-sm break-words text-gray-800 font-medium">{order.items.join(", ")}</p>
+                    </div>
+
+                    {/* Footer Row - Payment Info */}
+                    <div className="flex flex-col sm:flex-row gap-2 sm:gap-4 pt-2 border-t border-gray-200 text-xs">
+                      <div className="flex items-center gap-1">
+                        <span className="text-gray-600">💳</span>
+                        <span className="text-gray-600">Payment: </span>
+                        <span className="font-semibold text-gray-900">{getPaymentMethodLabel(order.paymentMethod)}</span>
+                      </div>
+                      <div className="flex items-center gap-1">
+                        <span className={order.paymentStatus === "paid" ? "text-green-600" : "text-orange-600"}>
+                          {order.paymentStatus === "paid" ? "✓" : "⏳"}
+                        </span>
+                        <span className="text-gray-600">Status: </span>
+                        <span className={`font-semibold ${order.paymentStatus === "paid" ? "text-green-600" : "text-orange-600"}`}>
+                          {order.paymentStatus === "paid" ? "Paid" : "Unpaid"}
+                        </span>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -220,6 +296,93 @@ export default function Orders() {
         </div>
 
         {error && <div className="text-xs sm:text-sm text-red-600">{error}</div>}
+
+        {/* Enhanced Date Filter */}
+        <Card className="bg-gradient-to-r from-blue-50 to-indigo-50 border-blue-200 shadow-md">
+          <CardContent className="p-4 sm:p-6">
+            <div className="space-y-4">
+              {/* Header */}
+              <div className="flex items-center justify-between">
+                <div>
+                  <h3 className="text-sm sm:text-base font-bold text-gray-900 flex items-center gap-2">
+                    <Calendar className="w-5 h-5 text-blue-600" />
+                    Smart Date Filter
+                  </h3>
+                  <p className="text-xs sm:text-sm text-gray-600 mt-1">Quick date selection</p>
+                </div>
+                {selectedDate && (
+                  <button
+                    onClick={clearFilters}
+                    className="px-3 py-1 bg-red-100 hover:bg-red-200 text-red-700 rounded-lg text-xs font-semibold flex items-center gap-1 transition"
+                  >
+                    <X className="w-4 h-4" /> Clear
+                  </button>
+                )}
+              </div>
+
+              {/* Quick Date Buttons */}
+              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2">
+                <button
+                  onClick={() => handleQuickDate(0)}
+                  className={`px-3 py-2 rounded-lg text-xs font-semibold transition ${
+                    selectedDate?.toDateString() === new Date().toDateString()
+                      ? "bg-blue-600 text-white shadow-md"
+                      : "bg-white border border-gray-300 text-gray-700 hover:bg-blue-50"
+                  }`}
+                >
+                  Today
+                </button>
+                <button
+                  onClick={() => handleQuickDate(1)}
+                  className={`px-3 py-2 rounded-lg text-xs font-semibold transition ${
+                    selectedDate?.toDateString() === new Date(Date.now() - 86400000).toDateString()
+                      ? "bg-blue-600 text-white shadow-md"
+                      : "bg-white border border-gray-300 text-gray-700 hover:bg-blue-50"
+                  }`}
+                >
+                  Yesterday
+                </button>
+                <button
+                  onClick={() => {
+                    setSelectedDate(null);
+                  }}
+                  className={`px-3 py-2 rounded-lg text-xs font-semibold transition ${
+                    !selectedDate
+                      ? "bg-purple-600 text-white shadow-md"
+                      : "bg-white border border-gray-300 text-gray-700 hover:bg-purple-50"
+                  }`}
+                >
+                  All Time
+                </button>
+              </div>
+
+              {/* Custom Date Input */}
+              <div>
+                <label className="text-xs font-semibold text-gray-700 mb-2 block">Select Date</label>
+                <input
+                  type="date"
+                  value={selectedDate ? selectedDate.toISOString().split('T')[0] : ''}
+                  onChange={(e) => {
+                    setSelectedDate(e.target.value ? new Date(e.target.value) : null);
+                  }}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+                {selectedDate && (
+                  <p className="text-xs text-blue-600 mt-2 font-semibold">📅 {getDateLabel(selectedDate)}</p>
+                )}
+              </div>
+
+              {/* Filter Status */}
+              {selectedDate && (
+                <div className="bg-blue-100 border border-blue-300 rounded-lg p-3">
+                  <p className="text-xs sm:text-sm text-blue-900 font-semibold">
+                    📊 Showing {stats.total} orders for {getDateLabel(selectedDate)}
+                  </p>
+                </div>
+              )}
+            </div>
+          </CardContent>
+        </Card>
 
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2 sm:gap-4">
           <StatCard title="Pending" value={String(stats.pending)} icon={<ShoppingCart className="h-4 sm:h-5 w-4 sm:w-5" />} />

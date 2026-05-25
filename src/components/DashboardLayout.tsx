@@ -1,6 +1,6 @@
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/AppSidebar";
-import { NotificationBell, ThemeToggle, AISuggestionPanel } from "@/components/StatCard";
+import { NotificationBell } from "@/components/StatCard";
 import { UserCog, LogOut } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
@@ -49,7 +49,6 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
             <SidebarTrigger />
             <div className="flex items-center gap-1 sm:gap-2 flex-wrap justify-end">
               <NotificationBell />
-              <ThemeToggle />
               <button
                 onClick={handleLogout}
                 className="flex items-center gap-2 px-3 py-2 rounded-md hover:bg-red-50 text-red-600 hover:text-red-700 transition-colors"

@@ -1,10 +1,9 @@
-import React, { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { DashboardLayout } from "@/components/DashboardLayout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { StatCard } from "@/components/StatCard";
 import { Badge } from "@/components/ui/badge";
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { IndianRupee, TrendingUp, ShoppingCart, Users, Download, BarChart3, PieChart as PieChartIcon, Calendar } from "lucide-react";
+import { IndianRupee, TrendingUp, ShoppingCart, Users, Download, BarChart3, PieChart as PieChartIcon, Calendar, X, Eye, Package, Zap, TrendingDown, FileText } from "lucide-react";
 import { BarChart, Bar, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, LineChart, Line } from "recharts";
 import jsPDF from "jspdf";
 import { apiRequest } from "@/lib/api";
@@ -39,6 +38,7 @@ const Reports = () => {
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState("overview");
   const [period, setPeriod] = useState<"daily" | "weekly" | "monthly">("daily");
+  const [selectedDate, setSelectedDate] = useState<Date | null>(null);
 
   useEffect(() => {
     const bootstrap = async () => {
@@ -58,10 +58,44 @@ const Reports = () => {
     void bootstrap();
   }, []);
 
+  // Filter orders by selected date
+  const filteredOrders = useMemo(() => {
+    if (!selectedDate) return orders;
+    return orders.filter(o => {
+      if (!o.created_at) return false;
+      const orderDate = new Date(o.created_at);
+      const selectedDateStr = selectedDate.toDateString();
+      return orderDate.toDateString() === selectedDateStr;
+    });
+  }, [orders, selectedDate]);
+
+  const getDateLabel = (date: Date) => {
+    const today = new Date();
+    const yesterday = new Date(today);
+    yesterday.setDate(yesterday.getDate() - 1);
+    const tomorrow = new Date(today);
+    tomorrow.setDate(tomorrow.getDate() + 1);
+
+    if (date.toDateString() === today.toDateString()) return "Today";
+    if (date.toDateString() === yesterday.toDateString()) return "Yesterday";
+    if (date.toDateString() === tomorrow.toDateString()) return "Tomorrow";
+    return date.toLocaleDateString("en-IN", { month: "short", day: "numeric" });
+  };
+
+  const handleQuickDate = (days: number) => {
+    const date = new Date();
+    date.setDate(date.getDate() - days);
+    setSelectedDate(date);
+  };
+
+  const clearFilters = () => {
+    setSelectedDate(null);
+  };
+
   // Calculate top selling items with quantities
   const topSellingItems = useMemo(() => {
     const itemCounts: { [key: string]: number } = {};
-    orders.forEach((order) => {
+    filteredOrders.forEach((order) => {
       if (Array.isArray(order.items)) {
         order.items.forEach((item) => {
           const match = item.match(/^(.+?)\s+x(\d+)$/);
@@ -75,7 +109,7 @@ const Reports = () => {
       .map(([name, count]) => ({ name, count }))
       .sort((a, b) => b.count - a.count)
       .slice(0, 10);
-  }, [orders]);
+  }, [filteredOrders]);
 
   // Calculate revenue by order type
   const revenueByType = useMemo(() => {
@@ -84,7 +118,7 @@ const Reports = () => {
       "take-away": 0,
       delivery: 0,
     };
-    orders.forEach((order) => {
+    filteredOrders.forEach((order) => {
       const type = order.orderType || "dine-in";
       typeRevenue[type] = (typeRevenue[type] || 0) + Number(order.total);
     });
@@ -92,12 +126,12 @@ const Reports = () => {
       name: name === "dine-in" ? "Dine-in" : name === "take-away" ? "Takeaway" : "Delivery",
       value,
     }));
-  }, [orders]);
+  }, [filteredOrders]);
 
   // Calculate payment method breakdown
   const paymentMethodBreakdown = useMemo(() => {
     const methods: { [key: string]: number } = { cash: 0, card: 0, upi: 0 };
-    orders.forEach((order) => {
+    filteredOrders.forEach((order) => {
       const method = order.paymentStatus === "paid" ? (order.paymentStatus || "cash") : "unpaid";
       if (method !== "unpaid") {
         methods[method] = (methods[method] || 0) + Number(order.total);
@@ -107,12 +141,12 @@ const Reports = () => {
       name: name.toUpperCase(),
       value,
     }));
-  }, [orders]);
+  }, [filteredOrders]);
 
   // Daily revenue trend
   const dailyRevenue = useMemo(() => {
     const days: { [key: string]: number } = {};
-    orders.forEach((order) => {
+    filteredOrders.forEach((order) => {
       if (order.created_at) {
         const date = new Date(order.created_at).toLocaleDateString("en-IN");
         days[date] = (days[date] || 0) + Number(order.total);
@@ -122,12 +156,12 @@ const Reports = () => {
       .map(([date, revenue]) => ({ date, revenue }))
       .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime())
       .slice(-7);
-  }, [orders]);
+  }, [filteredOrders]);
 
   // Order type distribution
   const orderTypeDistribution = useMemo(() => {
     const types: { [key: string]: number } = { "dine-in": 0, "take-away": 0, delivery: 0 };
-    orders.forEach((order) => {
+    filteredOrders.forEach((order) => {
       const type = order.orderType || "dine-in";
       types[type] = (types[type] || 0) + 1;
     });
@@ -135,13 +169,14 @@ const Reports = () => {
       name: name === "dine-in" ? "Dine-in" : name === "take-away" ? "Takeaway" : "Delivery",
       count,
     }));
-  }, [orders]);
+  }, [filteredOrders]);
 
   const handleDownload = (type: "pdf" | "csv") => {
     if (type === "csv") {
       const csvRows = [
         "Restaurant Report",
         `Generated: ${new Date().toLocaleString("en-IN")}`,
+        selectedDate ? `Date: ${getDateLabel(selectedDate)}` : "Date: All Orders",
         "",
         "SUMMARY",
         `Total Revenue,Rs ${Math.round(overview.revenue).toLocaleString("en-IN")}`,
@@ -181,7 +216,12 @@ const Reports = () => {
     doc.setFontSize(10);
     doc.setFont(undefined, "normal");
     doc.text(`Generated: ${new Date().toLocaleString("en-IN")}`, 10, yPos);
-    yPos += 8;
+    yPos += 5;
+    if (selectedDate) {
+      doc.text(`Date: ${getDateLabel(selectedDate)}`, 10, yPos);
+      yPos += 5;
+    }
+    yPos += 3;
 
     // Summary section
     doc.setFont(undefined, "bold");
@@ -253,6 +293,93 @@ const Reports = () => {
           <p className="text-muted-foreground text-xs sm:text-sm mt-2">Comprehensive analytics and performance metrics</p>
         </div>
 
+        {/* Enhanced Date Filter */}
+        <Card className="bg-gradient-to-r from-orange-50 to-red-50 border-orange-200 shadow-md">
+          <CardContent className="p-4 sm:p-6">
+            <div className="space-y-4">
+              {/* Header */}
+              <div className="flex items-center justify-between">
+                <div>
+                  <h3 className="text-sm sm:text-base font-bold text-gray-900 flex items-center gap-2">
+                    <Calendar className="w-5 h-5 text-orange-600" />
+                    Smart Date Filter
+                  </h3>
+                  <p className="text-xs sm:text-sm text-gray-600 mt-1">Quick date selection</p>
+                </div>
+                {selectedDate && (
+                  <button
+                    onClick={clearFilters}
+                    className="px-3 py-1 bg-red-100 hover:bg-red-200 text-red-700 rounded-lg text-xs font-semibold flex items-center gap-1 transition"
+                  >
+                    <X className="w-4 h-4" /> Clear
+                  </button>
+                )}
+              </div>
+
+              {/* Quick Date Buttons */}
+              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2">
+                <button
+                  onClick={() => handleQuickDate(0)}
+                  className={`px-3 py-2 rounded-lg text-xs font-semibold transition ${
+                    selectedDate?.toDateString() === new Date().toDateString()
+                      ? "bg-orange-600 text-white shadow-md"
+                      : "bg-white border border-gray-300 text-gray-700 hover:bg-orange-50"
+                  }`}
+                >
+                  Today
+                </button>
+                <button
+                  onClick={() => handleQuickDate(1)}
+                  className={`px-3 py-2 rounded-lg text-xs font-semibold transition ${
+                    selectedDate?.toDateString() === new Date(Date.now() - 86400000).toDateString()
+                      ? "bg-orange-600 text-white shadow-md"
+                      : "bg-white border border-gray-300 text-gray-700 hover:bg-orange-50"
+                  }`}
+                >
+                  Yesterday
+                </button>
+                <button
+                  onClick={() => {
+                    setSelectedDate(null);
+                  }}
+                  className={`px-3 py-2 rounded-lg text-xs font-semibold transition ${
+                    !selectedDate
+                      ? "bg-purple-600 text-white shadow-md"
+                      : "bg-white border border-gray-300 text-gray-700 hover:bg-purple-50"
+                  }`}
+                >
+                  All Time
+                </button>
+              </div>
+
+              {/* Custom Date Input */}
+              <div>
+                <label className="text-xs font-semibold text-gray-700 mb-2 block">Select Date</label>
+                <input
+                  type="date"
+                  value={selectedDate ? selectedDate.toISOString().split('T')[0] : ''}
+                  onChange={(e) => {
+                    setSelectedDate(e.target.value ? new Date(e.target.value) : null);
+                  }}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
+                />
+                {selectedDate && (
+                  <p className="text-xs text-orange-600 mt-2 font-semibold">📅 {getDateLabel(selectedDate)}</p>
+                )}
+              </div>
+
+              {/* Filter Status */}
+              {selectedDate && (
+                <div className="bg-orange-100 border border-orange-300 rounded-lg p-3">
+                  <p className="text-xs sm:text-sm text-orange-900 font-semibold">
+                    📊 Showing {filteredOrders.length} orders for {getDateLabel(selectedDate)}
+                  </p>
+                </div>
+              )}
+            </div>
+          </CardContent>
+        </Card>
+
         {/* Summary Stats */}
         <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-4">
           <StatCard title="Total Revenue" value={`₹${Math.round(overview.revenue).toLocaleString("en-IN")}`} icon={<IndianRupee className="h-4 sm:h-5 w-4 sm:w-5" />} />
@@ -265,16 +392,86 @@ const Reports = () => {
           />
         </div>
 
-        {/* Tabs */}
-        <Tabs value={activeTab} onValueChange={setActiveTab}>
-          <TabsList className="w-full overflow-x-auto flex gap-1 sm:gap-0 bg-gray-100 p-1 rounded-lg">
-            <TabsTrigger value="overview" className="text-xs sm:text-sm whitespace-nowrap flex-shrink-0">Overview</TabsTrigger>
-            <TabsTrigger value="items" className="text-xs sm:text-sm whitespace-nowrap flex-shrink-0">Items</TabsTrigger>
-            <TabsTrigger value="breakdown" className="text-xs sm:text-sm whitespace-nowrap flex-shrink-0 hidden sm:inline-flex">Breakdown</TabsTrigger>
-            <TabsTrigger value="trends" className="text-xs sm:text-sm whitespace-nowrap flex-shrink-0">Trends</TabsTrigger>
-            <TabsTrigger value="tally" className="text-xs sm:text-sm whitespace-nowrap flex-shrink-0">Tally</TabsTrigger>
-          </TabsList>
+        {/* Prominent Navigation Options */}
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2 sm:gap-3">
+          {/* Overview */}
+          <button
+            onClick={() => setActiveTab("overview")}
+            className={`p-3 sm:p-4 rounded-lg border-2 transition-all duration-200 flex flex-col items-center gap-2 ${
+              activeTab === "overview"
+                ? "border-blue-500 bg-blue-50 shadow-lg"
+                : "border-gray-200 bg-white hover:border-blue-300 hover:shadow-md"
+            }`}
+          >
+            <Eye className={`w-6 h-6 sm:w-7 sm:h-7 ${activeTab === "overview" ? "text-blue-600" : "text-gray-600"}`} />
+            <span className={`text-xs sm:text-sm font-bold text-center ${activeTab === "overview" ? "text-blue-600" : "text-gray-700"}`}>
+              Overview
+            </span>
+          </button>
 
+          {/* Items */}
+          <button
+            onClick={() => setActiveTab("items")}
+            className={`p-3 sm:p-4 rounded-lg border-2 transition-all duration-200 flex flex-col items-center gap-2 ${
+              activeTab === "items"
+                ? "border-green-500 bg-green-50 shadow-lg"
+                : "border-gray-200 bg-white hover:border-green-300 hover:shadow-md"
+            }`}
+          >
+            <Package className={`w-6 h-6 sm:w-7 sm:h-7 ${activeTab === "items" ? "text-green-600" : "text-gray-600"}`} />
+            <span className={`text-xs sm:text-sm font-bold text-center ${activeTab === "items" ? "text-green-600" : "text-gray-700"}`}>
+              Items
+            </span>
+          </button>
+
+          {/* Breakdown */}
+          <button
+            onClick={() => setActiveTab("breakdown")}
+            className={`p-3 sm:p-4 rounded-lg border-2 transition-all duration-200 flex flex-col items-center gap-2 hidden sm:flex ${
+              activeTab === "breakdown"
+                ? "border-purple-500 bg-purple-50 shadow-lg"
+                : "border-gray-200 bg-white hover:border-purple-300 hover:shadow-md"
+            }`}
+          >
+            <Zap className={`w-6 h-6 sm:w-7 sm:h-7 ${activeTab === "breakdown" ? "text-purple-600" : "text-gray-600"}`} />
+            <span className={`text-xs sm:text-sm font-bold text-center ${activeTab === "breakdown" ? "text-purple-600" : "text-gray-700"}`}>
+              Breakdown
+            </span>
+          </button>
+
+          {/* Trends */}
+          <button
+            onClick={() => setActiveTab("trends")}
+            className={`p-3 sm:p-4 rounded-lg border-2 transition-all duration-200 flex flex-col items-center gap-2 ${
+              activeTab === "trends"
+                ? "border-red-500 bg-red-50 shadow-lg"
+                : "border-gray-200 bg-white hover:border-red-300 hover:shadow-md"
+            }`}
+          >
+            <TrendingDown className={`w-6 h-6 sm:w-7 sm:h-7 ${activeTab === "trends" ? "text-red-600" : "text-gray-600"}`} />
+            <span className={`text-xs sm:text-sm font-bold text-center ${activeTab === "trends" ? "text-red-600" : "text-gray-700"}`}>
+              Trends
+            </span>
+          </button>
+
+          {/* Tally */}
+          <button
+            onClick={() => setActiveTab("tally")}
+            className={`p-3 sm:p-4 rounded-lg border-2 transition-all duration-200 flex flex-col items-center gap-2 ${
+              activeTab === "tally"
+                ? "border-orange-500 bg-orange-50 shadow-lg"
+                : "border-gray-200 bg-white hover:border-orange-300 hover:shadow-md"
+            }`}
+          >
+            <FileText className={`w-6 h-6 sm:w-7 sm:h-7 ${activeTab === "tally" ? "text-orange-600" : "text-gray-600"}`} />
+            <span className={`text-xs sm:text-sm font-bold text-center ${activeTab === "tally" ? "text-orange-600" : "text-gray-700"}`}>
+              Tally
+            </span>
+          </button>
+        </div>
+
+        {/* Tab Content */}
+        <div>
           {/* Overview Tab */}
           {activeTab === "overview" && (
             <div className="space-y-3 sm:space-y-4 mt-3 sm:mt-4">
@@ -438,129 +635,114 @@ const Reports = () => {
 
           {/* Tally Tab */}
           {activeTab === "tally" && (
-            <div className="space-y-4 mt-4">
-              {/* Period Selector */}
-              <div className="flex gap-2">
+            <div className="space-y-2 sm:space-y-4 mt-3 sm:mt-4">
+              {/* Period Selector - Compact Mobile */}
+              <div className="flex gap-1 sm:gap-2">
                 <button
                   onClick={() => setPeriod("daily")}
-                  className={`px-4 py-2 rounded font-semibold ${period === "daily" ? "bg-orange-500 text-white" : "bg-gray-100 text-gray-700"}`}
+                  className={`flex-1 px-1 sm:px-3 py-1.5 sm:py-2 rounded text-xs sm:text-sm font-semibold transition ${period === "daily" ? "bg-orange-500 text-white shadow-md" : "bg-gray-100 text-gray-700 hover:bg-gray-200"}`}
                 >
                   Daily
                 </button>
                 <button
                   onClick={() => setPeriod("weekly")}
-                  className={`px-4 py-2 rounded font-semibold ${period === "weekly" ? "bg-orange-500 text-white" : "bg-gray-100 text-gray-700"}`}
+                  className={`flex-1 px-1 sm:px-3 py-1.5 sm:py-2 rounded text-xs sm:text-sm font-semibold transition ${period === "weekly" ? "bg-orange-500 text-white shadow-md" : "bg-gray-100 text-gray-700 hover:bg-gray-200"}`}
                 >
                   Weekly
                 </button>
                 <button
                   onClick={() => setPeriod("monthly")}
-                  className={`px-4 py-2 rounded font-semibold ${period === "monthly" ? "bg-orange-500 text-white" : "bg-gray-100 text-gray-700"}`}
+                  className={`flex-1 px-1 sm:px-3 py-1.5 sm:py-2 rounded text-xs sm:text-sm font-semibold transition ${period === "monthly" ? "bg-orange-500 text-white shadow-md" : "bg-gray-100 text-gray-700 hover:bg-gray-200"}`}
                 >
                   Monthly
                 </button>
               </div>
 
-              {/* Tally Summary */}
-              <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-                <Card>
-                  <CardHeader className="pb-2">
-                    <CardTitle className="text-sm font-medium text-gray-600">Total Revenue</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="text-3xl font-bold text-green-600">₹{Math.round(overview.revenue).toLocaleString("en-IN")}</p>
-                  </CardContent>
-                </Card>
+              {/* Tally Summary - Compact Mobile */}
+              <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-1.5 sm:gap-3 lg:gap-4">
+                <div className="bg-gradient-to-br from-green-50 to-green-100 p-2 sm:p-3 rounded-lg border border-green-200">
+                  <p className="text-xs text-gray-600 mb-0.5">Revenue</p>
+                  <p className="text-sm sm:text-xl lg:text-2xl font-bold text-green-600">₹{Math.round(overview.revenue).toLocaleString("en-IN")}</p>
+                </div>
 
-                <Card>
-                  <CardHeader className="pb-2">
-                    <CardTitle className="text-sm font-medium text-gray-600">Total Orders</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="text-3xl font-bold text-blue-600">{overview.totalOrders}</p>
-                  </CardContent>
-                </Card>
+                <div className="bg-gradient-to-br from-blue-50 to-blue-100 p-2 sm:p-3 rounded-lg border border-blue-200">
+                  <p className="text-xs text-gray-600 mb-0.5">Orders</p>
+                  <p className="text-sm sm:text-xl lg:text-2xl font-bold text-blue-600">{overview.totalOrders}</p>
+                </div>
 
-                <Card>
-                  <CardHeader className="pb-2">
-                    <CardTitle className="text-sm font-medium text-gray-600">Avg Order Value</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="text-3xl font-bold text-purple-600">
-                      ₹{overview.totalOrders > 0 ? Math.round(overview.revenue / overview.totalOrders).toLocaleString("en-IN") : 0}
-                    </p>
-                  </CardContent>
-                </Card>
+                <div className="bg-gradient-to-br from-purple-50 to-purple-100 p-2 sm:p-3 rounded-lg border border-purple-200">
+                  <p className="text-xs text-gray-600 mb-0.5">Avg Value</p>
+                  <p className="text-sm sm:text-xl lg:text-2xl font-bold text-purple-600">
+                    ₹{overview.totalOrders > 0 ? Math.round(overview.revenue / overview.totalOrders).toLocaleString("en-IN") : 0}
+                  </p>
+                </div>
 
-                <Card>
-                  <CardHeader className="pb-2">
-                    <CardTitle className="text-sm font-medium text-gray-600">Total Customers</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="text-3xl font-bold text-orange-600">{overview.totalCustomers}</p>
-                  </CardContent>
-                </Card>
+                <div className="bg-gradient-to-br from-orange-50 to-orange-100 p-2 sm:p-3 rounded-lg border border-orange-200">
+                  <p className="text-xs text-gray-600 mb-0.5">Customers</p>
+                  <p className="text-sm sm:text-xl lg:text-2xl font-bold text-orange-600">{overview.totalCustomers}</p>
+                </div>
               </div>
 
-              {/* Payment Methods */}
-              <Card>
-                <CardHeader>
-                  <CardTitle className="text-lg">Payment Methods</CardTitle>
+              {/* Payment Methods - Compact Mobile */}
+              <Card className="shadow-sm">
+                <CardHeader className="p-2 sm:p-4 pb-2 sm:pb-3">
+                  <CardTitle className="text-xs sm:text-base">Payment Methods</CardTitle>
                 </CardHeader>
-                <CardContent>
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <CardContent className="p-2 sm:p-4 pt-0">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-1.5 sm:gap-3">
                     {paymentMethodBreakdown.map((item, idx) => (
-                      <div key={idx} className="bg-gradient-to-br from-gray-50 to-gray-100 p-4 rounded-lg border">
-                        <p className="text-sm text-gray-600 mb-2">{item.name}</p>
-                        <p className="text-2xl font-bold text-orange-600">₹{item.value.toLocaleString("en-IN")}</p>
+                      <div key={idx} className="bg-gradient-to-br from-gray-50 to-gray-100 p-2 sm:p-3 rounded border">
+                        <p className="text-xs text-gray-600 mb-0.5">{item.name}</p>
+                        <p className="text-xs sm:text-base lg:text-lg font-bold text-orange-600">₹{item.value.toLocaleString("en-IN")}</p>
                       </div>
                     ))}
                   </div>
                 </CardContent>
               </Card>
 
-              {/* Order Type Revenue */}
-              <Card>
-                <CardHeader>
-                  <CardTitle className="text-lg">Revenue by Order Type</CardTitle>
+              {/* Order Type Revenue - Compact Mobile */}
+              <Card className="shadow-sm">
+                <CardHeader className="p-2 sm:p-4 pb-2 sm:pb-3">
+                  <CardTitle className="text-xs sm:text-base">Revenue by Type</CardTitle>
                 </CardHeader>
-                <CardContent>
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <CardContent className="p-2 sm:p-4 pt-0">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-1.5 sm:gap-3">
                     {revenueByType.map((item, idx) => (
-                      <div key={idx} className="bg-gradient-to-br from-blue-50 to-blue-100 p-4 rounded-lg border border-blue-200">
-                        <p className="text-sm text-gray-600 mb-2">{item.name}</p>
-                        <p className="text-2xl font-bold text-blue-600">₹{item.value.toLocaleString("en-IN")}</p>
+                      <div key={idx} className="bg-gradient-to-br from-blue-50 to-blue-100 p-2 sm:p-3 rounded border border-blue-200">
+                        <p className="text-xs text-gray-600 mb-0.5">{item.name}</p>
+                        <p className="text-xs sm:text-base lg:text-lg font-bold text-blue-600">₹{item.value.toLocaleString("en-IN")}</p>
                       </div>
                     ))}
                   </div>
                 </CardContent>
               </Card>
 
-              {/* Bills List */}
-              <Card>
-                <CardHeader>
-                  <CardTitle className="text-lg flex items-center gap-2">
-                    <Calendar size={20} /> All Bills ({orders.length})
+              {/* Bills List - Compact Mobile */}
+              <Card className="shadow-sm">
+                <CardHeader className="p-2 sm:p-4 pb-2 sm:pb-3">
+                  <CardTitle className="text-xs sm:text-base flex items-center gap-1">
+                    <Calendar size={14} className="sm:w-5 sm:h-5" /> Bills ({filteredOrders.length})
                   </CardTitle>
                 </CardHeader>
-                <CardContent>
-                  <div className="overflow-x-auto">
-                    <table className="w-full text-sm">
+                <CardContent className="p-2 sm:p-4">
+                  {/* Desktop Table View */}
+                  <div className="hidden sm:block overflow-x-auto">
+                    <table className="w-full text-xs sm:text-sm">
                       <thead>
                         <tr className="border-b bg-gray-50">
-                          <th className="text-left py-3 px-4 font-semibold">Bill ID</th>
-                          <th className="text-left py-3 px-4 font-semibold">Type</th>
-                          <th className="text-left py-3 px-4 font-semibold">Items</th>
+                          <th className="text-left py-2 sm:py-3 px-2 sm:px-4 font-semibold">Bill ID</th>
+                          <th className="text-left py-2 sm:py-3 px-2 sm:px-4 font-semibold hidden sm:table-cell">Type</th>
+                          <th className="text-left py-2 sm:py-3 px-2 sm:px-4 font-semibold hidden md:table-cell">Items</th>
                           <th className="text-center py-3 px-4 font-semibold">Payment</th>
                           <th className="text-right py-3 px-4 font-semibold">Amount</th>
                           <th className="text-center py-3 px-4 font-semibold">Status</th>
                         </tr>
                       </thead>
                       <tbody>
-                        {orders.map((order) => (
+                        {filteredOrders.map((order) => (
                           <tr key={order.id} className="border-b hover:bg-gray-50">
                             <td className="py-3 px-4 font-medium text-orange-600">ORD-{order.id}</td>
-                            <td className="py-3 px-4">
+                            <td className="py-3 px-4 hidden sm:table-cell">
                               <Badge
                                 className={
                                   order.orderType === "dine-in"
@@ -573,7 +755,7 @@ const Reports = () => {
                                 {order.orderType === "dine-in" ? "Dine-in" : order.orderType === "take-away" ? "Takeaway" : "Delivery"}
                               </Badge>
                             </td>
-                            <td className="py-3 px-4 text-gray-600 truncate max-w-xs">
+                            <td className="py-3 px-4 text-gray-600 truncate max-w-xs hidden md:table-cell">
                               {Array.isArray(order.items) ? order.items.join(", ") : "N/A"}
                             </td>
                             <td className="py-3 px-4 text-center">
@@ -598,11 +780,61 @@ const Reports = () => {
                       </tbody>
                     </table>
                   </div>
+
+                  {/* Mobile Compact Card View */}
+                  <div className="sm:hidden space-y-1.5">
+                    {filteredOrders.length === 0 ? (
+                      <div className="text-center py-4 text-gray-500">
+                        <p className="text-xs">No bills</p>
+                      </div>
+                    ) : (
+                      filteredOrders.map((order) => (
+                        <div key={order.id} className="bg-gradient-to-r from-gray-50 to-gray-100 p-2 rounded border border-gray-200">
+                          {/* Row 1: Bill ID and Amount */}
+                          <div className="flex justify-between items-center mb-1">
+                            <span className="font-bold text-orange-600 text-xs">ORD-{order.id}</span>
+                            <span className="font-bold text-sm text-gray-900">₹{Number(order.total).toLocaleString("en-IN")}</span>
+                          </div>
+
+                          {/* Row 2: Type and Payment */}
+                          <div className="flex justify-between items-center gap-1 mb-1">
+                            <Badge
+                              className={
+                                order.orderType === "dine-in"
+                                  ? "bg-blue-100 text-blue-800 text-xs"
+                                  : order.orderType === "take-away"
+                                  ? "bg-orange-100 text-orange-800 text-xs"
+                                  : "bg-purple-100 text-purple-800 text-xs"
+                              }
+                            >
+                              {order.orderType === "dine-in" ? "Dine-in" : order.orderType === "take-away" ? "Takeaway" : "Delivery"}
+                            </Badge>
+                            <Badge className="bg-gray-100 text-gray-800 text-xs">
+                              {order.paymentStatus === "paid" ? "✓ Paid" : "Unpaid"}
+                            </Badge>
+                          </div>
+
+                          {/* Row 3: Status */}
+                          <Badge
+                            className={
+                              order.status === "completed"
+                                ? "bg-green-100 text-green-800 text-xs"
+                                : order.status === "pending"
+                                ? "bg-yellow-100 text-yellow-800 text-xs"
+                                : "bg-blue-100 text-blue-800 text-xs"
+                            }
+                          >
+                            {order.status}
+                          </Badge>
+                        </div>
+                      ))
+                    )}
+                  </div>
                 </CardContent>
               </Card>
             </div>
           )}
-        </Tabs>
+        </div>
       </div>
     </DashboardLayout>
   );

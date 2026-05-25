@@ -12,7 +12,7 @@ import { apiRequest, API_BASE_URL } from "@/lib/api";
 import { getAuthToken, getStoredRole, getStoredUserId, buildAuthHeaders, getStoredRestaurantName } from "@/lib/session";
 import { toast } from "@/components/ui/sonner";
 import { useLocation } from "react-router-dom";
-import { Monitor, ShoppingCart, UtensilsCrossed, Printer } from "lucide-react";
+import { Monitor, ShoppingCart, UtensilsCrossed, Printer, Minus, Plus } from "lucide-react";
 import { printBill } from "@/lib/printBill";
 
 const ORDER_TYPES = ["dine-in", "take-away", "delivery"] as const;
@@ -47,6 +47,7 @@ const Billing: React.FC = () => {
 	const [loadingRecentOrders, setLoadingRecentOrders] = useState(false);
 	const [taxRate, setTaxRate] = useState<number>(5);
 	const [serviceCharge, setServiceCharge] = useState<number>(0);
+	const [notes, setNotes] = useState<string>("");
 
 	// Fetch settings (tax rate, service charge, default delivery partner)
 	useEffect(() => {
@@ -149,14 +150,28 @@ const Billing: React.FC = () => {
 			setLoadingOrder(true);
 			const headers = buildAuthHeaders();
 			fetch(`${API_BASE_URL}/orders/table/${selectedTable}`, { headers: headers || {} })
-				.then(res => res.json())
+				.then(res => {
+					if (res.status === 404) {
+						// No existing order for this table
+						setExistingOrder(null);
+						setOrderItems([]);
+						setNotes("");
+						setLoadingOrder(false);
+						return null;
+					}
+					if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
+					return res.json();
+				})
 				.then(data => {
 					if (!data || data.error) {
 						setExistingOrder(null);
 						setOrderItems([]);
+						setNotes("");
+						setLoadingOrder(false);
 						return;
 					}
 					setExistingOrder(data);
+					setNotes(data.notes || "");
 					// Only pre-fill items if order is still active (not served/completed)
 					if (data.status === 'served' || data.status === 'completed') {
 						setOrderItems([]);
@@ -182,15 +197,21 @@ const Billing: React.FC = () => {
 				.catch(() => {
 					setExistingOrder(null);
 					setOrderItems([]);
+					setNotes("");
 				})
 				.finally(() => setLoadingOrder(false));
 		} else {
 			setExistingOrder(null);
 			setOrderItems([]);
+			setNotes("");
 		}
 	}, [selectedTable, orderType, menu]);
 
-	const addItem = (item: { id: number; name: string; price: number }) => {
+	const addItem = (item: { id: number; name: string; price: number }, e?: React.MouseEvent) => {
+		if (e) {
+			e.stopPropagation();
+			e.preventDefault();
+		}
 		setOrderItems((prev) => {
 			const found = prev.find((i) => i.id === item.id);
 			if (found) {
@@ -199,7 +220,11 @@ const Billing: React.FC = () => {
 			return [...prev, { ...item, qty: 1 }];
 		});
 	};
-	const removeItem = (id: number) => {
+	const removeItem = (id: number, e?: React.MouseEvent) => {
+		if (e) {
+			e.stopPropagation();
+			e.preventDefault();
+		}
 		setOrderItems((prev) => {
 			const found = prev.find((i) => i.id === id);
 			if (found && found.qty > 1) {
@@ -279,6 +304,7 @@ const Billing: React.FC = () => {
 					body: JSON.stringify({
 						items: updatedItems,
 						total,
+						notes,
 					}),
 				});
 				toast.success("Order updated successfully!");
@@ -291,6 +317,7 @@ const Billing: React.FC = () => {
 					orderType,
 					paymentMethod: (orderType === "delivery" || orderType === "take-away") ? paymentMethod : null,
 					table_number: orderType === "dine-in" ? selectedTable : null,
+					notes,
 				};
 				const newOrder = await apiRequest<any>("/orders", {
 					method: "POST",
@@ -353,6 +380,7 @@ const Billing: React.FC = () => {
 			setCustomer({ name: "", phone: "", address: "" });
 			setSelectedTable(null);
 			setExistingOrder(null);
+			setNotes("");
 		} catch (err: any) {
 			const errorMsg = err?.message || "Failed to place order. Please try again.";
 			toast.error(errorMsg);
@@ -473,35 +501,95 @@ const Billing: React.FC = () => {
 						</Card>
 
 						{/* Order Summary Section */}
-						<Card className="bg-white/90 shadow-lg">
-							<CardHeader className="p-3 sm:p-6">
-								<CardTitle className="text-lg sm:text-xl flex items-center gap-2 flex-wrap">
-									<ShoppingCart className="text-orange-500 flex-shrink-0" /> Order Summary
-									{existingOrder && existingOrder.status !== 'served' && existingOrder.status !== 'completed' && <Badge className="bg-blue-500 text-xs">Editing Order #{existingOrder.id}</Badge>}
+						<Card className="bg-gradient-to-br from-orange-50 to-white shadow-xl border-orange-200">
+							<CardHeader className="p-4 sm:p-6 bg-gradient-to-r from-orange-500 to-orange-600 text-white rounded-t-lg">
+								<CardTitle className="text-lg sm:text-2xl flex items-center gap-2 flex-wrap">
+									<ShoppingCart className="flex-shrink-0" size={28} /> Order Summary
+									{existingOrder && existingOrder.status !== 'served' && existingOrder.status !== 'completed' && <Badge className="bg-white text-orange-600 text-xs ml-auto">Editing #{existingOrder.id}</Badge>}
 								</CardTitle>
 							</CardHeader>
-							<CardContent className="p-3 sm:p-6">
+							<CardContent className="p-4 sm:p-6">
 								{orderItems.length === 0 ? (
-									<div className="text-muted-foreground mb-4 text-sm">No items selected.</div>
+									<div className="text-center py-8">
+										<ShoppingCart className="mx-auto mb-3 text-gray-300" size={48} />
+										<p className="text-muted-foreground text-sm">No items added yet. Select items from the menu to get started.</p>
+									</div>
 								) : (
-									<ul className="mb-4 max-h-48 overflow-y-auto">
-										{orderItems.map(item => (
-											<li key={item.id} className="flex justify-between items-center mb-2 bg-orange-50 rounded px-2 py-1 shadow-sm text-sm">
-												<span className="font-medium truncate">{item.name} <span className="text-xs text-muted-foreground">x {item.qty}</span></span>
-												<span className="font-semibold flex-shrink-0 ml-2">₹{item.price * item.qty}</span>
-												<Button size="sm" variant="ghost" onClick={() => removeItem(item.id)} className="h-6 w-6 p-0 ml-1">-</Button>
-											</li>
-										))}
-									</ul>
+									<>
+										{/* Items List */}
+										<div className="mb-4">
+											<div className="flex items-center justify-between mb-3">
+												<span className="font-bold text-sm text-gray-700">Items ({orderItems.length})</span>
+												<span className="text-xs text-gray-500">Tap - or + to adjust</span>
+											</div>
+											<div className="space-y-2 max-h-56 overflow-y-auto pr-2">
+												{orderItems.map((item, idx) => (
+													<div key={item.id} className="bg-white border-2 border-orange-200 rounded-lg p-3 hover:shadow-md transition-shadow">
+														<div className="flex items-start justify-between gap-2">
+															<div className="flex-1 min-w-0">
+																<div className="flex items-center gap-2 mb-1">
+																	<span className="inline-block bg-orange-100 text-orange-700 text-xs font-bold rounded-full w-6 h-6 flex items-center justify-center">{idx + 1}</span>
+																	<h4 className="font-semibold text-sm text-gray-800 truncate">{item.name}</h4>
+																</div>
+																<div className="flex items-center justify-between">
+																	<div className="flex items-center gap-2">
+																		<Button size="sm" variant="outline" onClick={(e) => removeItem(item.id, e)} className="h-7 w-7 p-0 text-orange-600 border-orange-300 hover:bg-orange-50">
+																			<Minus size={16} />
+																		</Button>
+																		<span className="font-bold text-orange-600 min-w-6 text-center">{item.qty}</span>
+																		<Button size="sm" variant="outline" onClick={(e) => addItem(item, e)} className="h-7 w-7 p-0 text-orange-600 border-orange-300 hover:bg-orange-50">
+																			<Plus size={16} />
+																		</Button>
+																	</div>
+																	<span className="font-bold text-orange-700 text-sm">₹{item.price * item.qty}</span>
+																</div>
+															</div>
+														</div>
+													</div>
+												))}
+											</div>
+										</div>
+
+										{/* Divider */}
+										<div className="border-t-2 border-orange-200 my-4"></div>
+
+										{/* Price Breakdown */}
+										<div className="bg-gradient-to-br from-orange-50 to-orange-100 rounded-lg p-4 mb-4 space-y-3 border border-orange-200">
+											{/* Subtotal */}
+											<div className="flex justify-between items-center">
+												<span className="text-gray-700 font-medium">Subtotal</span>
+												<span className="font-semibold text-gray-800">₹{subtotal}</span>
+											</div>
+											
+											{/* Tax - Highlighted */}
+											{tax > 0 && (
+												<div className="bg-white rounded-lg p-3 border-2 border-orange-300">
+													<div className="flex justify-between items-center">
+														<div>
+															<span className="text-orange-700 font-bold">Tax Applied</span>
+															<p className="text-xs text-orange-600 mt-0.5">({taxRate}% of subtotal)</p>
+														</div>
+														<span className="font-bold text-lg text-orange-600">₹{tax}</span>
+													</div>
+												</div>
+											)}
+											
+											{/* Service Charge - If applicable */}
+											{serviceCharge > 0 && svc > 0 && (
+												<div className="flex justify-between text-sm">
+													<span className="text-gray-700">Service Charge ({serviceCharge}%)</span>
+													<span className="font-semibold text-gray-800">₹{svc}</span>
+												</div>
+											)}
+											
+											{/* Total Amount - Bold and Prominent */}
+											<div className="border-t-2 border-orange-300 pt-3 flex justify-between items-center bg-white rounded-lg p-3 mt-3">
+												<span className="font-bold text-gray-900 text-lg">Total Amount</span>
+												<span className="font-bold text-2xl text-orange-600">₹{total}</span>
+											</div>
+										</div>
+									</>
 								)}
-								<div className="border-t pt-2 flex flex-col gap-1 mb-4 text-sm">
-									<div className="flex justify-between"><span>Subtotal</span><span>₹{subtotal}</span></div>
-									<div className="flex justify-between"><span>Tax ({taxRate}%)</span><span>₹{tax}</span></div>
-									{serviceCharge > 0 && (
-										<div className="flex justify-between"><span>Service Charge ({serviceCharge}%)</span><span>₹{svc}</span></div>
-									)}
-									<div className="flex justify-between font-bold text-base sm:text-lg text-orange-700"><span>Total</span><span>₹{total}</span></div>
-								</div>
 								{(orderType === "take-away" || orderType === "delivery") && (
 									<div className="mb-4">
 										<div className="font-medium mb-2 text-sm">Customer Details</div>
@@ -545,7 +633,7 @@ const Billing: React.FC = () => {
 										</div>
 									</div>
 								)}
-								{orderType === "delivery" && (
+								{(orderType === "take-away" || orderType === "delivery") && (
 									<div className="mb-4">
 										<div className="font-medium mb-2 text-sm">Delivery Partner</div>
 										<div className="flex gap-2 flex-wrap">
@@ -576,6 +664,16 @@ const Billing: React.FC = () => {
 										</div>
 									</div>
 								)}
+								<div className="mb-4">
+									<div className="font-medium mb-2 text-sm">Special Instructions (Optional)</div>
+									<textarea
+										className="w-full border rounded px-2 sm:px-3 py-2 bg-orange-50 focus:border-orange-400 focus:ring-2 focus:ring-orange-200 transition-all text-sm resize-none"
+										placeholder="e.g., Extra spicy, No salt, Salty, etc."
+										value={notes}
+										onChange={e => setNotes(e.target.value)}
+										rows={3}
+									/>
+								</div>
 								<Button className="w-full bg-orange-500 hover:bg-orange-600 text-sm" onClick={handlePlaceOrder} disabled={orderItems.length === 0}>
 									{existingOrder && existingOrder.status !== 'served' && existingOrder.status !== 'completed' ? "Update Order" : "Place Order"}
 								</Button>
