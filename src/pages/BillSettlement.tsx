@@ -246,7 +246,7 @@ const BillSettlement: React.FC = () => {
                             {tableOrders.length} order{tableOrders.length > 1 ? 's' : ''}
                           </p>
                         </div>
-                        <Badge className="bg-green-500">Ready</Badge>
+                        <Badge className="bg-green-500">Served</Badge>
                       </div>
                     </CardHeader>
                     <CardContent>
