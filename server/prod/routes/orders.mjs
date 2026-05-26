@@ -1,9 +1,25 @@
 import { Router } from 'express';
 import { query } from '../db.mjs';
 import { authenticate } from '../middleware/auth.mjs';
-import { printerService } from '../services/printer.mjs';
 
 const router = Router();
+
+// Lazy load printer service to handle missing module gracefully
+let printerService = null;
+const getPrinterService = async () => {
+  if (printerService) return printerService;
+  try {
+    const { printerService: ps } = await import('../../services/printer.mjs');
+    printerService = ps;
+  } catch (err) {
+    console.warn('⚠️ Printer service not available:', err.message);
+    printerService = {
+      printKoT: async () => ({ success: true, skipped: true }),
+      printBill: async () => ({ success: true, skipped: true })
+    };
+  }
+  return printerService;
+};
 
 // Public order endpoint for table QR ordering (no auth required)
 router.post('/orders/public', async (req, res) => {
@@ -88,13 +104,14 @@ router.post('/orders', authenticate, async (req, res) => {
     if (orderType === 'dine-in' || !orderType) {
       try {
         const { rows: restaurantRows } = await query(
-          `SELECT id, name, location, kitchen_printer_ip, kitchen_printer_port FROM restaurants WHERE id=$1`,
+          `SELECT id, name, kitchen_printer_ip, kitchen_printer_port FROM restaurants WHERE id=$1`,
           [req.user.restaurantId]
         );
         
         if (restaurantRows[0]) {
           const restaurant = restaurantRows[0];
-          const printResult = await printerService.printKoT(
+          const printer = await getPrinterService();
+          const printResult = await printer.printKoT(
             {
               id: order.id,
               table_number: order.table_number,
@@ -140,13 +157,14 @@ router.put('/orders/:id', authenticate, async (req, res) => {
     if (paymentStatus === 'paid') {
       try {
         const { rows: restaurantRows } = await query(
-          `SELECT id, name, location, counter_printer_ip, counter_printer_port, tax_rate FROM restaurants WHERE id=$1`,
+          `SELECT id, name, counter_printer_ip, counter_printer_port, tax_rate FROM restaurants WHERE id=$1`,
           [req.user.restaurantId]
         );
         
         if (restaurantRows[0]) {
           const restaurant = restaurantRows[0];
-          const printResult = await printerService.printBill(
+          const printer = await getPrinterService();
+          const printResult = await printer.printBill(
             {
               id: order.id,
               table_number: order.table_number,
@@ -186,14 +204,14 @@ router.patch('/orders/:id/status', authenticate, async (req, res) => {
       if (status === "served") {
         // When order is served, table remains occupied (customer is eating)
         await query(
-          `UPDATE restaurant_tables SET status='occupied', current_order=$1, estimated_time='Eating' 
+          `UPDATE tables SET status='occupied', current_order=$1, estimated_time='Eating' 
            WHERE table_number=$2 AND restaurant_id=$3`,
           [rows[0].order_number, rows[0].table_number, req.user.restaurantId]
         );
       } else if (status === "completed") {
         // When order is completed, table becomes available (customer left)
         await query(
-          `UPDATE restaurant_tables SET status='available', current_order=NULL, estimated_time=NULL 
+          `UPDATE tables SET status='available', current_order=NULL, estimated_time=NULL 
            WHERE table_number=$1 AND restaurant_id=$2`,
           [rows[0].table_number, req.user.restaurantId]
         );
