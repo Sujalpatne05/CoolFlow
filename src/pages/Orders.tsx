@@ -355,8 +355,8 @@ export default function Orders() {
                   }}
                   className={`px-3 py-2 rounded-lg text-xs font-semibold transition ${
                     !selectedDate
-                      ? "bg-purple-600 text-white shadow-md"
-                      : "bg-white border border-gray-300 text-gray-700 hover:bg-purple-50"
+                      ? "bg-blue-600 text-white shadow-md"
+                      : "bg-white border border-gray-300 text-gray-700 hover:bg-blue-50"
                   }`}
                 >
                   All Time
