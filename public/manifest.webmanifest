@@ -1,6 +1,6 @@
 {
-  "name": "RestroHub - Restaurant Management",
-  "short_name": "RestroHub",
+  "name": "Logdine - Restaurant Management",
+  "short_name": "Logdine",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#1a1a2e",
