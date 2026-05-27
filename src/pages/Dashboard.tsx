@@ -77,9 +77,16 @@ export default function Dashboard() {
   const topItems = useMemo(() => {
     const counts: { [k: string]: number } = {};
     orders.forEach(o => {
-      (o.items || []).forEach((item: string) => {
-        const match = item.match(/^(.+?)\s+x(\d+)$/);
-        const name = match ? match[1] : item;
+      (o.items || []).forEach((item: string | any) => {
+        let itemStr = typeof item === 'string' ? item : '';
+        
+        // Handle object format
+        if (typeof item === 'object' && item !== null) {
+          itemStr = item.name ? `${item.name} x${item.qty}` : '';
+        }
+        
+        const match = itemStr.match(/^(.+?)\s+x(\d+)$/);
+        const name = match ? match[1] : itemStr;
         const qty = match ? Number(match[2]) : 1;
         counts[name] = (counts[name] || 0) + qty;
       });

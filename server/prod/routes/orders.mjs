@@ -85,17 +85,23 @@ router.get('/orders/table/:num', authenticate, async (req, res) => {
 
 router.post('/orders', authenticate, async (req, res) => {
   try {
-    const { items, total, table_number, orderType, paymentMethod, userId, notes } = req.body;
+    const { items, total, table_number, orderType, paymentMethod, userId } = req.body;
     if (!items || !total) return res.status(400).json({ error: 'items and total required' });
 
     const orderNum = `ORD-${Date.now()}`;
     const payStatus = (orderType === 'delivery' || orderType === 'take-away') ? 'paid' : 'unpaid';
     const orderStatus = 'pending'; // Always start as pending - kitchen needs to prepare
 
+    // Convert items to string format for storage: "Item Name x qty (note)"
+    const itemsForStorage = items.map(item => {
+      const note = item.note ? ` (${item.note})` : '';
+      return `${item.name} x${item.qty}${note}`;
+    });
+
     const { rows } = await query(
-      `INSERT INTO orders (restaurant_id, user_id, order_number, table_number, items, total, status, order_type, payment_status, payment_method, notes)
-       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11) RETURNING *`,
-      [req.user.restaurantId, userId || req.user.id, orderNum, table_number || null, JSON.stringify(items), Number(total), orderStatus, orderType || 'dine-in', payStatus, paymentMethod || null, notes || '']
+      `INSERT INTO orders (restaurant_id, user_id, order_number, table_number, items, total, status, order_type, payment_status, payment_method)
+       VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10) RETURNING *`,
+      [req.user.restaurantId, userId || req.user.id, orderNum, table_number || null, JSON.stringify(itemsForStorage), Number(total), orderStatus, orderType || 'dine-in', payStatus, paymentMethod || null]
     );
 
     const order = rows[0];
@@ -117,7 +123,6 @@ router.post('/orders', authenticate, async (req, res) => {
               table_number: order.table_number,
               table_capacity: 4, // TODO: Get from tables table
               items: Array.isArray(order.items) ? order.items : [],
-              notes: order.notes,
               orderType: order.order_type
             },
             restaurant
@@ -136,7 +141,17 @@ router.post('/orders', authenticate, async (req, res) => {
 
 router.put('/orders/:id', authenticate, async (req, res) => {
   try {
-    const { items, total, status, paymentStatus, paymentMethod, notes } = req.body;
+    const { items, total, status, paymentStatus, paymentMethod } = req.body;
+    
+    // Convert items to string format if provided
+    let itemsForStorage = null;
+    if (items) {
+      itemsForStorage = items.map(item => {
+        const note = item.note ? ` (${item.note})` : '';
+        return `${item.name} x${item.qty}${note}`;
+      });
+    }
+
     const { rows } = await query(
       `UPDATE orders SET
         items=COALESCE($1::jsonb, items),
@@ -144,10 +159,9 @@ router.put('/orders/:id', authenticate, async (req, res) => {
         status=COALESCE($3, status),
         payment_status=COALESCE($4, payment_status),
         payment_method=COALESCE($5, payment_method),
-        notes=COALESCE($6, notes),
         updated_at=NOW()
-       WHERE id=$7 AND restaurant_id=$8 RETURNING *`,
-      [items ? JSON.stringify(items) : null, total ? Number(total) : null, status || null, paymentStatus || null, paymentMethod || null, notes || null, req.params.id, req.user.restaurantId]
+       WHERE id=$6 AND restaurant_id=$7 RETURNING *`,
+      [itemsForStorage ? JSON.stringify(itemsForStorage) : null, total ? Number(total) : null, status || null, paymentStatus || null, paymentMethod || null, req.params.id, req.user.restaurantId]
     );
     if (!rows[0]) return res.status(404).json({ error: 'Not found' });
     

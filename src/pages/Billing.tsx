@@ -21,13 +21,14 @@ type Table = { id: number; number: number; capacity: number; status: string; sec
 type MenuItem = { id: number; name: string; price: number; category: string; available: boolean; image_url?: string };
 
 const MENU_CATEGORIES_DEFAULT = ["All"];
-type OrderItem = { id: number; name: string; price: number; qty: number };
+type OrderItem = { id: number; name: string; price: number; qty: number; notes?: string };
 
 
 
 
 const Billing: React.FC = () => {
 	const location = useLocation();
+	const orderSummaryRef = React.useRef<HTMLDivElement>(null);
 	const [orderType, setOrderType] = useState<typeof ORDER_TYPES[number]>("dine-in");
 	const [selectedTable, setSelectedTable] = useState<number | null>(null);
 	const [orderItems, setOrderItems] = useState<OrderItem[]>([]);
@@ -47,7 +48,6 @@ const Billing: React.FC = () => {
 	const [loadingRecentOrders, setLoadingRecentOrders] = useState(false);
 	const [taxRate, setTaxRate] = useState<number>(5);
 	const [serviceCharge, setServiceCharge] = useState<number>(0);
-	const [notes, setNotes] = useState<string>("");
 
 	// Fetch settings (tax rate, service charge, default delivery partner)
 	useEffect(() => {
@@ -155,7 +155,6 @@ const Billing: React.FC = () => {
 						// No existing order for this table
 						setExistingOrder(null);
 						setOrderItems([]);
-						setNotes("");
 						setLoadingOrder(false);
 						return null;
 					}
@@ -166,44 +165,58 @@ const Billing: React.FC = () => {
 					if (!data || data.error) {
 						setExistingOrder(null);
 						setOrderItems([]);
-						setNotes("");
 						setLoadingOrder(false);
 						return;
 					}
 					setExistingOrder(data);
-					setNotes(data.notes || "");
 					// Only pre-fill items if order is still active (not served/completed)
 					if (data.status === 'served' || data.status === 'completed') {
 						setOrderItems([]);
 						return;
 					}
 					// Parse items from existing order
-					const parsedItems: OrderItem[] = data.items.map((itemStr: string) => {
-						// Parse format like "Butter Chicken x1"
-						const match = itemStr.match(/^(.+?)\s+x(\d+)$/);
-						if (match) {
-							const itemName = match[1];
-							const qty = Number(match[2]);
-							const menuItem = menu.find(m => m.name === itemName);
-							if (menuItem) {
-								return { id: menuItem.id, name: menuItem.name, price: menuItem.price, qty };
+					const parsedItems: OrderItem[] = data.items.map((itemStr: string | any) => {
+						let itemName = '';
+						let qty = 1;
+						let notes = '';
+						
+						if (typeof itemStr === 'object' && itemStr !== null) {
+							itemName = itemStr.name || '';
+							qty = itemStr.qty || 1;
+							notes = itemStr.note || itemStr.notes || '';
+						} else {
+							// Parse format like "Butter Chicken x1" or "Butter Chicken x1 (Extra spicy)"
+							const noteMatch = itemStr.match(/\s*\((.+)\)\s*$/);
+							if (noteMatch) {
+								notes = noteMatch[1];
+								itemStr = itemStr.replace(noteMatch[0], '');
 							}
-							return { id: Date.now() + Math.random(), name: itemName, price: 0, qty };
+							
+							const match = itemStr.match(/^(.+?)\s+x(\d+)$/);
+							if (match) {
+								itemName = match[1];
+								qty = Number(match[2]);
+							} else {
+								itemName = itemStr;
+							}
 						}
-						return { id: Date.now() + Math.random(), name: itemStr, price: 0, qty: 1 };
+						
+						const menuItem = menu.find(m => m.name === itemName);
+						if (menuItem) {
+							return { id: menuItem.id, name: menuItem.name, price: menuItem.price, qty, notes };
+						}
+						return { id: Date.now() + Math.random(), name: itemName, price: 0, qty, notes };
 					}).filter(Boolean);
 					setOrderItems(parsedItems);
 				})
 				.catch(() => {
 					setExistingOrder(null);
 					setOrderItems([]);
-					setNotes("");
 				})
 				.finally(() => setLoadingOrder(false));
 		} else {
 			setExistingOrder(null);
 			setOrderItems([]);
-			setNotes("");
 		}
 	}, [selectedTable, orderType, menu]);
 
@@ -217,8 +230,13 @@ const Billing: React.FC = () => {
 			if (found) {
 				return prev.map((i) => (i.id === item.id ? { ...i, qty: i.qty + 1 } : i));
 			}
-			return [...prev, { ...item, qty: 1 }];
+			return [...prev, { ...item, qty: 1, notes: "" }];
 		});
+		
+		// Auto-scroll to Order Summary
+		setTimeout(() => {
+			orderSummaryRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+		}, 100);
 	};
 	const removeItem = (id: number, e?: React.MouseEvent) => {
 		if (e) {
@@ -232,6 +250,11 @@ const Billing: React.FC = () => {
 			}
 			return prev.filter((i) => i.id !== id);
 		});
+	};
+	const updateItemNote = (id: number, note: string) => {
+		setOrderItems((prev) =>
+			prev.map((i) => (i.id === id ? { ...i, notes: note } : i))
+		);
 	};
 	const subtotal = orderItems.reduce((sum, i) => sum + i.price * i.qty, 0);
 	const tax = Math.round(subtotal * (taxRate / 100));
@@ -298,13 +321,12 @@ const Billing: React.FC = () => {
 		try {
 			if (existingOrder && existingOrder.status !== 'served' && existingOrder.status !== 'completed') {
 				// Update existing order only if it's still active
-				const updatedItems = orderItems.map(i => `${i.name} x${i.qty}`);
+				const updatedItems = orderItems.map(i => ({ name: i.name, qty: i.qty, price: i.price, note: i.notes || "" }));
 				await apiRequest(`/orders/${existingOrder.id}`, {
 					method: "PUT",
 					body: JSON.stringify({
 						items: updatedItems,
 						total,
-						notes,
 					}),
 				});
 				toast.success("Order updated successfully!");
@@ -312,12 +334,11 @@ const Billing: React.FC = () => {
 				// Create new order
 				const payload = {
 					userId,
-					items: orderItems.map(i => `${i.name} x${i.qty}`),
+					items: orderItems.map(i => ({ name: i.name, qty: i.qty, price: i.price, note: i.notes || "" })),
 					total,
 					orderType,
 					paymentMethod: (orderType === "delivery" || orderType === "take-away") ? paymentMethod : null,
 					table_number: orderType === "dine-in" ? selectedTable : null,
-					notes,
 				};
 				const newOrder = await apiRequest<any>("/orders", {
 					method: "POST",
@@ -380,7 +401,6 @@ const Billing: React.FC = () => {
 			setCustomer({ name: "", phone: "", address: "" });
 			setSelectedTable(null);
 			setExistingOrder(null);
-			setNotes("");
 		} catch (err: any) {
 			const errorMsg = err?.message || "Failed to place order. Please try again.";
 			toast.error(errorMsg);
@@ -501,7 +521,7 @@ const Billing: React.FC = () => {
 						</Card>
 
 						{/* Order Summary Section */}
-						<Card className="bg-gradient-to-br from-orange-50 to-white shadow-xl border-orange-200">
+						<Card ref={orderSummaryRef} className="bg-gradient-to-br from-orange-50 to-white shadow-xl border-orange-200">
 							<CardHeader className="p-4 sm:p-6 bg-gradient-to-r from-orange-500 to-orange-600 text-white rounded-t-lg">
 								<CardTitle className="text-lg sm:text-2xl flex items-center gap-2 flex-wrap">
 									<ShoppingCart className="flex-shrink-0" size={28} /> Order Summary
@@ -522,7 +542,7 @@ const Billing: React.FC = () => {
 												<span className="font-bold text-sm text-gray-700">Items ({orderItems.length})</span>
 												<span className="text-xs text-gray-500">Tap - or + to adjust</span>
 											</div>
-											<div className="space-y-2 max-h-56 overflow-y-auto pr-2">
+											<div className="space-y-2 pr-2">
 												{orderItems.map((item, idx) => (
 													<div key={item.id} className="bg-white border-2 border-orange-200 rounded-lg p-3 hover:shadow-md transition-shadow">
 														<div className="flex items-start justify-between gap-2">
@@ -531,7 +551,7 @@ const Billing: React.FC = () => {
 																	<span className="inline-block bg-orange-100 text-orange-700 text-xs font-bold rounded-full w-6 h-6 flex items-center justify-center">{idx + 1}</span>
 																	<h4 className="font-semibold text-sm text-gray-800 truncate">{item.name}</h4>
 																</div>
-																<div className="flex items-center justify-between">
+																<div className="flex items-center justify-between mb-2">
 																	<div className="flex items-center gap-2">
 																		<Button size="sm" variant="outline" onClick={(e) => removeItem(item.id, e)} className="h-7 w-7 p-0 text-orange-600 border-orange-300 hover:bg-orange-50">
 																			<Minus size={16} />
@@ -543,6 +563,13 @@ const Billing: React.FC = () => {
 																	</div>
 																	<span className="font-bold text-orange-700 text-sm">₹{item.price * item.qty}</span>
 																</div>
+																<Input
+																	type="text"
+																	placeholder="Add note (optional)"
+																	value={item.notes || ""}
+																	onChange={(e) => updateItemNote(item.id, e.target.value)}
+																	className="text-xs h-7 bg-orange-50 border-orange-200 focus:border-orange-400"
+																/>
 															</div>
 														</div>
 													</div>
@@ -664,16 +691,6 @@ const Billing: React.FC = () => {
 										</div>
 									</div>
 								)}
-								<div className="mb-4">
-									<div className="font-medium mb-2 text-sm">Special Instructions (Optional)</div>
-									<textarea
-										className="w-full border rounded px-2 sm:px-3 py-2 bg-orange-50 focus:border-orange-400 focus:ring-2 focus:ring-orange-200 transition-all text-sm resize-none"
-										placeholder="e.g., Extra spicy, No salt, Salty, etc."
-										value={notes}
-										onChange={e => setNotes(e.target.value)}
-										rows={3}
-									/>
-								</div>
 								<Button className="w-full bg-orange-500 hover:bg-orange-600 text-sm" onClick={handlePlaceOrder} disabled={orderItems.length === 0}>
 									{existingOrder && existingOrder.status !== 'served' && existingOrder.status !== 'completed' ? "Update Order" : "Place Order"}
 								</Button>

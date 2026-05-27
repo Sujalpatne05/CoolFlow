@@ -70,16 +70,7 @@ const Reports = () => {
   }, [orders, selectedDate]);
 
   const getDateLabel = (date: Date) => {
-    const today = new Date();
-    const yesterday = new Date(today);
-    yesterday.setDate(yesterday.getDate() - 1);
-    const tomorrow = new Date(today);
-    tomorrow.setDate(tomorrow.getDate() + 1);
-
-    if (date.toDateString() === today.toDateString()) return "Today";
-    if (date.toDateString() === yesterday.toDateString()) return "Yesterday";
-    if (date.toDateString() === tomorrow.toDateString()) return "Tomorrow";
-    return date.toLocaleDateString("en-IN", { month: "short", day: "numeric" });
+    return date.toLocaleDateString('en-IN', { day: '2-digit', month: '2-digit', year: 'numeric' });
   };
 
   const handleQuickDate = (days: number) => {
@@ -97,10 +88,19 @@ const Reports = () => {
     const itemCounts: { [key: string]: number } = {};
     filteredOrders.forEach((order) => {
       if (Array.isArray(order.items)) {
-        order.items.forEach((item) => {
-          const match = item.match(/^(.+?)\s+x(\d+)$/);
-          const itemName = match ? match[1] : item;
-          const qty = match ? Number(match[2]) : 1;
+        order.items.forEach((item: string | any) => {
+          let itemName = '';
+          let qty = 1;
+          
+          if (typeof item === 'object' && item !== null) {
+            itemName = item.name || '';
+            qty = item.qty || 1;
+          } else {
+            const match = item.match(/^(.+?)\s+x(\d+)$/);
+            itemName = match ? match[1] : item;
+            qty = match ? Number(match[2]) : 1;
+          }
+          
           itemCounts[itemName] = (itemCounts[itemName] || 0) + qty;
         });
       }

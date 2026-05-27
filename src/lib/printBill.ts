@@ -7,6 +7,7 @@ export interface BillItem {
   name: string;
   price: number;
   qty: number;
+  note?: string;
 }
 
 export interface BillData {
@@ -65,6 +66,7 @@ export const printBill = (billData: BillData) => {
       <td style="text-align: center; padding: 8px 0;">x${item.qty}</td>
       <td style="text-align: right; padding: 8px 0;">₹${(item.price * item.qty).toFixed(2)}</td>
     </tr>
+    ${item.note ? `<tr><td colspan="3" style="text-align: left; padding: 4px 0 8px 0; font-size: 10px; color: #666; font-style: italic;">Note: ${item.note}</td></tr>` : ''}
   `
     )
     .join("");

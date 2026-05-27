@@ -5,7 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import React, { useState, useEffect } from "react";
 import { apiRequest } from "@/lib/api";
 import { toast } from "@/components/ui/sonner";
-import { CreditCard, DollarSign, Check, Printer } from "lucide-react";
+import { CreditCard, Check, Printer } from "lucide-react";
 import { printBill } from "@/lib/printBill";
 import { getStoredRestaurantName } from "@/lib/session";
 
@@ -165,12 +165,26 @@ const BillSettlement: React.FC = () => {
       orderType: "dine-in",
       tableNumber,
       items: tableOrders.flatMap(order => 
-        order.items.map(itemStr => {
-          const match = itemStr.match(/^(.+?)\s+x(\d+)$/);
-          if (match) {
-            return { name: match[1], price: 0, qty: Number(match[2]) };
+        order.items.map((itemStr: string | any) => {
+          let itemName = '';
+          let qty = 1;
+          let note = '';
+          
+          if (typeof itemStr === 'object' && itemStr !== null) {
+            itemName = itemStr.name || '';
+            qty = itemStr.qty || 1;
+            note = itemStr.note || '';
+          } else {
+            const match = itemStr.match(/^(.+?)\s+x(\d+)$/);
+            if (match) {
+              itemName = match[1];
+              qty = Number(match[2]);
+            } else {
+              itemName = itemStr;
+            }
           }
-          return { name: itemStr, price: 0, qty: 1 };
+          
+          return { name: itemName, price: 0, qty, note };
         })
       ),
       subtotal: Math.round(subtotal),
@@ -257,9 +271,25 @@ const BillSettlement: React.FC = () => {
                           <div key={order.id} className="text-sm mb-2 p-2 bg-orange-50 rounded">
                             <p className="font-medium">Order #{order.id}</p>
                             <ul className="text-xs text-muted-foreground ml-2">
-                              {order.items.map((item, i) => (
-                                <li key={i}>• {item}</li>
-                              ))}
+                              {order.items.map((item, i) => {
+                                let itemName = '';
+                                let qty = 1;
+                                
+                                if (typeof item === 'object' && item !== null) {
+                                  itemName = item.name || '';
+                                  qty = item.qty || 1;
+                                } else {
+                                  const match = String(item).match(/^(.+?)\s+x(\d+)$/);
+                                  if (match) {
+                                    itemName = match[1];
+                                    qty = Number(match[2]);
+                                  } else {
+                                    itemName = String(item);
+                                  }
+                                }
+                                
+                                return <li key={i}>• {itemName} x{qty}</li>;
+                              })}
                             </ul>
                             <p className="text-xs font-semibold mt-1">₹{Number(order.total).toFixed(2)}</p>
                           </div>

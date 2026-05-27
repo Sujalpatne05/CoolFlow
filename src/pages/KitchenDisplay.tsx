@@ -59,15 +59,33 @@ const inferStation = (name: string): OrderItem["station"] => {
   return "hot";
 };
 
-const parseBillItem = (raw: string, idx: number): OrderItem => {
-  const match = raw.match(/^(.*)\sx(\d+)$/i);
-  const name = match ? match[1].trim() : raw;
+const parseBillItem = (raw: string | any, idx: number): OrderItem => {
+  // Handle both string format and object format
+  let itemStr = typeof raw === 'string' ? raw : '';
+  let notes = '';
+  
+  if (typeof raw === 'object' && raw !== null) {
+    // If it's an object, extract the string representation
+    itemStr = raw.name ? `${raw.name} x${raw.qty}` : '';
+    notes = raw.note || raw.notes || '';
+  }
+  
+  // Parse format: "Item Name x qty" or "Item Name x qty (note)"
+  const noteMatch = itemStr.match(/\s*\((.+)\)\s*$/);
+  if (noteMatch) {
+    notes = noteMatch[1];
+    itemStr = itemStr.replace(noteMatch[0], '');
+  }
+  
+  const match = itemStr.match(/^(.*)\sx(\d+)$/i);
+  const name = match ? match[1].trim() : itemStr;
   const quantity = match ? Number(match[2]) : 1;
 
   return {
     id: `${idx + 1}`,
     name,
     quantity,
+    notes: notes || undefined,
     status: "pending",
     station: inferStation(name),
   };
@@ -319,7 +337,11 @@ export default function KitchenDisplay() {
                     <span className="font-medium text-sm">{item.quantity}x</span>
                     <span className="text-sm">{item.name}</span>
                   </div>
-                  {item.notes && <p className="text-xs text-orange-600 mt-1">Note: {item.notes}</p>}
+                  {item.notes && (
+                    <div className="mt-2 p-2.5 bg-gradient-to-r from-amber-100 to-orange-100 border-l-3 border-orange-500 rounded">
+                      <p className="text-sm font-semibold text-gray-800"><span className="text-orange-700">NOTE:</span> {item.notes}</p>
+                    </div>
+                  )}
                 </div>
                 <div className="flex gap-1">
                   {item.status === "pending" && <Badge variant="outline">Pending</Badge>}

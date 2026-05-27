@@ -458,12 +458,14 @@ export default function Reservations() {
           </CardHeader>
           <CardContent className="space-y-3">
             {filteredReservations.length === 0 && <p className="text-sm text-muted-foreground">No reservations found.</p>}
-            {filteredReservations.map((reservation) => (
+            {filteredReservations.map((reservation) => {
+              const formattedDate = new Date(reservation.date).toLocaleDateString('en-IN', { day: '2-digit', month: '2-digit', year: 'numeric' });
+              return (
               <div key={reservation.id} className="border rounded-lg p-3 flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
                 <div>
                   <p className="font-semibold">{reservation.name}</p>
                   <p className="text-xs text-muted-foreground">R-{reservation.id} | {reservation.phone}</p>
-                  <p className="text-sm">{reservation.date} at {reservation.time} | Guests: {reservation.guests} | Table: {reservation.tableNumber}</p>
+                  <p className="text-sm">{formattedDate} at {reservation.time} | Guests: {reservation.guests} | Table: {reservation.tableNumber}</p>
                 </div>
                 <div className="flex items-center gap-2">
                   <Badge className={statusColor[reservation.status]}>{reservation.status}</Badge>
@@ -483,7 +485,8 @@ export default function Reservations() {
                   <Button variant="outline" size="sm" className="text-red-600 border-red-200 hover:bg-red-50" onClick={() => void deleteReservation(reservation.id)}>Delete</Button>
                 </div>
               </div>
-            ))}
+            );
+            })}
           </CardContent>
         </Card>
       </div>

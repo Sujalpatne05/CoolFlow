@@ -257,7 +257,14 @@ export default function Orders() {
                     {/* Items - with better styling */}
                     <div className="bg-white rounded px-2 py-1.5 border border-gray-200">
                       <p className="text-xs text-gray-600 font-semibold mb-1">Items:</p>
-                      <p className="text-xs sm:text-sm break-words text-gray-800 font-medium">{order.items.join(", ")}</p>
+                      <p className="text-xs sm:text-sm break-words text-gray-800 font-medium">
+                        {order.items.map((item: any) => {
+                          if (typeof item === 'object' && item !== null) {
+                            return `${item.name} x${item.qty}`;
+                          }
+                          return item;
+                        }).join(", ")}
+                      </p>
                     </div>
 
                     {/* Footer Row - Payment Info */}
