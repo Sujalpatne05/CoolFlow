@@ -58,6 +58,8 @@ export default function Orders() {
   const [orders, setOrders] = useState<Order[]>([]);
   const [error, setError] = useState("");
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+  const [fromDate, setFromDate] = useState<Date | null>(null);
+  const [toDate, setToDate] = useState<Date | null>(null);
 
   const goToLogin = (message = "Session expired. Please login again.") => {
     setError(message);
@@ -123,13 +125,37 @@ export default function Orders() {
 
   const stats = useMemo(
     () => {
-      const filteredByDate = selectedDate 
-        ? orders.filter(o => {
-            const orderDate = new Date(o.createdAt);
-            const selectedDateStr = selectedDate.toDateString();
-            return orderDate.toDateString() === selectedDateStr;
-          })
-        : orders;
+      let filteredByDate = orders;
+
+      // Filter by single selected date
+      if (selectedDate) {
+        filteredByDate = filteredByDate.filter(o => {
+          const orderDate = new Date(o.createdAt);
+          const selectedDateStr = selectedDate.toDateString();
+          return orderDate.toDateString() === selectedDateStr;
+        });
+      }
+
+      // Filter by date range (From/To)
+      if (fromDate || toDate) {
+        filteredByDate = filteredByDate.filter(o => {
+          const orderDate = new Date(o.createdAt);
+          
+          if (fromDate) {
+            const fromDateStart = new Date(fromDate);
+            fromDateStart.setHours(0, 0, 0, 0);
+            if (orderDate < fromDateStart) return false;
+          }
+          
+          if (toDate) {
+            const toDateEnd = new Date(toDate);
+            toDateEnd.setHours(23, 59, 59, 999);
+            if (orderDate > toDateEnd) return false;
+          }
+          
+          return true;
+        });
+      }
 
       return {
         pending: filteredByDate.filter((o) => o.status === "pending").length,
@@ -140,7 +166,7 @@ export default function Orders() {
         total: filteredByDate.length,
       };
     },
-    [orders, selectedDate],
+    [orders, selectedDate, fromDate, toDate],
   );
 
   const getDateLabel = (date: Date) => {
@@ -200,11 +226,33 @@ export default function Orders() {
   const renderOrders = (filter: "all" | OrderStatus) => {
     let filteredByDate = orders;
     
+    // Filter by single selected date
     if (selectedDate) {
-      filteredByDate = orders.filter(o => {
+      filteredByDate = filteredByDate.filter(o => {
         const orderDate = new Date(o.createdAt);
         const selectedDateStr = selectedDate.toDateString();
         return orderDate.toDateString() === selectedDateStr;
+      });
+    }
+
+    // Filter by date range (From/To)
+    if (fromDate || toDate) {
+      filteredByDate = filteredByDate.filter(o => {
+        const orderDate = new Date(o.createdAt);
+        
+        if (fromDate) {
+          const fromDateStart = new Date(fromDate);
+          fromDateStart.setHours(0, 0, 0, 0);
+          if (orderDate < fromDateStart) return false;
+        }
+        
+        if (toDate) {
+          const toDateEnd = new Date(toDate);
+          toDateEnd.setHours(23, 59, 59, 999);
+          if (orderDate > toDateEnd) return false;
+        }
+        
+        return true;
       });
     }
 
@@ -327,57 +375,99 @@ export default function Orders() {
                 )}
               </div>
 
-              {/* Quick Date Buttons */}
-              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2">
-                <button
-                  onClick={() => handleQuickDate(0)}
-                  className={`px-3 py-2 rounded-lg text-xs font-semibold transition ${
-                    selectedDate?.toDateString() === new Date().toDateString()
-                      ? "bg-blue-600 text-white shadow-md"
-                      : "bg-white border border-gray-300 text-gray-700 hover:bg-blue-50"
-                  }`}
-                >
-                  Today
-                </button>
-                <button
-                  onClick={() => handleQuickDate(1)}
-                  className={`px-3 py-2 rounded-lg text-xs font-semibold transition ${
-                    selectedDate?.toDateString() === new Date(Date.now() - 86400000).toDateString()
-                      ? "bg-blue-600 text-white shadow-md"
-                      : "bg-white border border-gray-300 text-gray-700 hover:bg-blue-50"
-                  }`}
-                >
-                  Yesterday
-                </button>
-                <button
-                  onClick={() => {
-                    setSelectedDate(null);
-                  }}
-                  className={`px-3 py-2 rounded-lg text-xs font-semibold transition ${
-                    !selectedDate
-                      ? "bg-blue-600 text-white shadow-md"
-                      : "bg-white border border-gray-300 text-gray-700 hover:bg-blue-50"
-                  }`}
-                >
-                  All Time
-                </button>
+              {/* All Date Filters in One Line - Left: Quick buttons, Right: Date inputs */}
+              <div className="space-y-3">
+                <div className="flex flex-wrap gap-4 items-end justify-between">
+                  {/* Left Side - Quick Date Buttons */}
+                  <div className="flex flex-col gap-2">
+                    <label className="text-xs font-semibold text-gray-700">Quick Selection</label>
+                    <div className="flex gap-2 items-end">
+                      <button
+                        onClick={() => handleQuickDate(0)}
+                        className={`px-3 py-2 rounded-lg text-xs font-semibold transition whitespace-nowrap ${
+                          selectedDate?.toDateString() === new Date().toDateString()
+                            ? "bg-orange-600 text-white shadow-md"
+                            : "bg-white border border-gray-300 text-gray-700 hover:bg-orange-50"
+                        }`}
+                      >
+                        Today
+                      </button>
+                      <button
+                        onClick={() => handleQuickDate(1)}
+                        className={`px-3 py-2 rounded-lg text-xs font-semibold transition whitespace-nowrap ${
+                          selectedDate?.toDateString() === new Date(Date.now() - 86400000).toDateString()
+                            ? "bg-orange-600 text-white shadow-md"
+                            : "bg-white border border-gray-300 text-gray-700 hover:bg-orange-50"
+                        }`}
+                      >
+                        Yesterday
+                      </button>
+                      <button
+                        onClick={() => {
+                          setSelectedDate(null);
+                          setFromDate(null);
+                          setToDate(null);
+                        }}
+                        className={`px-3 py-2 rounded-lg text-xs font-semibold transition whitespace-nowrap ${
+                          !selectedDate && !fromDate && !toDate
+                            ? "bg-purple-600 text-white shadow-md"
+                            : "bg-white border border-gray-300 text-gray-700 hover:bg-purple-50"
+                        }`}
+                      >
+                        All Time
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Right Side - Date Inputs with individual labels */}
+                  <div className="flex gap-3 items-end">
+                    <div className="flex flex-col gap-1">
+                      <label className="text-xs font-semibold text-gray-700">Single Day</label>
+                      <input
+                        type="date"
+                        value={selectedDate ? selectedDate.toISOString().split('T')[0] : ''}
+                        onChange={(e) => {
+                          setSelectedDate(e.target.value ? new Date(e.target.value) : null);
+                          setFromDate(null);
+                          setToDate(null);
+                        }}
+                        className="px-3 py-2 border border-gray-300 rounded-lg text-xs focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        title="Single date"
+                      />
+                    </div>
+                    <div className="flex flex-col gap-1">
+                      <label className="text-xs font-semibold text-gray-700">From</label>
+                      <input
+                        type="date"
+                        value={fromDate ? fromDate.toISOString().split('T')[0] : ''}
+                        onChange={(e) => {
+                          setFromDate(e.target.value ? new Date(e.target.value) : null);
+                          setSelectedDate(null);
+                        }}
+                        className="px-3 py-2 border border-gray-300 rounded-lg text-xs focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        title="From date"
+                      />
+                    </div>
+                    <div className="flex flex-col gap-1">
+                      <label className="text-xs font-semibold text-gray-700">To</label>
+                      <input
+                        type="date"
+                        value={toDate ? toDate.toISOString().split('T')[0] : ''}
+                        onChange={(e) => {
+                          setToDate(e.target.value ? new Date(e.target.value) : null);
+                          setSelectedDate(null);
+                        }}
+                        className="px-3 py-2 border border-gray-300 rounded-lg text-xs focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        title="To date"
+                      />
+                    </div>
+                  </div>
+                </div>
               </div>
 
-              {/* Custom Date Input */}
-              <div>
-                <label className="text-xs font-semibold text-gray-700 mb-2 block">Select Date</label>
-                <input
-                  type="date"
-                  value={selectedDate ? selectedDate.toISOString().split('T')[0] : ''}
-                  onChange={(e) => {
-                    setSelectedDate(e.target.value ? new Date(e.target.value) : null);
-                  }}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
-                {selectedDate && (
-                  <p className="text-xs text-blue-600 mt-2 font-semibold">📅 {getDateLabel(selectedDate)}</p>
-                )}
-              </div>
+              {selectedDate && (
+                <p className="text-xs text-blue-600 font-semibold">📅 {getDateLabel(selectedDate)}</p>
+              )}
 
               {/* Filter Status */}
               {selectedDate && (
