@@ -76,7 +76,7 @@ router.post('/superadmin/restaurants', ...sa, async (req, res) => {
     const { name, owner, city, status, plan, logo, subscriptionStartDate, subscriptionExpiryDate } = req.body;
     if (!name || !owner) return res.status(400).json({ error: 'name and owner required' });
 
-    const logoUrl = logo ? await uploadBase64Image(logo, 'restrohub/logos') : null;
+    const logoUrl = logo ? await uploadBase64Image(logo, 'logdine/logos') : null;
 
     const { rows } = await query(
       `INSERT INTO restaurants (name, owner, city, status, plan, logo_url) VALUES ($1,$2,$3,$4,$5,$6) RETURNING *`,
@@ -105,7 +105,7 @@ router.post('/superadmin/restaurants', ...sa, async (req, res) => {
 router.put('/superadmin/restaurants/:id', ...sa, async (req, res) => {
   try {
     const { name, owner, city, status, plan, logo } = req.body;
-    const logoUrl = logo ? await uploadBase64Image(logo, 'restrohub/logos') : undefined;
+    const logoUrl = logo ? await uploadBase64Image(logo, 'logdine/logos') : undefined;
     const { rows } = await query(
       `UPDATE restaurants SET name=COALESCE($1,name), owner=COALESCE($2,owner), city=COALESCE($3,city),
        status=COALESCE($4,status), plan=COALESCE($5,plan), logo_url=COALESCE($6,logo_url)

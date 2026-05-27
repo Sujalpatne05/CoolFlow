@@ -289,7 +289,7 @@ router.put('/settings', authenticate, async (req, res) => {
     let finalLogoUrl = logo_url;
     if (logo_url && logo_url.startsWith('data:')) {
       const { uploadBase64Image } = await import('../middleware/upload.mjs');
-      finalLogoUrl = await uploadBase64Image(logo_url, 'restrohub/logos');
+      finalLogoUrl = await uploadBase64Image(logo_url, 'logdine/logos');
     }
 
     // Validate and sanitize table_sections

@@ -11,7 +11,7 @@ if (!connectionString) {
 const pool = new Pool({
   connectionString,
   // Disable channel binding for compatibility
-  application_name: 'restrohub-backend',
+  application_name: 'logdine-backend',
 });
 
 pool.on('error', (err) => {

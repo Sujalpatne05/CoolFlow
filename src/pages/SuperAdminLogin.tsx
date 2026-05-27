@@ -78,7 +78,7 @@ export default function SuperAdminLogin() {
             <div style={{ width: 90, height: 90, borderRadius: 15, margin: "0 auto 20px", background: "linear-gradient(135deg,#1a1a2e,#0f3460)", display: "flex", alignItems: "center", justifyContent: "center" }}>
               <ChefHat style={{ width: 50, height: 50, color: "white" }} />
             </div>
-            <h1 style={{ fontSize: 32, fontWeight: 900, color: "#1a1a2e", margin: "0 0 8px" }}>RestroHub</h1>
+            <h1 style={{ fontSize: 32, fontWeight: 900, color: "#1a1a2e", margin: "0 0 8px" }}>Logdine</h1>
             <p style={{ color: "#999", fontSize: 14, margin: 0 }}>Super Admin Portal</p>
           </div>
 
@@ -93,7 +93,7 @@ export default function SuperAdminLogin() {
               <label style={{ display: "block", fontSize: 13, fontWeight: 600, color: "#666", marginBottom: 10 }}>Email</label>
               <div style={{ position: "relative" }}>
                 <Mail style={{ position: "absolute", left: 12, top: "50%", transform: "translateY(-50%)", width: 20, height: 20, color: "#0f3460" }} />
-                <input type="text" value={username} onChange={e => setUsername(e.target.value)} required placeholder="superadmin@restrohub.com" style={{ width: "100%", paddingLeft: 48, paddingRight: 12, paddingTop: 14, paddingBottom: 14, borderRadius: 10, border: "2px solid #f0f0f0", fontSize: 15, outline: "none", boxSizing: "border-box" }} />
+                <input type="text" value={username} onChange={e => setUsername(e.target.value)} required placeholder="superadmin@logdine.com" style={{ width: "100%", paddingLeft: 48, paddingRight: 12, paddingTop: 14, paddingBottom: 14, borderRadius: 10, border: "2px solid #f0f0f0", fontSize: 15, outline: "none", boxSizing: "border-box" }} />
               </div>
             </div>
             <div style={{ marginBottom: 24 }}>

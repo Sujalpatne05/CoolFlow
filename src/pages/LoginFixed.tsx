@@ -144,7 +144,7 @@ const LoginFixed = () => {
             <div style={{ width: 90, height: 90, borderRadius: 15, margin: "0 auto 20px", background: "linear-gradient(135deg,#e53935,#ff6f00)", display: "flex", alignItems: "center", justifyContent: "center" }}>
               <ChefHat style={{ width: 50, height: 50, color: "white" }} />
             </div>
-            <h1 style={{ fontSize: 32, fontWeight: 900, color: "#1a1a2e", margin: "0 0 8px" }}>RestroHub</h1>
+            <h1 style={{ fontSize: 32, fontWeight: 900, color: "#1a1a2e", margin: "0 0 8px" }}>Logdine</h1>
             <p style={{ color: "#999", fontSize: 14, margin: 0 }}>Restaurant Management System</p>
           </div>
 

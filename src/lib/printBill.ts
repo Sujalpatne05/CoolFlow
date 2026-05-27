@@ -39,7 +39,7 @@ export const printBill = (billData: BillData) => {
     paymentMethod,
     customerName,
     customerPhone,
-    restaurantName = "RestroHub",
+    restaurantName = "Logdine",
     timestamp = new Date(),
   } = billData;
 

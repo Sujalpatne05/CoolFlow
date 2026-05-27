@@ -8,7 +8,7 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
-export async function uploadBase64Image(base64String, folder = 'restrohub') {
+export async function uploadBase64Image(base64String, folder = 'logdine') {
   if (!base64String || !base64String.startsWith('data:')) {
     return base64String; // already a URL, return as-is
   }

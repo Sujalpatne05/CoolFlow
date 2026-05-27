@@ -12,7 +12,7 @@ dotenv.config();
 const PORT = Number(process.env.PORT || 5000);
 const JWT_SECRET = process.env.JWT_SECRET || "restaurant-secret-key";
 const DATABASE_URL = process.env.DATABASE_URL;
-const SUPERADMIN_EMAIL = normalizeEnvEmail(process.env.SUPERADMIN_EMAIL) || "superadmin@restrohub.local";
+const SUPERADMIN_EMAIL = normalizeEnvEmail(process.env.SUPERADMIN_EMAIL) || "superadmin@logdine.local";
 const SUPERADMIN_PASSWORD = String(process.env.SUPERADMIN_PASSWORD || "super123");
 
 if (!DATABASE_URL) {

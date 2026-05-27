@@ -158,7 +158,7 @@ try {
   } else {
     console.log("[INIT] users.json not found, using default users");
     users = [
-      { id: 1, name: "Super Admin", email: "superadmin@restrohub.local", password: "super123", role: "superadmin", restaurant_id: null, restaurant_name: null, is_active: true },
+      { id: 1, name: "Super Admin", email: "superadmin@logdine.local", password: "super123", role: "superadmin", restaurant_id: null, restaurant_name: null, is_active: true },
       { id: 2, name: "Admin User", email: "admin@example.com", password: "admin123", role: "admin", restaurant_id: 1, restaurant_name: "Demo Restaurant", is_active: true },
       { id: 3, name: "Manager User", email: "manager@example.com", password: "manager123", role: "manager", restaurant_id: 1, restaurant_name: "Demo Restaurant", is_active: true },
       { id: 4, name: "Staff User", email: "staff@example.com", password: "staff123", role: "staff", restaurant_id: 1, restaurant_name: "Demo Restaurant", is_active: true },
@@ -167,7 +167,7 @@ try {
 } catch (err) {
   console.error("[INIT] Error loading users.json:", err.message);
   users = [
-    { id: 1, name: "Super Admin", email: "superadmin@restrohub.local", password: "super123", role: "superadmin", restaurant_id: null, restaurant_name: null, is_active: true },
+    { id: 1, name: "Super Admin", email: "superadmin@logdine.local", password: "super123", role: "superadmin", restaurant_id: null, restaurant_name: null, is_active: true },
     { id: 2, name: "Admin User", email: "admin@example.com", password: "admin123", role: "admin", restaurant_id: 1, restaurant_name: "Demo Restaurant", is_active: true },
   ];
 }

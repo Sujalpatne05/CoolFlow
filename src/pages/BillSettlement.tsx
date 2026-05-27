@@ -191,7 +191,7 @@ const BillSettlement: React.FC = () => {
       tax: Math.round(tax),
       serviceCharge: Math.round(svc),
       total: Math.round(totalAmount),
-      restaurantName: getStoredRestaurantName() || "RestroHub",
+      restaurantName: getStoredRestaurantName() || "Logdine",
       timestamp: new Date(),
     });
   };

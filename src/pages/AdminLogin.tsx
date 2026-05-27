@@ -117,7 +117,7 @@ const AdminLogin = () => {
               <div style={{ width: 82, height: 82, borderRadius: 24, margin: "0 auto 16px", background: "linear-gradient(135deg,#e53935,#ff6f00)", display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0 16px 40px rgba(229,57,53,0.45)", animation: "logoPulse 2.5s ease-in-out infinite" }}>
                 <ChefHat style={{ width: 46, height: 46, color: "white" }} />
               </div>
-              <h1 style={{ fontSize: 30, fontWeight: 900, color: "#1a1a2e", margin: "0 0 4px", letterSpacing: "-0.5px" }}>RestroHub</h1>
+              <h1 style={{ fontSize: 30, fontWeight: 900, color: "#1a1a2e", margin: "0 0 4px", letterSpacing: "-0.5px" }}>Logdine</h1>
               <p style={{ color: "#aaa", fontSize: 13, margin: 0 }}>Your kitchen, your control</p>
             </div>
 

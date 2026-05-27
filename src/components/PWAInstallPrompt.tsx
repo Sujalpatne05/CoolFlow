@@ -56,7 +56,7 @@ const PWAInstallPrompt: React.FC = () => {
         <span style={{ color: "white", fontWeight: 900, fontSize: 20 }}>R</span>
       </div>
       <div style={{ flex: 1, minWidth: 0 }}>
-        <div style={{ fontWeight: 700, fontSize: 14, color: "#1a1a2e" }}>Install RestroHub</div>
+        <div style={{ fontWeight: 700, fontSize: 14, color: "#1a1a2e" }}>Install Logdine</div>
         <div style={{ fontSize: 12, color: "#888", marginTop: 2 }}>Add to home screen for quick access</div>
       </div>
       <div style={{ display: "flex", gap: 8, flexShrink: 0 }}>

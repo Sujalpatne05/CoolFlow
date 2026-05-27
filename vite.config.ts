@@ -27,8 +27,8 @@ export default defineConfig(({ mode }) => ({
       registerType: "autoUpdate",
       includeAssets: ['favicon.svg', 'icon-192x192.png', 'icon-512x512.png'],
       manifest: {
-        name: 'RestroHub - Restaurant Management',
-        short_name: 'RestroHub',
+        name: 'Logdine - Restaurant Management',
+        short_name: 'Logdine',
         description: 'Complete Restaurant Management System - POS, Billing, Kitchen Display, Orders & More',
         theme_color: '#e53935',
         background_color: '#1a1a2e',

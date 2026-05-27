@@ -279,7 +279,7 @@ const Billing: React.FC = () => {
 			paymentMethod: (orderType === "delivery" || orderType === "take-away") ? paymentMethod : undefined,
 			customerName: (orderType === "delivery" || orderType === "take-away") ? customer.name : undefined,
 			customerPhone: (orderType === "delivery" || orderType === "take-away") ? customer.phone : undefined,
-			restaurantName: getStoredRestaurantName() || "RestroHub",
+			restaurantName: getStoredRestaurantName() || "Logdine",
 			timestamp: new Date(),
 		});
 	};
@@ -423,7 +423,7 @@ const Billing: React.FC = () => {
 							<h1 className="text-2xl sm:text-3xl font-bold text-orange-700 flex items-center gap-2 mb-1">
 								<ShoppingCart className="inline-block text-orange-500 flex-shrink-0" size={24} /> POS Billing
 							</h1>
-							<div className="text-muted-foreground text-xs sm:text-sm">Welcome to RestroHub! Please select items and complete the order below.</div>
+							<div className="text-muted-foreground text-xs sm:text-sm">Welcome to Logdine! Please select items and complete the order below.</div>
 						</div>
 						<div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
 							<span className="bg-orange-100 text-orange-700 px-2 sm:px-3 py-1 rounded-full font-semibold text-xs sm:text-sm truncate">Restaurant: {getStoredRestaurantName() || "Restaurant"}</span>
@@ -772,7 +772,7 @@ const Billing: React.FC = () => {
 
 				{/* Footer */}
 				<footer className="w-full text-center py-3 sm:py-4 text-muted-foreground text-xs bg-transparent mt-6 sm:mt-8 px-3">
-					&copy; {new Date().getFullYear()} RestroHub POS &mdash; Powered by {getStoredRestaurantName() || "RestroHub"}
+					&copy; {new Date().getFullYear()} Logdine POS &mdash; Powered by {getStoredRestaurantName() || "Logdine"}
 				</footer>
 			</div>
 		</DashboardLayout>

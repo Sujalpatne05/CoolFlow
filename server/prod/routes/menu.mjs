@@ -39,7 +39,7 @@ router.post('/menu', authenticate, async (req, res) => {
     const { name, category, price, image_url, description, available } = req.body;
     if (!name || !category || !price) return res.status(400).json({ error: 'Name, category, price required' });
 
-    const imgUrl = image_url ? await uploadBase64Image(image_url, 'restrohub/menu') : '';
+    const imgUrl = image_url ? await uploadBase64Image(image_url, 'logdine/menu') : '';
 
     const { rows } = await query(
       `INSERT INTO menu_items (restaurant_id, name, category, price, image_url, description, available)
@@ -56,7 +56,7 @@ router.put('/menu/:id', authenticate, async (req, res) => {
     // Only process image if provided; if empty/null, keep existing image
     let imgUrl = undefined;
     if (image_url) {
-      imgUrl = await uploadBase64Image(image_url, 'restrohub/menu');
+      imgUrl = await uploadBase64Image(image_url, 'logdine/menu');
     }
 
     const { rows } = await query(
@@ -86,7 +86,7 @@ router.post('/menu/image', authenticate, async (req, res) => {
   try {
     const { image } = req.body;
     if (!image) return res.status(400).json({ error: 'Image required' });
-    const url = await uploadBase64Image(image, 'restrohub/menu');
+    const url = await uploadBase64Image(image, 'logdine/menu');
     res.json({ url });
   } catch (err) { res.status(500).json({ error: err.message }); }
 });

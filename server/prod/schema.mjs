@@ -194,14 +194,14 @@ export async function setupSchema() {
       ALTER TABLE restaurants ADD COLUMN IF NOT EXISTS counter_printer_ip TEXT;
       ALTER TABLE restaurants ADD COLUMN IF NOT EXISTS counter_printer_port INTEGER DEFAULT 9100;
     `);
-    const existing = await client.query(`SELECT id FROM users WHERE email = 'superadmin@restrohub.com'`);
+    const existing = await client.query(`SELECT id FROM users WHERE email = 'superadmin@logdine.com'`);
     if (existing.rows.length === 0) {
       const hash = await bcrypt.hash('Admin@123', 10);
       await client.query(`
         INSERT INTO users (name, email, password_hash, role, restaurant_id, restaurant_name, is_active)
-        VALUES ('Super Admin', 'superadmin@restrohub.com', $1, 'superadmin', NULL, NULL, TRUE)
+        VALUES ('Super Admin', 'superadmin@logdine.com', $1, 'superadmin', NULL, NULL, TRUE)
       `, [hash]);
-      console.log('[SCHEMA] ✅ Superadmin created: superadmin@restrohub.com / Admin@123');
+      console.log('[SCHEMA] ✅ Superadmin created: superadmin@logdine.com / Admin@123');
     }
 
     // Seed system settings if empty
