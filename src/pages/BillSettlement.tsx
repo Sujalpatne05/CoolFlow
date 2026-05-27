@@ -260,7 +260,9 @@ const BillSettlement: React.FC = () => {
                             {tableOrders.length} order{tableOrders.length > 1 ? 's' : ''}
                           </p>
                         </div>
-                        <Badge className="bg-green-500">Served</Badge>
+                        <Badge className={tableOrders[0]?.status === 'served' ? 'bg-green-500' : 'bg-blue-500'}>
+                          {tableOrders[0]?.status ? tableOrders[0].status.charAt(0).toUpperCase() + tableOrders[0].status.slice(1) : 'Pending'}
+                        </Badge>
                       </div>
                     </CardHeader>
                     <CardContent>
