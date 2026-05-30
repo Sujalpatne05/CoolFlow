@@ -5,10 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "backend": "node server/mock-backend.mjs",
-    "backend:prod": "node server/prod/index.mjs",
-    "backend:ts": "tsx server/fastify-backend.ts",
-    "backend:postgres": "node server/postgres-backend.mjs",
+    "backend": "node server/prod/index.mjs",
     "build": "vite build",
     "build:dev": "vite build --mode development",
     "lint": "eslint .",
