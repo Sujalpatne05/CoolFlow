@@ -44,9 +44,9 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
     <SidebarProvider>
       <div className="min-h-screen flex w-full">
         <AppSidebar />
-        <div className="flex-1 flex flex-col relative">
-          <header className="min-h-14 flex items-center justify-between border-b px-3 py-2 sm:px-4 bg-card relative gap-2">
-            <SidebarTrigger />
+        <div className="min-w-0 flex-1 flex flex-col relative">
+          <header className="sticky top-0 z-30 min-h-14 flex items-center justify-between border-b px-3 py-2 sm:px-4 bg-card relative gap-2">
+            <SidebarTrigger className="h-10 w-10 shrink-0" />
             <div className="flex items-center gap-1 sm:gap-2 flex-wrap justify-end">
               <NotificationBell />
               <button
@@ -59,7 +59,7 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
               </button>
             </div>
           </header>
-          <main className="flex-1 p-4 sm:p-6 overflow-auto">{children}</main>
+          <main className="min-w-0 flex-1 overflow-x-hidden overflow-y-auto p-2 sm:p-4 md:p-6">{children}</main>
         </div>
       </div>
     </SidebarProvider>
