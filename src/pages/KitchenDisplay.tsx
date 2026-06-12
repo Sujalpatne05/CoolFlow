@@ -92,9 +92,12 @@ const parseBillItem = (raw: string | any, idx: number): OrderItem => {
 };
 
 const toItemStatus = (orderStatus: KitchenOrder["status"]): OrderItem["status"] => {
-  if (orderStatus === "preparing") return "preparing";
   if (orderStatus === "ready" || orderStatus === "served" || orderStatus === "completed") return "ready";
   return "pending";
+};
+
+const toKitchenStatus = (status?: KitchenOrder["status"]): KitchenOrder["status"] => {
+  return status === "preparing" ? "pending" : status || "pending";
 };
 
 export default function KitchenDisplay() {
@@ -139,15 +142,17 @@ export default function KitchenDisplay() {
         const orderType = order.orderType || "dine-in";
         const displayType = orderType === "take-away" ? "takeout" : orderType === "delivery" ? "delivery" : "dine-in";
         
+        const kdsStatus = toKitchenStatus(order.status || "pending");
+
         return {
           id: String(order.id),
           orderNumber: `ORD-${order.id}`,
           tableNumber: order.table_number ? String(order.table_number) : "N/A",
           items: (Array.isArray(order.items) ? order.items : []).map((rawItem, itemIdx) => {
             const parsed = parseBillItem(rawItem, itemIdx);
-            return { ...parsed, status: toItemStatus(order.status || "pending") };
+            return { ...parsed, status: toItemStatus(kdsStatus) };
           }),
-          status: order.status || "pending",
+          status: kdsStatus,
           priority: Number(order.total) >= 1000 ? "urgent" : "normal",
           timestamp: order.created_at ? new Date(order.created_at) : new Date(),
           estimatedTime: 15,
@@ -217,9 +222,7 @@ export default function KitchenDisplay() {
         toast.error(data?.error || "Unable to update order status");
         return;
       }
-      if (nextStatus === "preparing") {
-        toast.success("Order started");
-      } else if (nextStatus === "ready") {
+      if (nextStatus === "ready") {
         toast.success("Order ready for serving");
       } else if (nextStatus === "served") {
         toast.success("Order served");
@@ -240,7 +243,6 @@ export default function KitchenDisplay() {
     if (isOverdue) return "bg-red-600";
     switch (status) {
       case "pending": return "bg-yellow-500";
-      case "preparing": return "bg-blue-500";
       case "ready": return "bg-green-500";
       case "served": return "bg-gray-500";
       default: return "bg-gray-500";
@@ -271,7 +273,6 @@ export default function KitchenDisplay() {
 
   const stats = {
     pending: orders.filter(o => o.status === "pending").length,
-    preparing: orders.filter(o => o.status === "preparing").length,
     ready: orders.filter(o => o.status === "ready").length,
     served: orders.filter(o => o.status === "served" || o.status === "completed").length,
   };
@@ -286,6 +287,7 @@ export default function KitchenDisplay() {
         <CardHeader className="pb-3">
           <div className="flex justify-between items-start">
             <div>
+              <div className="text-xs font-bold uppercase tracking-wide text-orange-600">KOT</div>
               <CardTitle className="text-xl">{order.orderNumber}</CardTitle>
               <div className="text-sm mt-1">
                 {order.type === "dine-in" ? `Table ${order.tableNumber}` : (
@@ -345,7 +347,6 @@ export default function KitchenDisplay() {
                 </div>
                 <div className="flex gap-1">
                   {item.status === "pending" && <Badge variant="outline">Pending</Badge>}
-                  {item.status === "preparing" && <Badge className="bg-blue-500">Preparing</Badge>}
                   {item.status === "ready" && <Badge className="bg-green-500">Ready</Badge>}
                 </div>
               </div>
@@ -395,14 +396,10 @@ export default function KitchenDisplay() {
           </div>
         </div>
 
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           <Card>
             <CardHeader className="pb-2"><CardTitle className="text-sm font-medium text-yellow-600">Pending</CardTitle></CardHeader>
             <CardContent><div className="text-2xl font-bold text-yellow-600">{stats.pending}</div></CardContent>
-          </Card>
-          <Card>
-            <CardHeader className="pb-2"><CardTitle className="text-sm font-medium text-blue-600">Preparing</CardTitle></CardHeader>
-            <CardContent><div className="text-2xl font-bold text-blue-600">{stats.preparing}</div></CardContent>
           </Card>
           <Card>
             <CardHeader className="pb-2"><CardTitle className="text-sm font-medium text-green-600">Ready</CardTitle></CardHeader>

@@ -57,18 +57,22 @@ export const printBill = (billData: BillData) => {
     second: "2-digit",
   });
 
+  const knownItemsTotal = items.reduce((sum, item) => sum + (Number(item.price) || 0) * item.qty, 0);
+  const zeroPriceQty = items.reduce((sum, item) => sum + ((Number(item.price) || 0) <= 0 ? item.qty : 0), 0);
+  const fallbackUnitPrice = zeroPriceQty > 0 ? Math.max(0, subtotal - knownItemsTotal) / zeroPriceQty : 0;
+
   const itemsHTML = items
-    .map(
-      (item) =>
-        `
+    .map((item) => {
+      const unitPrice = (Number(item.price) || 0) > 0 ? Number(item.price) : fallbackUnitPrice;
+      return `
     <tr>
       <td style="text-align: left; padding: 8px 0;">${item.name}</td>
       <td style="text-align: center; padding: 8px 0;">x${item.qty}</td>
-      <td style="text-align: right; padding: 8px 0;">₹${(item.price * item.qty).toFixed(2)}</td>
+      <td style="text-align: right; padding: 8px 0;">₹${(unitPrice * item.qty).toFixed(2)}</td>
     </tr>
     ${item.note ? `<tr><td colspan="3" style="text-align: left; padding: 4px 0 8px 0; font-size: 10px; color: #666; font-style: italic;">Note: ${item.note}</td></tr>` : ''}
-  `
-    )
+  `;
+    })
     .join("");
 
   const html = `

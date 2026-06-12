@@ -13,7 +13,7 @@ import { getAuthToken, getStoredRole, getStoredUserId, buildAuthHeaders, getStor
 import { toast } from "@/components/ui/sonner";
 import { useLocation } from "react-router-dom";
 import { Monitor, ShoppingCart, UtensilsCrossed, Printer, Minus, Plus } from "lucide-react";
-import { printBill } from "@/lib/printBill";
+import { printKOT } from "@/lib/printKOT";
 
 const ORDER_TYPES = ["dine-in", "take-away", "delivery"] as const;
 const PAYMENT_METHODS = ["upi", "card", "cash"] as const;
@@ -179,11 +179,13 @@ const Billing: React.FC = () => {
 						let itemName = '';
 						let qty = 1;
 						let notes = '';
+						let savedPrice = 0;
 						
 						if (typeof itemStr === 'object' && itemStr !== null) {
 							itemName = itemStr.name || '';
 							qty = itemStr.qty || 1;
 							notes = itemStr.note || itemStr.notes || '';
+							savedPrice = Number(itemStr.price) || 0;
 						} else {
 							// Parse format like "Butter Chicken x1" or "Butter Chicken x1 (Extra spicy)"
 							const noteMatch = itemStr.match(/\s*\((.+)\)\s*$/);
@@ -205,7 +207,7 @@ const Billing: React.FC = () => {
 						if (menuItem) {
 							return { id: menuItem.id, name: menuItem.name, price: menuItem.price, qty, notes };
 						}
-						return { id: Date.now() + Math.random(), name: itemName, price: 0, qty, notes };
+						return { id: Date.now() + Math.random(), name: itemName, price: savedPrice, qty, notes };
 					}).filter(Boolean);
 					setOrderItems(parsedItems);
 				})
@@ -232,11 +234,6 @@ const Billing: React.FC = () => {
 			}
 			return [...prev, { ...item, qty: 1, notes: "" }];
 		});
-		
-		// Auto-scroll to Order Summary
-		setTimeout(() => {
-			orderSummaryRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
-		}, 100);
 	};
 	const removeItem = (id: number, e?: React.MouseEvent) => {
 		if (e) {
@@ -260,28 +257,45 @@ const Billing: React.FC = () => {
 	const tax = Math.round(subtotal * (taxRate / 100));
 	const svc = Math.round(subtotal * (serviceCharge / 100));
 	const total = subtotal + tax + svc;
+	const totalItems = orderItems.reduce((sum, item) => sum + item.qty, 0);
+	const getItemQty = (id: number) => orderItems.find((item) => item.id === id)?.qty || 0;
+	const getItemNote = (id: number) => orderItems.find((item) => item.id === id)?.notes || "";
+	const quickNotes = ["Spicy", "Extra spicy", "Less spicy", "No onion", "No garlic"];
+	const getNoteParts = (note: string) => note.split(",").map(part => part.trim()).filter(Boolean);
+	const hasQuickNote = (itemId: number, note: string) => getNoteParts(getItemNote(itemId)).includes(note);
+	const toggleQuickNote = (itemId: number, note: string) => {
+		const current = getNoteParts(getItemNote(itemId));
+		const next = current.includes(note)
+			? current.filter(part => part !== note)
+			: [...current, note];
+		updateItemNote(itemId, next.join(", "));
+	};
 
-	const handlePrintBill = () => {
-		if (orderItems.length === 0) {
-			toast.error("No items to print");
-			return;
-		}
-
-		printBill({
-			orderId: existingOrder?.id || "NEW",
+	const printOrderKOT = (orderId: number | string = existingOrder?.id || "NEW") => {
+		printKOT({
+			kotId: orderId,
+			orderNumber: orderId === "NEW" ? "NEW" : `ORD-${orderId}`,
 			orderType,
 			tableNumber: orderType === "dine-in" ? selectedTable || undefined : undefined,
-			items: orderItems,
-			subtotal,
-			tax,
-			serviceCharge: svc,
-			total,
-			paymentMethod: (orderType === "delivery" || orderType === "take-away") ? paymentMethod : undefined,
+			items: orderItems.map(item => ({
+				name: item.name,
+				qty: item.qty,
+				notes: item.notes,
+			})),
 			customerName: (orderType === "delivery" || orderType === "take-away") ? customer.name : undefined,
 			customerPhone: (orderType === "delivery" || orderType === "take-away") ? customer.phone : undefined,
 			restaurantName: getStoredRestaurantName() || "Logdine",
 			timestamp: new Date(),
 		});
+	};
+
+	const handlePrintKOT = () => {
+		if (orderItems.length === 0) {
+			toast.error("No items to print in KOT");
+			return;
+		}
+
+		printOrderKOT();
 	};
 
 	const handlePlaceOrder = async () => {
@@ -329,6 +343,7 @@ const Billing: React.FC = () => {
 						total,
 					}),
 				});
+				printOrderKOT(existingOrder.id);
 				toast.success("Order updated successfully!");
 			} else {
 				// Create new order
@@ -394,7 +409,7 @@ const Billing: React.FC = () => {
 						toast.error("Order created but delivery record failed. Please create manually.");
 					}
 				}
-				
+				printOrderKOT(newOrder.id);
 				toast.success("Order placed successfully!");
 			}
 			setOrderItems([]);
@@ -497,21 +512,67 @@ const Billing: React.FC = () => {
 										value={menuSearch}
 										onChange={e => setMenuSearch(e.target.value)}
 									/>
+									<div className="flex gap-2 overflow-x-auto pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+										{menuCategories.map(category => (
+											<Button
+												key={category}
+												type="button"
+												size="sm"
+												variant={menuCategory === category ? "default" : "outline"}
+												onClick={() => setMenuCategory(category)}
+												className={
+													menuCategory === category
+														? "h-8 shrink-0 bg-orange-500 px-3 text-xs hover:bg-orange-600"
+														: "h-8 shrink-0 border-orange-200 px-3 text-xs text-orange-700 hover:bg-orange-50"
+												}
+											>
+												{category}
+											</Button>
+										))}
+									</div>
 								</div>
 							</CardHeader>
 							<CardContent className="p-3 sm:p-6">
-								<div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-3 gap-2 sm:gap-4">
+								<div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-2 sm:gap-4">
 									{loadingMenu ? (
 										<div className="col-span-full text-center text-muted-foreground py-8 text-sm">Loading menu...</div>
 									) : filteredMenu.length === 0 ? (
 										<div className="col-span-full text-center text-muted-foreground py-8 text-sm">No items found.</div>
 									) : (
 										filteredMenu.map(item => (
-											<Card key={item.id} className="p-2 sm:p-3 flex flex-col items-center bg-orange-50/80 border-orange-100 shadow-sm hover:shadow-md transition-all">
+											<Card key={item.id} className="relative flex flex-col items-center overflow-hidden border-orange-100 bg-white p-4 shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-md sm:min-h-[150px] sm:p-3">
+												{getItemQty(item.id) > 0 && (
+													<div className="absolute right-2 top-2 hidden rounded-full bg-green-600 px-2 py-0.5 text-[11px] font-bold text-white sm:block">
+														{getItemQty(item.id)} in cart
+													</div>
+												)}
 												<div className="mb-2 text-2xl sm:text-3xl"><UtensilsCrossed className="text-orange-500" /></div>
 												<span className="font-semibold text-xs sm:text-base mb-1 text-center line-clamp-2">{item.name}</span>
 												<Badge className="mb-2 bg-orange-500/90 text-white text-xs">₹{item.price}</Badge>
-												<Button size="sm" onClick={() => addItem(item)} variant="outline" disabled={!item.available || (orderType === "dine-in" && !selectedTable)} className="text-xs">Add</Button>
+												{getItemQty(item.id) > 0 ? (
+													<div className="w-full space-y-2">
+														<div className="grid h-9 w-full grid-cols-3 overflow-hidden rounded-md border border-green-600 bg-green-50">
+															<Button size="sm" variant="ghost" onClick={(e) => removeItem(item.id, e)} className="h-9 rounded-none text-green-700 hover:bg-green-100">
+																<Minus size={15} />
+															</Button>
+															<div className="flex items-center justify-center bg-white text-sm font-bold text-green-700">
+																{getItemQty(item.id)}
+															</div>
+															<Button size="sm" variant="ghost" onClick={(e) => addItem(item, e)} className="h-9 rounded-none text-green-700 hover:bg-green-100">
+																<Plus size={15} />
+															</Button>
+														</div>
+														<Input
+															type="text"
+															placeholder="Note: spicy, extra spicy..."
+															value={getItemNote(item.id)}
+															onChange={(e) => updateItemNote(item.id, e.target.value)}
+															className="h-8 bg-green-50 text-xs border-green-200 focus:border-green-500"
+														/>
+													</div>
+												) : (
+													<Button size="sm" onClick={() => addItem(item)} variant="outline" disabled={!item.available || (orderType === "dine-in" && !selectedTable)} className="h-9 w-full border-orange-300 text-xs font-bold text-orange-600 hover:bg-orange-50">Add</Button>
+												)}
 												{!item.available && <span className="text-xs text-red-500 mt-1">Unavailable</span>}
 											</Card>
 										))
@@ -521,7 +582,7 @@ const Billing: React.FC = () => {
 						</Card>
 
 						{/* Order Summary Section */}
-						<Card ref={orderSummaryRef} className="bg-gradient-to-br from-orange-50 to-white shadow-xl border-orange-200">
+						<Card ref={orderSummaryRef} className="bg-gradient-to-br from-orange-50 to-white shadow-xl border-orange-200 lg:sticky lg:top-4 lg:self-start">
 							<CardHeader className="p-4 sm:p-6 bg-gradient-to-r from-orange-500 to-orange-600 text-white rounded-t-lg">
 								<CardTitle className="text-lg sm:text-2xl flex items-center gap-2 flex-wrap">
 									<ShoppingCart className="flex-shrink-0" size={28} /> Order Summary
@@ -570,6 +631,24 @@ const Billing: React.FC = () => {
 																	onChange={(e) => updateItemNote(item.id, e.target.value)}
 																	className="text-xs h-7 bg-orange-50 border-orange-200 focus:border-orange-400"
 																/>
+																<div className="mt-2 flex gap-1.5 overflow-x-auto pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+																	{quickNotes.map(note => (
+																		<Button
+																			key={note}
+																			type="button"
+																			size="sm"
+																			variant={hasQuickNote(item.id, note) ? "default" : "outline"}
+																			onClick={() => toggleQuickNote(item.id, note)}
+																			className={
+																				hasQuickNote(item.id, note)
+																					? "h-7 shrink-0 bg-orange-500 px-2 text-[11px] text-white hover:bg-orange-600"
+																					: "h-7 shrink-0 border-orange-200 px-2 text-[11px] text-orange-700 hover:bg-orange-50"
+																			}
+																		>
+																			{note}
+																		</Button>
+																	))}
+																</div>
 															</div>
 														</div>
 													</div>
@@ -697,14 +776,36 @@ const Billing: React.FC = () => {
 								<Button 
 									variant="outline" 
 									className="w-full border-orange-300 text-orange-600 hover:bg-orange-50 text-sm mt-2"
-									onClick={handlePrintBill}
+									onClick={handlePrintKOT}
 									disabled={orderItems.length === 0}
 								>
-									<Printer size={16} className="mr-2" /> Print Bill
+									<Printer size={16} className="mr-2" /> Print KOT
 								</Button>
 							</CardContent>
 						</Card>
 					</div>
+
+					{orderItems.length > 0 && (
+						<div className="fixed inset-x-3 bottom-3 z-40 rounded-lg border border-green-700 bg-green-700 p-3 text-white shadow-2xl lg:hidden">
+							<div className="flex items-center justify-between gap-3">
+								<div className="min-w-0">
+									<div className="flex items-center gap-2 text-sm font-bold">
+										<ShoppingCart size={18} />
+										<span>{totalItems} item{totalItems === 1 ? "" : "s"}</span>
+									</div>
+									<div className="text-xs text-green-50">Total: {"\u20b9"}{total}</div>
+								</div>
+								<Button
+									type="button"
+									size="sm"
+									className="h-9 shrink-0 bg-white px-4 text-xs font-bold text-green-700 hover:bg-green-50"
+									onClick={() => orderSummaryRef.current?.scrollIntoView({ behavior: "smooth", block: "start" })}
+								>
+									View cart
+								</Button>
+							</div>
+						</div>
+					)}
 				</div>
 
 				{/* Recent Orders Section */}
