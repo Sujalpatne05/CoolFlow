@@ -178,7 +178,7 @@ export function AppSidebar() {
                           end
                           className={
                             isActive
-                              ? "bg-orange-600 text-white font-semibold shadow-sm hover:bg-orange-600 hover:text-white"
+                              ? "bg-orange-600 text-white font-semibold shadow-sm hover:bg-orange-100 hover:text-gray-950"
                               : "hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
                           }
                           activeClassName="bg-orange-600 text-white font-semibold"

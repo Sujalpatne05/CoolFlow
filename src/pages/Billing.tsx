@@ -527,8 +527,8 @@ const Billing: React.FC = () => {
 												onClick={() => setMenuCategory(category)}
 												className={
 													menuCategory === category
-														? "h-8 shrink-0 bg-orange-500 px-3 text-xs hover:bg-orange-600"
-														: "h-8 shrink-0 border-orange-200 px-3 text-xs text-orange-700 hover:bg-orange-50"
+														? "h-8 shrink-0 bg-orange-500 px-3 text-xs text-white hover:bg-orange-600"
+														: "h-8 shrink-0 border-orange-200 px-3 text-xs text-orange-700 hover:bg-orange-50 hover:text-gray-950"
 												}
 											>
 												{category}
@@ -576,7 +576,7 @@ const Billing: React.FC = () => {
 														/>
 													</div>
 												) : (
-													<Button size="sm" onClick={() => addItem(item)} variant="outline" disabled={!item.available || (orderType === "dine-in" && !selectedTable)} className="h-9 w-full border-orange-300 text-xs font-bold text-orange-600 hover:bg-orange-50">Add</Button>
+													<Button size="sm" onClick={() => addItem(item)} variant="outline" disabled={!item.available || (orderType === "dine-in" && !selectedTable)} className="h-9 w-full border-orange-300 text-xs font-bold text-orange-700 hover:bg-orange-50 hover:text-gray-950 disabled:bg-orange-50 disabled:text-gray-900">Add</Button>
 												)}
 												{!item.available && <span className="text-xs text-red-500 mt-1">Unavailable</span>}
 											</Card>
@@ -775,7 +775,7 @@ const Billing: React.FC = () => {
 										</div>
 									</div>
 								)}
-								<Button className="w-full bg-orange-500 hover:bg-orange-600 text-sm" onClick={handlePlaceOrder} disabled={orderItems.length === 0}>
+								<Button className="w-full bg-orange-500 hover:bg-orange-600 text-sm disabled:bg-orange-100 disabled:text-gray-900" onClick={handlePlaceOrder} disabled={orderItems.length === 0}>
 									{existingOrder && existingOrder.status !== 'served' && existingOrder.status !== 'completed' ? "Update Order" : "Place Order"}
 								</Button>
 								<Button 

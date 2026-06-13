@@ -359,7 +359,7 @@ const BillSettlement: React.FC = () => {
                       {/* Buttons */}
                       <div className="flex flex-col gap-2">
                         <Button
-                          className="w-full bg-green-500 hover:bg-green-600"
+                          className="w-full bg-green-500 hover:bg-green-600 disabled:bg-green-100 disabled:text-gray-900"
                           onClick={(e) => {
                             e.stopPropagation();
                             handlePayment(tableOrders[0].id, tableNumber);
@@ -380,7 +380,7 @@ const BillSettlement: React.FC = () => {
                         </Button>
                         <Button
                           variant="outline"
-                          className="w-full border-orange-300 text-orange-600 hover:bg-orange-50"
+                          className="w-full border-orange-300 text-orange-700 hover:bg-orange-50 hover:text-gray-950 disabled:bg-orange-50 disabled:text-gray-900"
                           onClick={(e) => {
                             e.stopPropagation();
                             handlePrintBill(tableNumber, tableOrders);

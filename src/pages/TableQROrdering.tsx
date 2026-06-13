@@ -183,7 +183,7 @@ export default function TableQROrdering() {
                     <button
                       onClick={() => addToCart(item)}
                       disabled={!item.available}
-                      className="w-full mt-3 bg-orange-500 hover:bg-orange-600 disabled:bg-gray-300 text-white font-semibold py-2 rounded-lg transition flex items-center justify-center gap-2"
+                      className="w-full mt-3 bg-orange-500 hover:bg-orange-600 disabled:bg-gray-300 text-white disabled:text-gray-900 font-semibold py-2 rounded-lg transition flex items-center justify-center gap-2"
                     >
                       <Plus className="h-4 w-4" />
                       Add to Cart
@@ -246,7 +246,7 @@ export default function TableQROrdering() {
                     <button
                       onClick={handlePlaceOrder}
                       disabled={submitting}
-                      className="w-full bg-green-500 hover:bg-green-600 disabled:bg-gray-300 text-white font-bold py-3 rounded-lg transition flex items-center justify-center gap-2"
+                      className="w-full bg-green-500 hover:bg-green-600 disabled:bg-gray-300 text-white disabled:text-gray-900 font-bold py-3 rounded-lg transition flex items-center justify-center gap-2"
                     >
                       <Check className="h-5 w-5" />
                       {submitting ? "Placing Order..." : "Place Order"}
