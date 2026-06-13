@@ -13,7 +13,6 @@ import { getAuthToken, getStoredRole, getStoredUserId, buildAuthHeaders, getStor
 import { toast } from "@/components/ui/sonner";
 import { useLocation } from "react-router-dom";
 import { Monitor, ShoppingCart, UtensilsCrossed, Printer, Minus, Plus } from "lucide-react";
-import { printKOT } from "@/lib/printKOT";
 
 const ORDER_TYPES = ["dine-in", "take-away", "delivery"] as const;
 const PAYMENT_METHODS = ["upi", "card", "cash"] as const;
@@ -271,31 +270,34 @@ const Billing: React.FC = () => {
 		updateItemNote(itemId, next.join(", "));
 	};
 
-	const printOrderKOT = (orderId: number | string = existingOrder?.id || "NEW") => {
-		printKOT({
-			kotId: orderId,
-			orderNumber: orderId === "NEW" ? "NEW" : `ORD-${orderId}`,
-			orderType,
-			tableNumber: orderType === "dine-in" ? selectedTable || undefined : undefined,
-			items: orderItems.map(item => ({
-				name: item.name,
-				qty: item.qty,
-				notes: item.notes,
-			})),
-			customerName: (orderType === "delivery" || orderType === "take-away") ? customer.name : undefined,
-			customerPhone: (orderType === "delivery" || orderType === "take-away") ? customer.phone : undefined,
-			restaurantName: getStoredRestaurantName() || "Logdine",
-			timestamp: new Date(),
+	const printOrderKOT = async (orderId: number | string = existingOrder?.id || "NEW") => {
+		await apiRequest("/orders/print-kot", {
+			method: "POST",
+			body: JSON.stringify({
+				id: orderId,
+				orderType,
+				table_number: orderType === "dine-in" ? selectedTable : null,
+				items: orderItems.map(item => ({
+					name: item.name,
+					qty: item.qty,
+					note: item.notes || "",
+				})),
+			}),
 		});
 	};
 
-	const handlePrintKOT = () => {
+	const handlePrintKOT = async () => {
 		if (orderItems.length === 0) {
 			toast.error("No items to print in KOT");
 			return;
 		}
 
-		printOrderKOT();
+		try {
+			await printOrderKOT();
+			toast.success("KOT sent to kitchen printer");
+		} catch (err: any) {
+			toast.error(err?.message || "Failed to print KOT");
+		}
 	};
 
 	const handlePlaceOrder = async () => {
@@ -343,7 +345,11 @@ const Billing: React.FC = () => {
 						total,
 					}),
 				});
-				printOrderKOT(existingOrder.id);
+				try {
+					await printOrderKOT(existingOrder.id);
+				} catch (printErr: any) {
+					toast.error(printErr?.message || "Order updated but KOT print failed");
+				}
 				toast.success("Order updated successfully!");
 			} else {
 				// Create new order
@@ -409,7 +415,6 @@ const Billing: React.FC = () => {
 						toast.error("Order created but delivery record failed. Please create manually.");
 					}
 				}
-				printOrderKOT(newOrder.id);
 				toast.success("Order placed successfully!");
 			}
 			setOrderItems([]);
@@ -775,9 +780,9 @@ const Billing: React.FC = () => {
 								</Button>
 								<Button 
 									variant="outline" 
-									className="w-full border-orange-300 text-orange-600 hover:bg-orange-50 text-sm mt-2"
+									className="w-full border-orange-300 bg-white text-gray-900 hover:bg-orange-50 hover:text-gray-950 text-sm mt-2"
 									onClick={handlePrintKOT}
-									disabled={orderItems.length === 0}
+									aria-disabled={orderItems.length === 0}
 								>
 									<Printer size={16} className="mr-2" /> Print KOT
 								</Button>

@@ -65,7 +65,7 @@ export const printKOT = (kotData: KOTData) => {
       <title>KOT ${orderNumber || kotId}</title>
       <style>
         @page {
-          size: 80mm auto;
+          size: 72mm auto;
           margin: 0;
         }
 
@@ -78,12 +78,16 @@ export const printKOT = (kotData: KOTData) => {
           background: #fff;
           color: #000;
           font-family: "Courier New", monospace;
-          font-size: 12px;
+          font-size: 11px;
+          width: 72mm;
+          overflow: hidden;
         }
 
         .kot {
-          width: 80mm;
-          padding: 10px 8px;
+          width: 72mm;
+          max-width: 72mm;
+          padding: 8px 5px;
+          overflow: hidden;
         }
 
         .center {
@@ -91,14 +95,14 @@ export const printKOT = (kotData: KOTData) => {
         }
 
         .restaurant {
-          font-size: 15px;
+          font-size: 13px;
           font-weight: 700;
           text-transform: uppercase;
         }
 
         .title {
           margin-top: 4px;
-          font-size: 20px;
+          font-size: 18px;
           font-weight: 800;
           letter-spacing: 1px;
         }
@@ -111,30 +115,45 @@ export const printKOT = (kotData: KOTData) => {
         .meta {
           display: grid;
           gap: 4px;
-          font-size: 12px;
+          font-size: 11px;
         }
 
         .meta-row {
           display: flex;
           justify-content: space-between;
-          gap: 8px;
+          gap: 6px;
         }
 
         .strong {
           font-weight: 700;
+          text-align: right;
+          overflow-wrap: anywhere;
         }
 
         table {
           width: 100%;
+          table-layout: fixed;
           border-collapse: collapse;
-          font-size: 13px;
+          font-size: 12px;
+        }
+
+        .index-col {
+          width: 7mm;
+        }
+
+        .item-col {
+          width: 48mm;
+        }
+
+        .qty-col {
+          width: 9mm;
         }
 
         th {
           border-bottom: 1px solid #000;
           padding: 5px 0;
           text-align: left;
-          font-size: 12px;
+          font-size: 11px;
         }
 
         td {
@@ -144,12 +163,13 @@ export const printKOT = (kotData: KOTData) => {
         }
 
         .index {
-          width: 9mm;
+          width: 7mm;
           font-weight: 700;
         }
 
         .item {
-          width: auto;
+          width: 48mm;
+          padding-right: 2mm;
         }
 
         .item-name {
@@ -158,10 +178,11 @@ export const printKOT = (kotData: KOTData) => {
         }
 
         .qty {
-          width: 14mm;
+          width: 9mm;
           text-align: right;
-          font-size: 15px;
+          font-size: 13px;
           font-weight: 800;
+          white-space: nowrap;
         }
 
         .note {
@@ -178,11 +199,12 @@ export const printKOT = (kotData: KOTData) => {
 
         @media print {
           body {
-            width: 80mm;
+            width: 72mm;
           }
 
           .kot {
-            width: 80mm;
+            width: 72mm;
+            max-width: 72mm;
           }
         }
       </style>
@@ -208,6 +230,11 @@ export const printKOT = (kotData: KOTData) => {
         <div class="line"></div>
 
         <table>
+          <colgroup>
+            <col class="index-col">
+            <col class="item-col">
+            <col class="qty-col">
+          </colgroup>
           <thead>
             <tr>
               <th>#</th>

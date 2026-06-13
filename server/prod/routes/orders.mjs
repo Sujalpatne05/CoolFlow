@@ -21,6 +21,20 @@ const getPrinterService = async () => {
   return printerService;
 };
 
+const printKitchenOrder = async (restaurantId, order) => {
+  const { rows: restaurantRows } = await query(
+    `SELECT id, name, kitchen_printer_ip, kitchen_printer_port FROM restaurants WHERE id=$1`,
+    [restaurantId]
+  );
+
+  if (!restaurantRows[0]) {
+    return { success: false, error: 'Restaurant not found' };
+  }
+
+  const printer = await getPrinterService();
+  return printer.printKoT(order, restaurantRows[0]);
+};
+
 // Public order endpoint for table QR ordering (no auth required)
 router.post('/orders/public', async (req, res) => {
   try {
@@ -106,37 +120,54 @@ router.post('/orders', authenticate, async (req, res) => {
 
     const order = rows[0];
 
-    // Print KoT if printer is enabled and order is dine-in
-    if (orderType === 'dine-in' || !orderType) {
-      try {
-        const { rows: restaurantRows } = await query(
-          `SELECT id, name, kitchen_printer_ip, kitchen_printer_port FROM restaurants WHERE id=$1`,
-          [req.user.restaurantId]
-        );
-        
-        if (restaurantRows[0]) {
-          const restaurant = restaurantRows[0];
-          const printer = await getPrinterService();
-          const printResult = await printer.printKoT(
-            {
-              id: order.id,
-              table_number: order.table_number,
-              table_capacity: 4, // TODO: Get from tables table
-              items: Array.isArray(order.items) ? order.items : [],
-              orderType: order.order_type
-            },
-            restaurant
-          );
-          console.log('KoT Print Result:', printResult);
-        }
-      } catch (printError) {
-        console.error('KoT printing error (non-blocking):', printError.message);
-        // Don't fail the order creation if printer fails
-      }
+    // Print KoT directly from the backend so browser print preview is not shown.
+    try {
+      const printResult = await printKitchenOrder(req.user.restaurantId, {
+        id: order.id,
+        table_number: order.table_number,
+        table_capacity: 4, // TODO: Get from tables table
+        items: Array.isArray(order.items) ? order.items : [],
+        orderType: order.order_type
+      });
+      console.log('KoT Print Result:', printResult);
+    } catch (printError) {
+      console.error('KoT printing error (non-blocking):', printError.message);
+      // Don't fail the order creation if printer fails
     }
 
     res.status(201).json({ ...order, items: order.items });
   } catch (err) { res.status(500).json({ error: err.message }); }
+});
+
+router.post('/orders/print-kot', authenticate, async (req, res) => {
+  try {
+    const { id, items, table_number, orderType } = req.body;
+    if (!items || !Array.isArray(items) || items.length === 0) {
+      return res.status(400).json({ error: 'items required' });
+    }
+
+    const itemsForPrint = items.map(item => {
+      if (typeof item === 'string') return item;
+      const note = item.note || item.notes ? ` (${item.note || item.notes})` : '';
+      return `${item.name} x${item.qty}${note}`;
+    });
+
+    const printResult = await printKitchenOrder(req.user.restaurantId, {
+      id: id || 'NEW',
+      table_number: table_number || null,
+      table_capacity: 4, // TODO: Get from tables table
+      items: itemsForPrint,
+      orderType: orderType || 'dine-in'
+    });
+
+    if (!printResult.success) {
+      return res.status(400).json(printResult);
+    }
+
+    res.json(printResult);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
 });
 
 router.put('/orders/:id', authenticate, async (req, res) => {

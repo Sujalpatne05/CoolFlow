@@ -26,6 +26,8 @@ export interface BillData {
   timestamp?: Date;
 }
 
+const formatAmount = (amount: number) => (Number(amount) || 0).toFixed(2);
+
 export const printBill = (billData: BillData) => {
   const {
     orderId = "N/A",
@@ -43,7 +45,6 @@ export const printBill = (billData: BillData) => {
     timestamp = new Date(),
   } = billData;
 
-  // Create a hidden iframe for printing
   const iframe = document.createElement("iframe");
   iframe.style.display = "none";
   document.body.appendChild(iframe);
@@ -64,14 +65,15 @@ export const printBill = (billData: BillData) => {
   const itemsHTML = items
     .map((item) => {
       const unitPrice = (Number(item.price) || 0) > 0 ? Number(item.price) : fallbackUnitPrice;
+
       return `
-    <tr>
-      <td style="text-align: left; padding: 8px 0;">${item.name}</td>
-      <td style="text-align: center; padding: 8px 0;">x${item.qty}</td>
-      <td style="text-align: right; padding: 8px 0;">₹${(unitPrice * item.qty).toFixed(2)}</td>
-    </tr>
-    ${item.note ? `<tr><td colspan="3" style="text-align: left; padding: 4px 0 8px 0; font-size: 10px; color: #666; font-style: italic;">Note: ${item.note}</td></tr>` : ''}
-  `;
+        <tr>
+          <td class="item-name">${item.name}</td>
+          <td class="item-qty">x${item.qty}</td>
+          <td class="item-amount">Rs ${formatAmount(unitPrice * item.qty)}</td>
+        </tr>
+        ${item.note ? `<tr><td colspan="3" class="note">Note: ${item.note}</td></tr>` : ""}
+      `;
     })
     .join("");
 
@@ -80,107 +82,187 @@ export const printBill = (billData: BillData) => {
     <html>
     <head>
       <meta charset="UTF-8">
-      <title>Bill Receipt - Order #${orderId}</title>
+      <title>Bill</title>
       <style>
+        @page {
+          size: 72mm auto;
+          margin: 0;
+        }
+
         * {
           margin: 0;
           padding: 0;
           box-sizing: border-box;
         }
+
         body {
-          font-family: 'Courier New', monospace;
-          background: white;
+          width: 72mm;
+          margin: 0;
           padding: 0;
+          overflow: hidden;
+          background: white;
+          color: #000;
+          font-family: "Courier New", monospace;
+          font-size: 11px;
         }
+
         .receipt {
-          max-width: 400px;
-          margin: 0 auto;
-          border: 2px solid #333;
-          padding: 20px;
+          width: 72mm;
+          max-width: 72mm;
+          margin: 0;
+          padding: 8px 5px;
+          overflow: hidden;
           background: white;
         }
+
         .header {
           text-align: center;
-          margin-bottom: 20px;
-          border-bottom: 2px solid #333;
-          padding-bottom: 10px;
+          margin-bottom: 10px;
+          border-bottom: 1px dashed #333;
+          padding-bottom: 8px;
         }
+
         .restaurant-name {
-          font-size: 18px;
-          font-weight: bold;
           margin-bottom: 5px;
+          font-size: 16px;
+          font-weight: 700;
+          overflow-wrap: anywhere;
         }
+
         .order-info {
-          font-size: 12px;
-          color: #666;
-          margin-top: 10px;
+          margin-top: 6px;
+          font-size: 11px;
+          overflow-wrap: anywhere;
         }
+
         .section {
-          margin: 15px 0;
+          margin: 10px 0;
         }
+
         .section-title {
-          font-weight: bold;
-          font-size: 12px;
           margin-bottom: 8px;
+          font-size: 11px;
+          font-weight: 700;
           text-transform: uppercase;
         }
+
+        .detail-line {
+          margin-bottom: 5px;
+          font-size: 11px;
+          overflow-wrap: anywhere;
+        }
+
         table {
           width: 100%;
-          font-size: 12px;
+          table-layout: fixed;
+          border-collapse: collapse;
           margin-bottom: 10px;
+          font-size: 11px;
         }
+
+        .name-col {
+          width: 34mm;
+        }
+
+        .qty-col {
+          width: 10mm;
+        }
+
+        .amount-col {
+          width: 18mm;
+        }
+
         th {
-          text-align: left;
           border-bottom: 1px solid #ddd;
-          padding: 8px 0;
-          font-weight: bold;
+          padding: 5px 0;
+          text-align: left;
+          font-weight: 700;
         }
+
         td {
           padding: 6px 0;
+          vertical-align: top;
         }
+
+        .item-name {
+          padding-right: 2mm;
+          text-align: left;
+          overflow-wrap: anywhere;
+        }
+
+        .item-qty {
+          text-align: center;
+          white-space: nowrap;
+        }
+
+        .item-amount {
+          text-align: right;
+          white-space: nowrap;
+        }
+
+        .note {
+          padding: 0 0 6px;
+          text-align: left;
+          font-size: 10px;
+          font-style: italic;
+          overflow-wrap: anywhere;
+        }
+
         .totals {
-          border-top: 2px solid #333;
-          border-bottom: 2px solid #333;
-          padding: 10px 0;
-          margin: 15px 0;
+          border-top: 1px dashed #333;
+          border-bottom: 1px dashed #333;
+          padding: 8px 0;
+          margin: 10px 0;
         }
-        .total-row {
-          display: flex;
-          justify-content: space-between;
-          margin: 5px 0;
-          font-size: 12px;
-        }
+
+        .total-row,
         .total-amount {
-          font-size: 16px;
-          font-weight: bold;
           display: flex;
           justify-content: space-between;
-          margin-top: 10px;
+          gap: 6px;
         }
-        .footer {
-          text-align: center;
-          margin-top: 20px;
+
+        .total-row {
+          margin: 5px 0;
           font-size: 11px;
-          color: #666;
-          border-top: 1px solid #ddd;
-          padding-top: 10px;
         }
-        .thank-you {
-          text-align: center;
-          font-weight: bold;
+
+        .total-amount {
           margin-top: 10px;
-          font-size: 12px;
+          font-size: 14px;
+          font-weight: 700;
         }
+
+        .footer {
+          margin-top: 12px;
+          border-top: 1px dashed #ddd;
+          padding-top: 8px;
+          text-align: center;
+          font-size: 10px;
+        }
+
+        .thank-you {
+          font-size: 11px;
+          font-weight: 700;
+        }
+
+        .powered-by {
+          margin-top: 8px;
+          font-weight: 700;
+        }
+
         @media print {
           body {
-            padding: 0;
+            width: 72mm;
             margin: 0;
+            padding: 0;
           }
+
           .receipt {
-            border: none;
-            max-width: 100%;
+            width: 72mm;
+            max-width: 72mm;
             margin: 0;
-            padding: 0;
+            padding: 8px 5px;
           }
         }
       </style>
@@ -197,17 +279,20 @@ export const printBill = (billData: BillData) => {
 
         <div class="section">
           <div class="section-title">Order Details</div>
-          <div style="font-size: 12px; margin-bottom: 5px;">
-            <strong>Type:</strong> ${orderType === "dine-in" ? "Dine-in" : orderType === "take-away" ? "Take-away" : "Delivery"}
-          </div>
-          ${tableNumber ? `<div style="font-size: 12px; margin-bottom: 5px;"><strong>Table:</strong> ${tableNumber}</div>` : ""}
-          ${customerName ? `<div style="font-size: 12px; margin-bottom: 5px;"><strong>Customer:</strong> ${customerName}</div>` : ""}
-          ${customerPhone ? `<div style="font-size: 12px; margin-bottom: 5px;"><strong>Phone:</strong> ${customerPhone}</div>` : ""}
+          <div class="detail-line"><strong>Type:</strong> ${orderType === "dine-in" ? "Dine-in" : orderType === "take-away" ? "Take-away" : "Delivery"}</div>
+          ${tableNumber ? `<div class="detail-line"><strong>Table:</strong> ${tableNumber}</div>` : ""}
+          ${customerName ? `<div class="detail-line"><strong>Customer:</strong> ${customerName}</div>` : ""}
+          ${customerPhone ? `<div class="detail-line"><strong>Phone:</strong> ${customerPhone}</div>` : ""}
         </div>
 
         <div class="section">
           <div class="section-title">Items</div>
           <table>
+            <colgroup>
+              <col class="name-col">
+              <col class="qty-col">
+              <col class="amount-col">
+            </colgroup>
             <thead>
               <tr>
                 <th>Item</th>
@@ -224,41 +309,38 @@ export const printBill = (billData: BillData) => {
         <div class="totals">
           <div class="total-row">
             <span>Subtotal:</span>
-            <span>₹${subtotal.toFixed(2)}</span>
+            <span>Rs ${formatAmount(subtotal)}</span>
           </div>
           <div class="total-row">
             <span>Tax:</span>
-            <span>₹${tax.toFixed(2)}</span>
+            <span>Rs ${formatAmount(tax)}</span>
           </div>
-          ${serviceCharge > 0 ? `<div class="total-row"><span>Service Charge:</span><span>₹${serviceCharge.toFixed(2)}</span></div>` : ""}
+          ${serviceCharge > 0 ? `<div class="total-row"><span>Service Charge:</span><span>Rs ${formatAmount(serviceCharge)}</span></div>` : ""}
           <div class="total-amount">
             <span>TOTAL:</span>
-            <span>₹${total.toFixed(2)}</span>
+            <span>Rs ${formatAmount(total)}</span>
           </div>
         </div>
 
-        ${paymentMethod ? `<div class="section"><div style="font-size: 12px;"><strong>Payment Method:</strong> ${paymentMethod.toUpperCase()}</div></div>` : ""}
+        ${paymentMethod ? `<div class="section"><div class="detail-line"><strong>Payment Method:</strong> ${paymentMethod.toUpperCase()}</div></div>` : ""}
 
         <div class="footer">
           <div class="thank-you">Thank You!</div>
-          <div style="margin-top: 10px;">Please visit again</div>
+          <div class="powered-by">Powered by LogDine Restro</div>
         </div>
       </div>
     </body>
     </html>
   `;
 
-  // Write to iframe
   const iframeDoc = iframe.contentDocument || iframe.contentWindow?.document;
   if (iframeDoc) {
     iframeDoc.open();
     iframeDoc.write(html);
     iframeDoc.close();
 
-    // Print after content is loaded
     iframe.onload = () => {
       iframe.contentWindow?.print();
-      // Remove iframe after printing
       setTimeout(() => {
         document.body.removeChild(iframe);
       }, 1000);
