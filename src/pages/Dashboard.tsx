@@ -68,10 +68,9 @@ export default function Dashboard() {
     const avgOrder = totalOrders > 0 ? Math.round(totalRevenue / totalOrders) : 0;
     const unpaidOrders = orders.filter(o => o.paymentStatus !== "paid" && o.orderType === "dine-in");
     const kitchenPending = orders.filter(o => o.status === "pending").length;
-    const kitchenPreparing = orders.filter(o => o.status === "preparing").length;
     const kitchenReady = orders.filter(o => o.status === "ready").length;
     const lowStock = inventory.filter((i: any) => i.quantity <= i.min_stock);
-    return { totalRevenue, totalOrders, avgOrder, unpaidOrders, kitchenPending, kitchenPreparing, kitchenReady, lowStock };
+    return { totalRevenue, totalOrders, avgOrder, unpaidOrders, kitchenPending, kitchenReady, lowStock };
   }, [orders, inventory]);
 
   const topItems = useMemo(() => {
@@ -302,13 +301,6 @@ export default function Dashboard() {
                   <span className="text-sm font-medium">Pending</span>
                 </div>
                 <Badge className="bg-yellow-500 text-white text-lg px-3">{stats.kitchenPending}</Badge>
-              </div>
-              <div className="flex justify-between items-center p-3 bg-blue-50 rounded-lg border border-blue-200">
-                <div className="flex items-center gap-2">
-                  <ChefHat size={16} className="text-blue-600" />
-                  <span className="text-sm font-medium">Preparing</span>
-                </div>
-                <Badge className="bg-blue-500 text-white text-lg px-3">{stats.kitchenPreparing}</Badge>
               </div>
               <div className="flex justify-between items-center p-3 bg-green-50 rounded-lg border border-green-200">
                 <div className="flex items-center gap-2">
