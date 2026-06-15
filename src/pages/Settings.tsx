@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toast } from "@/components/ui/sonner";
 import { apiRequest } from "@/lib/api";
-import { Settings2, Building2, Receipt, Truck, Upload, X, LayoutGrid, Plus } from "lucide-react";
+import { Settings2, Building2, Receipt, Truck, Upload, X, LayoutGrid, Plus, Printer } from "lucide-react";
 import { saveAuthSession, getAuthToken, getStoredRole, getStoredUserId, getStoredRestaurantId } from "@/lib/session";
 
 type SettingsData = {
@@ -17,6 +17,10 @@ type SettingsData = {
   service_charge: number;
   default_delivery_partner: string;
   table_sections: string[];
+  kitchen_printer_ip: string;
+  kitchen_printer_port: number;
+  counter_printer_ip: string;
+  counter_printer_port: number;
 };
 
 const DELIVERY_PARTNERS = ["in-house", "swiggy", "zomato"] as const;
@@ -26,6 +30,8 @@ const Settings: React.FC = () => {
     name: "", owner: "", city: "", logo_url: "",
     tax_rate: 5, service_charge: 0, default_delivery_partner: "in-house",
     table_sections: [],
+    kitchen_printer_ip: "", kitchen_printer_port: 9100,
+    counter_printer_ip: "", counter_printer_port: 9100,
   });
   const [newSection, setNewSection] = useState("");
   const [logoPreview, setLogoPreview] = useState<string>("");
@@ -37,7 +43,14 @@ const Settings: React.FC = () => {
   useEffect(() => {
     apiRequest<SettingsData>("/settings", { method: "GET" }, true)
       .then(d => {
-        setData(d);
+        setData(current => ({
+          ...current,
+          ...d,
+          kitchen_printer_ip: d.kitchen_printer_ip || "",
+          kitchen_printer_port: Number(d.kitchen_printer_port ?? 9100),
+          counter_printer_ip: d.counter_printer_ip || "",
+          counter_printer_port: Number(d.counter_printer_port ?? 9100),
+        }));
         setLogoPreview(d.logo_url || "");
       })
       .catch(() => toast.error("Failed to load settings"))
@@ -75,6 +88,16 @@ const Settings: React.FC = () => {
       toast.error("Restaurant name is required");
       return;
     }
+    const kitchenPrinterPort = Number(data.kitchen_printer_port);
+    const counterPrinterPort = Number(data.counter_printer_port);
+    if (!Number.isInteger(kitchenPrinterPort) || kitchenPrinterPort < 1 || kitchenPrinterPort > 65535) {
+      toast.error("Kitchen printer port must be between 1 and 65535");
+      return;
+    }
+    if (!Number.isInteger(counterPrinterPort) || counterPrinterPort < 1 || counterPrinterPort > 65535) {
+      toast.error("Counter printer port must be between 1 and 65535");
+      return;
+    }
 
     setSaving(true);
     try {
@@ -85,6 +108,11 @@ const Settings: React.FC = () => {
         tax_rate: taxRate,
         service_charge: svcCharge,
         default_delivery_partner: data.default_delivery_partner,
+        table_sections: data.table_sections,
+        kitchen_printer_ip: data.kitchen_printer_ip.trim(),
+        kitchen_printer_port: kitchenPrinterPort,
+        counter_printer_ip: data.counter_printer_ip.trim(),
+        counter_printer_port: counterPrinterPort,
       };
       if (logoBase64) payload.logo_url = logoBase64;
 
@@ -255,6 +283,60 @@ const Settings: React.FC = () => {
               ))}
             </div>
             <p className="text-xs text-muted-foreground mt-2">Pre-selected when placing delivery orders in POS.</p>
+          </CardContent>
+        </Card>
+
+        {/* Printers */}
+        <Card>
+          <CardHeader className="pb-3">
+            <CardTitle className="text-base flex items-center gap-2">
+              <Printer size={16} className="text-orange-500" /> Printers
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="grid grid-cols-1 sm:grid-cols-[1fr_120px] gap-4">
+              <div>
+                <label className="block text-sm font-medium mb-1">Kitchen Printer IP</label>
+                <Input
+                  value={data.kitchen_printer_ip}
+                  onChange={e => setData(d => ({ ...d, kitchen_printer_ip: e.target.value }))}
+                  placeholder="e.g. 192.168.1.50"
+                  inputMode="decimal"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium mb-1">Port</label>
+                <Input
+                  type="number"
+                  min={1}
+                  max={65535}
+                  value={data.kitchen_printer_port}
+                  onChange={e => setData(d => ({ ...d, kitchen_printer_port: Number(e.target.value) }))}
+                />
+              </div>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-[1fr_120px] gap-4">
+              <div>
+                <label className="block text-sm font-medium mb-1">Counter Printer IP</label>
+                <Input
+                  value={data.counter_printer_ip}
+                  onChange={e => setData(d => ({ ...d, counter_printer_ip: e.target.value }))}
+                  placeholder="e.g. 192.168.1.51"
+                  inputMode="decimal"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium mb-1">Port</label>
+                <Input
+                  type="number"
+                  min={1}
+                  max={65535}
+                  value={data.counter_printer_port}
+                  onChange={e => setData(d => ({ ...d, counter_printer_port: Number(e.target.value) }))}
+                />
+              </div>
+            </div>
+            <p className="text-xs text-muted-foreground">Most thermal printers use port 9100.</p>
           </CardContent>
         </Card>
 
