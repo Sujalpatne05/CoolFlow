@@ -340,6 +340,82 @@ router.put('/settings', authenticate, async (req, res) => {
   } catch (err) { res.status(500).json({ error: err.message }); }
 });
 
+// ===== PRINTER CONFIGURATION =====
+router.get('/printer-settings', authenticate, async (req, res) => {
+  try {
+    const { rows } = await query(
+      `SELECT kitchen_printer_ip, kitchen_printer_port, counter_printer_ip, counter_printer_port
+       FROM restaurants WHERE id=$1`,
+      [req.user.restaurantId]
+    );
+    if (!rows[0]) return res.status(404).json({ error: 'Restaurant not found' });
+    const r = rows[0];
+    res.json({
+      kitchen_printer_ip: r.kitchen_printer_ip || '',
+      kitchen_printer_port: r.kitchen_printer_port || 9100,
+      counter_printer_ip: r.counter_printer_ip || '',
+      counter_printer_port: r.counter_printer_port || 9100,
+    });
+  } catch (err) { res.status(500).json({ error: err.message }); }
+});
+
+router.put('/printer-settings', authenticate, async (req, res) => {
+  try {
+    const { kitchen_printer_ip, kitchen_printer_port, counter_printer_ip, counter_printer_port } = req.body;
+
+    // Validate IP format (basic check)
+    const validateIP = (ip) => {
+      if (!ip) return true; // Empty is allowed
+      const ipRegex = /^(\d{1,3}\.){3}\d{1,3}$/;
+      if (!ipRegex.test(ip)) return false;
+      const parts = ip.split('.');
+      return parts.every(p => Number(p) >= 0 && Number(p) <= 255);
+    };
+
+    if (!validateIP(kitchen_printer_ip)) return res.status(400).json({ error: 'Invalid kitchen printer IP' });
+    if (!validateIP(counter_printer_ip)) return res.status(400).json({ error: 'Invalid counter printer IP' });
+
+    const kitchenPort = kitchen_printer_port ? Number(kitchen_printer_port) : 9100;
+    const counterPort = counter_printer_port ? Number(counter_printer_port) : 9100;
+
+    if (isNaN(kitchenPort) || kitchenPort < 1 || kitchenPort > 65535) {
+      return res.status(400).json({ error: 'Invalid kitchen printer port (1-65535)' });
+    }
+    if (isNaN(counterPort) || counterPort < 1 || counterPort > 65535) {
+      return res.status(400).json({ error: 'Invalid counter printer port (1-65535)' });
+    }
+
+    await query(
+      `UPDATE restaurants SET
+        kitchen_printer_ip = $1,
+        kitchen_printer_port = $2,
+        counter_printer_ip = $3,
+        counter_printer_port = $4
+       WHERE id=$5`,
+      [
+        kitchen_printer_ip || null,
+        kitchenPort,
+        counter_printer_ip || null,
+        counterPort,
+        req.user.restaurantId,
+      ]
+    );
+
+    const { rows } = await query(
+      `SELECT kitchen_printer_ip, kitchen_printer_port, counter_printer_ip, counter_printer_port
+       FROM restaurants WHERE id=$1`,
+      [req.user.restaurantId]
+    );
+    const r = rows[0];
+    res.json({
+      kitchen_printer_ip: r.kitchen_printer_ip || '',
+      kitchen_printer_port: r.kitchen_printer_port || 9100,
+      counter_printer_ip: r.counter_printer_ip || '',
+      counter_printer_port: r.counter_printer_port || 9100,
+    });
+  } catch (err) { res.status(500).json({ error: err.message }); }
+});
+
 // ===== DELIVERY API KEYS (per restaurant, stored in memory for now) =====
 const deliveryKeys = {};
 router.get('/delivery-api-keys', authenticate, async (req, res) => {

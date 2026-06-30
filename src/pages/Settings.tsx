@@ -23,6 +23,13 @@ type SettingsData = {
   counter_printer_port: number;
 };
 
+type PrinterSettings = {
+  kitchen_printer_ip: string;
+  kitchen_printer_port: number;
+  counter_printer_ip: string;
+  counter_printer_port: number;
+};
+
 const DELIVERY_PARTNERS = ["in-house", "swiggy", "zomato"] as const;
 
 const Settings: React.FC = () => {
@@ -33,6 +40,12 @@ const Settings: React.FC = () => {
     kitchen_printer_ip: "", kitchen_printer_port: 9100,
     counter_printer_ip: "", counter_printer_port: 9100,
   });
+  const [printers, setPrinters] = useState<PrinterSettings>({
+    kitchen_printer_ip: "",
+    kitchen_printer_port: 9100,
+    counter_printer_ip: "",
+    counter_printer_port: 9100,
+  });
   const [newSection, setNewSection] = useState("");
   const [logoPreview, setLogoPreview] = useState<string>("");
   const [logoBase64, setLogoBase64] = useState<string>("");
@@ -41,16 +54,20 @@ const Settings: React.FC = () => {
   const fileRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    apiRequest<SettingsData>("/settings", { method: "GET" }, true)
-      .then(d => {
+    Promise.all([
+      apiRequest<SettingsData>("/settings", { method: "GET" }, true),
+      apiRequest<PrinterSettings>("/printer-settings", { method: "GET" }, true),
+    ])
+      .then(([d, p]) => {
         setData(current => ({
           ...current,
           ...d,
-          kitchen_printer_ip: d.kitchen_printer_ip || "",
-          kitchen_printer_port: Number(d.kitchen_printer_port ?? 9100),
-          counter_printer_ip: d.counter_printer_ip || "",
-          counter_printer_port: Number(d.counter_printer_port ?? 9100),
+          kitchen_printer_ip: d.kitchen_printer_ip || current.kitchen_printer_ip || "",
+          kitchen_printer_port: Number(d.kitchen_printer_port ?? current.kitchen_printer_port ?? 9100),
+          counter_printer_ip: d.counter_printer_ip || current.counter_printer_ip || "",
+          counter_printer_port: Number(d.counter_printer_port ?? current.counter_printer_port ?? 9100),
         }));
+        setPrinters(p);
         setLogoPreview(d.logo_url || "");
       })
       .catch(() => toast.error("Failed to load settings"))
@@ -124,6 +141,12 @@ const Settings: React.FC = () => {
       setData(updated);
       setLogoPreview(updated.logo_url || "");
       setLogoBase64("");
+
+      // Save printer settings
+      await apiRequest<PrinterSettings>("/printer-settings", {
+        method: "PUT",
+        body: JSON.stringify(printers),
+      });
 
       // Update restaurant name in localStorage so sidebar reflects it immediately
       const token = getAuthToken() || "";
@@ -255,6 +278,64 @@ const Settings: React.FC = () => {
                   <span className="text-sm text-muted-foreground">%</span>
                 </div>
                 <p className="text-xs text-muted-foreground mt-1">Added separately on top of tax.</p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Printer Configuration */}
+        <Card>
+          <CardHeader className="pb-3">
+            <CardTitle className="text-base flex items-center gap-2">
+              <Printer size={16} className="text-orange-500" /> Printer Configuration
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <p className="text-xs text-muted-foreground">
+              Set IP addresses and ports for kitchen (KOT) and counter (Bill) printers. Leave empty to disable printing for that device.
+            </p>
+            
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 border-b pb-4">
+              <div>
+                <label className="block text-sm font-medium mb-1">Kitchen Printer IP</label>
+                <Input
+                  placeholder="e.g. 192.168.1.100"
+                  value={printers.kitchen_printer_ip}
+                  onChange={e => setPrinters(p => ({ ...p, kitchen_printer_ip: e.target.value }))}
+                />
+                <p className="text-xs text-muted-foreground mt-1">For printing KOT (Kitchen Order Tickets)</p>
+              </div>
+              <div>
+                <label className="block text-sm font-medium mb-1">Kitchen Printer Port</label>
+                <Input
+                  type="number" min={1} max={65535}
+                  placeholder="9100"
+                  value={printers.kitchen_printer_port}
+                  onChange={e => setPrinters(p => ({ ...p, kitchen_printer_port: Number(e.target.value) }))}
+                />
+                <p className="text-xs text-muted-foreground mt-1">Default: 9100</p>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-medium mb-1">Counter Printer IP</label>
+                <Input
+                  placeholder="e.g. 192.168.1.101"
+                  value={printers.counter_printer_ip}
+                  onChange={e => setPrinters(p => ({ ...p, counter_printer_ip: e.target.value }))}
+                />
+                <p className="text-xs text-muted-foreground mt-1">For printing Bills</p>
+              </div>
+              <div>
+                <label className="block text-sm font-medium mb-1">Counter Printer Port</label>
+                <Input
+                  type="number" min={1} max={65535}
+                  placeholder="9100"
+                  value={printers.counter_printer_port}
+                  onChange={e => setPrinters(p => ({ ...p, counter_printer_port: Number(e.target.value) }))}
+                />
+                <p className="text-xs text-muted-foreground mt-1">Default: 9100</p>
               </div>
             </div>
           </CardContent>
