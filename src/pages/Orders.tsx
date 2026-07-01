@@ -7,6 +7,7 @@ import { StatCard } from "@/components/StatCard";
 import { ShoppingCart, Clock, CheckCircle, Truck, Calendar, X } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { buildAuthHeaders, clearAuthSession, isAuthError } from "@/lib/session";
+import { PrintBillButton } from "@/components/PrintBillButton";
 
 const API_BASE_URL = (() => {
   const configured = (import.meta.env.VITE_API_URL || "").trim();
@@ -316,21 +317,23 @@ export default function Orders() {
                     </div>
 
                     {/* Footer Row - Payment Info */}
-                    <div className="flex flex-col sm:flex-row gap-2 sm:gap-4 pt-2 border-t border-gray-200 text-xs">
-                      <div className="flex items-center gap-1">
-                        <span className="text-gray-600">💳</span>
-                        <span className="text-gray-600">Payment: </span>
-                        <span className="font-semibold text-gray-900">{getPaymentMethodLabel(order.paymentMethod)}</span>
+                    <div className="flex flex-col gap-3 pt-2 border-t border-gray-200">
+                      <div className="flex flex-col sm:flex-row gap-2 sm:gap-4 text-xs">
+                        <div className="flex items-center gap-1">
+                          <span className="text-gray-600">Payment: </span>
+                          <span className="font-semibold text-gray-900">{getPaymentMethodLabel(order.paymentMethod)}</span>
+                        </div>
+                        <div className="flex items-center gap-1">
+                          <span className="text-gray-600">Status</span>
+                          <span className={`font-semibold ${order.paymentStatus === "paid" ? "text-green-600" : "text-orange-600"}`}>
+                            {order.paymentStatus === "paid" ? "Paid" : "Unpaid"}
+                          </span>
+                        </div>
                       </div>
-                      <div className="flex items-center gap-1">
-                        <span className={order.paymentStatus === "paid" ? "text-green-600" : "text-orange-600"}>
-                          {order.paymentStatus === "paid" ? "✓" : "⏳"}
-                        </span>
-                        <span className="text-gray-600">Status: </span>
-                        <span className={`font-semibold ${order.paymentStatus === "paid" ? "text-green-600" : "text-orange-600"}`}>
-                          {order.paymentStatus === "paid" ? "Paid" : "Unpaid"}
-                        </span>
-                      </div>
+                      <PrintBillButton
+                        orderId={order.id}
+                        className="w-full sm:w-auto border-orange-300 text-orange-700 hover:bg-orange-50 hover:text-gray-950"
+                      />
                     </div>
                   </div>
                 </div>
@@ -510,4 +513,3 @@ export default function Orders() {
     </DashboardLayout>
   );
 }
-
