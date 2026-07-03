@@ -52,9 +52,11 @@ const PWAInstallPrompt: React.FC = () => {
       gap: 14, maxWidth: 360, width: "calc(100% - 32px)",
       border: "1px solid #f0f0f0", animation: "slideUp 0.3s ease"
     }}>
-      <div style={{ width: 44, height: 44, borderRadius: 10, background: "linear-gradient(135deg,#e53935,#ff6f00)", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-        <span style={{ color: "white", fontWeight: 900, fontSize: 20 }}>R</span>
-      </div>
+      <img
+        src="/logdine-restro-logo.png"
+        alt="Logdine"
+        style={{ width: 44, height: 44, borderRadius: 10, flexShrink: 0, objectFit: "cover" }}
+      />
       <div style={{ flex: 1, minWidth: 0 }}>
         <div style={{ fontWeight: 700, fontSize: 14, color: "#1a1a2e" }}>Install Logdine</div>
         <div style={{ fontSize: 12, color: "#888", marginTop: 2 }}>Add to home screen for quick access</div>

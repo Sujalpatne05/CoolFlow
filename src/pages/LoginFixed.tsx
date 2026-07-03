@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { saveAuthSession } from "@/lib/session";
-import { ChefHat, Mail, Lock, Eye, EyeOff } from "lucide-react";
+import { Mail, Lock, Eye, EyeOff } from "lucide-react";
 
 const API_BASE_URL = (() => {
   const configured = (import.meta.env.VITE_API_URL || "").trim();
@@ -98,7 +98,7 @@ const LoginFixed = () => {
   };
 
   return (
-    <div style={{ minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", background: "linear-gradient(135deg,#1a1a2e,#16213e,#0f3460)", position: "relative", overflow: "hidden" }}>
+    <div style={{ minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", background: "linear-gradient(135deg,#0f172a,#111827,#1f2937)", position: "relative", overflow: "hidden" }}>
       {/* Animated food items */}
       {foodItems.map((item, i) => (
         <div
@@ -139,13 +139,17 @@ const LoginFixed = () => {
       ))}
 
       <div style={{ width: "100%", maxWidth: 500, padding: "0 20px", position: "relative", zIndex: 10 }}>
-        <div style={{ borderRadius: 20, background: "white", padding: "50px", boxShadow: "0 20px 60px rgba(0,0,0,0.3)" }} className="login-card">
+        <div style={{ borderRadius: 20, background: "rgba(255,255,255,0.98)", padding: "50px", boxShadow: "0 20px 60px rgba(0,0,0,0.35)" }} className="login-card">
           <div style={{ textAlign: "center", marginBottom: 35 }}>
-            <div style={{ width: 90, height: 90, borderRadius: 15, margin: "0 auto 20px", background: "linear-gradient(135deg,#e53935,#ff6f00)", display: "flex", alignItems: "center", justifyContent: "center" }}>
-              <ChefHat style={{ width: 50, height: 50, color: "white" }} />
+            <div style={{ marginBottom: 20 }}>
+              <img 
+                src="/logdine-restro-logo.png" 
+                alt="LogDine Restro" 
+                style={{ width: 100, height: 100, margin: "0 auto", borderRadius: 15 }}
+              />
             </div>
-            <h1 style={{ fontSize: 32, fontWeight: 900, color: "#1a1a2e", margin: "0 0 8px" }}>Logdine</h1>
-            <p style={{ color: "#999", fontSize: 14, margin: 0 }}>Restaurant Management System</p>
+            <h1 style={{ fontSize: 32, fontWeight: 900, color: "#1f2937", margin: "0 0 8px" }}>LogDine Restro</h1>
+            <p style={{ color: "#10b981", fontSize: 18, margin: 0, fontWeight: 700, letterSpacing: "0.01em" }}>Restaurant Management System</p>
           </div>
 
           {error && (
@@ -156,38 +160,38 @@ const LoginFixed = () => {
 
           <form onSubmit={handleSubmit}>
             <div style={{ marginBottom: 18 }}>
-              <label style={{ display: "block", fontSize: 13, fontWeight: 600, color: "#666", marginBottom: 10 }}>Email or Username</label>
+              <label style={{ display: "block", fontSize: 13, fontWeight: 600, color: "#374151", marginBottom: 10 }}>Email or Username</label>
               <div style={{ position: "relative" }}>
-                <Mail style={{ position: "absolute", left: 12, top: "50%", transform: "translateY(-50%)", width: 20, height: 20, color: "#e53935" }} />
+                <Mail style={{ position: "absolute", left: 12, top: "50%", transform: "translateY(-50%)", width: 20, height: 20, color: "#10b981" }} />
                 <input
                   type="text"
                   value={username}
                   onChange={e => setUsername(e.target.value)}
                   required
                   placeholder="Enter your email"
-                  style={{ width: "100%", paddingLeft: 48, paddingRight: 12, paddingTop: 14, paddingBottom: 14, borderRadius: 10, border: "2px solid #f0f0f0", fontSize: 15, outline: "none", boxSizing: "border-box" }}
+                  style={{ width: "100%", paddingLeft: 48, paddingRight: 12, paddingTop: 14, paddingBottom: 14, borderRadius: 10, border: "2px solid #e5e7eb", fontSize: 15, outline: "none", boxSizing: "border-box", background: "#f8fafc", color: "#111827" }}
                 />
               </div>
             </div>
 
             <div style={{ marginBottom: 24 }}>
-              <label style={{ display: "block", fontSize: 13, fontWeight: 600, color: "#666", marginBottom: 10 }}>Password</label>
+              <label style={{ display: "block", fontSize: 13, fontWeight: 600, color: "#374151", marginBottom: 10 }}>Password</label>
               <div style={{ position: "relative" }}>
-                <Lock style={{ position: "absolute", left: 12, top: "50%", transform: "translateY(-50%)", width: 20, height: 20, color: "#e53935" }} />
+                <Lock style={{ position: "absolute", left: 12, top: "50%", transform: "translateY(-50%)", width: 20, height: 20, color: "#10b981" }} />
                 <input
                   type={showPassword ? "text" : "password"}
                   value={password}
                   onChange={e => setPassword(e.target.value)}
                   required
                   placeholder="Enter your password"
-                  style={{ width: "100%", paddingLeft: 48, paddingRight: 48, paddingTop: 14, paddingBottom: 14, borderRadius: 10, border: "2px solid #f0f0f0", fontSize: 15, outline: "none", boxSizing: "border-box" }}
+                  style={{ width: "100%", paddingLeft: 48, paddingRight: 48, paddingTop: 14, paddingBottom: 14, borderRadius: 10, border: "2px solid #e5e7eb", fontSize: 15, outline: "none", boxSizing: "border-box", background: "#f8fafc", color: "#111827" }}
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
                   style={{ position: "absolute", right: 12, top: "50%", transform: "translateY(-50%)", background: "none", border: "none", cursor: "pointer", padding: 0 }}
                 >
-                  {showPassword ? <EyeOff style={{ width: 20, height: 20, color: "#e53935" }} /> : <Eye style={{ width: 20, height: 20, color: "#e53935" }} />}
+                  {showPassword ? <EyeOff style={{ width: 20, height: 20, color: "#10b981" }} /> : <Eye style={{ width: 20, height: 20, color: "#10b981" }} />}
                 </button>
               </div>
             </div>
@@ -195,13 +199,13 @@ const LoginFixed = () => {
             <button
               type="submit"
               disabled={loading}
-              style={{ width: "100%", padding: "16px", borderRadius: 10, background: loading ? "#ffb3b3" : "linear-gradient(135deg,#e53935,#ff6f00)", border: "none", color: "white", fontWeight: 700, fontSize: 16, cursor: loading ? "not-allowed" : "pointer" }}
+              style={{ width: "100%", padding: "16px", borderRadius: 10, background: loading ? "#a7f3d0" : "linear-gradient(135deg,#10b981,#2c3e50)", border: "none", color: "white", fontWeight: 700, fontSize: 16, cursor: loading ? "not-allowed" : "pointer", boxShadow: "0 12px 28px rgba(16,185,129,0.28)" }}
             >
               {loading ? "Signing in..." : "Sign In"}
             </button>
           </form>
 
-          <div style={{ marginTop: 24, textAlign: "center", fontSize: 13, color: "#999" }}>
+          <div style={{ marginTop: 24, textAlign: "center", fontSize: 13, color: "#6b7280" }}>
             Complete POS & Restaurant Management Solution
           </div>
         </div>
@@ -238,11 +242,11 @@ const LoginFixed = () => {
 
         @keyframes pulse {
           0%, 100% {
-            box-shadow: 0 16px 40px rgba(229, 57, 53, 0.45);
+            box-shadow: 0 16px 40px rgba(0, 137, 123, 0.45);
             transform: scale(1);
           }
           50% {
-            box-shadow: 0 20px 60px rgba(229, 57, 53, 0.7);
+            box-shadow: 0 20px 60px rgba(0, 137, 123, 0.7);
             transform: scale(1.05);
           }
         }

@@ -1,7 +1,7 @@
 
 import React, { useState } from "react";
 import { saveAuthSession } from "@/lib/session";
-import { ChefHat, Mail, Lock, Eye, EyeOff } from "lucide-react";
+import { Mail, Lock, Eye, EyeOff } from "lucide-react";
 
 const API_BASE_URL = (() => {
   const configured = (import.meta.env.VITE_API_URL || "").trim();
@@ -76,7 +76,11 @@ export default function SuperAdminLogin() {
         <div style={{ borderRadius: 20, background: "white", padding: "50px", boxShadow: "0 20px 60px rgba(0,0,0,0.3)" }} className="login-card">
           <div style={{ textAlign: "center", marginBottom: 35 }}>
             <div style={{ width: 90, height: 90, borderRadius: 15, margin: "0 auto 20px", background: "linear-gradient(135deg,#1a1a2e,#0f3460)", display: "flex", alignItems: "center", justifyContent: "center" }}>
-              <ChefHat style={{ width: 50, height: 50, color: "white" }} />
+                  <img
+                    src="/logdine-restro-logo.png"
+                    alt="LogDine Restro"
+                    style={{ width: 90, height: 90, margin: "0 auto 20px", borderRadius: 15, display: "block" }}
+                  />
             </div>
             <h1 style={{ fontSize: 32, fontWeight: 900, color: "#1a1a2e", margin: "0 0 8px" }}>Logdine</h1>
             <p style={{ color: "#999", fontSize: 14, margin: 0 }}>Super Admin Portal</p>

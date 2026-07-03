@@ -1,1 +1,11 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64"><g><ellipse fill="#fbbf24" cx="32" cy="32" rx="30" ry="30"/><path fill="#fff" d="M32 12c-7.732 0-14 6.268-14 14 0 7.732 14 26 14 26s14-18.268 14-26c0-7.732-6.268-14-14-14zm0 19a5 5 0 1 1 0-10 5 5 0 0 1 0 10z"/></g></svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+	<circle cx="100" cy="100" r="100" fill="#1DE9B6"/>
+	<g fill="#2C3E50">
+		<path d="M 55 75 L 95 55 L 95 145 L 55 125 Z"/>
+		<path d="M 55 75 L 95 55 L 135 75 L 95 95 Z"/>
+		<path d="M 135 75 Q 165 75 165 100 Q 165 140 135 145 L 95 125 Q 115 130 135 130 Q 155 130 155 100 Q 155 85 135 85 L 95 95 Z"/>
+		<path d="M 55 125 L 95 145 L 135 125 L 95 105 Z"/>
+		<path d="M 70 95 L 95 80 L 95 120 L 70 105 Z"/>
+	</g>
+	<rect x="40" y="135" width="25" height="25" fill="#2C3E50" rx="2"/>
+</svg>

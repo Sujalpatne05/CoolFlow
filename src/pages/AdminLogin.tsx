@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { saveAuthSession } from "@/lib/session";
-import { ChefHat, Eye, EyeOff } from "lucide-react";
+import { Eye, EyeOff } from "lucide-react";
 
 const API_BASE_URL = (() => {
   const configured = (import.meta.env.VITE_API_URL || "").trim();
@@ -115,7 +115,11 @@ const AdminLogin = () => {
           <div style={{ padding: "40px 44px 44px" }}>
             <div style={{ textAlign: "center", marginBottom: 32 }}>
               <div style={{ width: 82, height: 82, borderRadius: 24, margin: "0 auto 16px", background: "linear-gradient(135deg,#e53935,#ff6f00)", display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0 16px 40px rgba(229,57,53,0.45)", animation: "logoPulse 2.5s ease-in-out infinite" }}>
-                <ChefHat style={{ width: 46, height: 46, color: "white" }} />
+                  <img
+                    src="/logdine-restro-logo.png"
+                    alt="LogDine Restro"
+                    style={{ width: 90, height: 90, margin: "0 auto 20px", borderRadius: 15, display: "block" }}
+                  />
               </div>
               <h1 style={{ fontSize: 30, fontWeight: 900, color: "#1a1a2e", margin: "0 0 4px", letterSpacing: "-0.5px" }}>Logdine</h1>
               <p style={{ color: "#aaa", fontSize: 13, margin: 0 }}>Your kitchen, your control</p>
