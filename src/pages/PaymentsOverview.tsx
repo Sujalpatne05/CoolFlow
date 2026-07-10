@@ -171,7 +171,7 @@ export default function PaymentsOverview() {
         {/* Header */}
         <div className="flex flex-col gap-3 sm:gap-4">
           <div>
-            <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Payments Overview</h1>
+            <h1 className="text-2xl sm:text-3xl font-bold text-emerald-600">Payments Overview</h1>
             <p className="text-xs sm:text-sm text-gray-600 mt-1">Track payments by method and view order details</p>
           </div>
           <div className="bg-gradient-to-r from-emerald-500 to-teal-600 text-white px-4 sm:px-6 py-2 sm:py-3 rounded-lg shadow-lg w-full sm:w-fit">
@@ -325,7 +325,7 @@ export default function PaymentsOverview() {
                             <span className="text-gray-500 text-xs">-</span>
                           )}
                         </td>
-                        <td className="py-2 sm:py-3 px-2 sm:px-4 text-right font-bold text-gray-900 text-xs sm:text-sm">
+                        <td className="py-2 sm:py-3 px-2 sm:px-4 text-right font-bold text-emerald-600 text-xs sm:text-sm">
                           ₹{Number(order.total).toLocaleString("en-IN")}
                         </td>
                         <td className="py-2 sm:py-3 px-2 sm:px-4 text-center hidden lg:table-cell">

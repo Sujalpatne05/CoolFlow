@@ -228,7 +228,7 @@ export default function Payroll() {
           <div className="flex items-center gap-3">
             <Users className="h-8 w-8 text-emerald-500 drop-shadow" />
             <div>
-              <h1 className="text-2xl font-bold">Payroll</h1>
+              <h1 className="text-2xl font-bold text-emerald-600">Payroll</h1>
               <p className="text-muted-foreground">Manage staff attendance, leaves & payroll</p>
             </div>
           </div>

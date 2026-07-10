@@ -449,7 +449,7 @@ const MenuManagement = () => {
       <div className="space-y-6">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-bold">Menu Management</h1>
+            <h1 className="text-2xl font-bold text-emerald-600">Menu Management</h1>
             <p className="text-muted-foreground">{menuItems.length} items across {dynamicCategories.length - 1} categories</p>
           </div>
           <div className="flex gap-2">

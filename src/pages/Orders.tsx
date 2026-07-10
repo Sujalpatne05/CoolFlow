@@ -349,7 +349,7 @@ export default function Orders() {
     <DashboardLayout>
       <div className="space-y-4 sm:space-y-6 px-2 sm:px-0">
         <div>
-          <h1 className="text-xl sm:text-2xl font-bold">Orders</h1>
+          <h1 className="text-xl sm:text-2xl font-bold text-emerald-600">Orders</h1>
           <p className="text-xs sm:text-sm text-muted-foreground">Live order feed from billing and kitchen</p>
         </div>
 
@@ -362,8 +362,8 @@ export default function Orders() {
               {/* Header */}
               <div className="flex items-center justify-between">
                 <div>
-                  <h3 className="text-sm sm:text-base font-bold text-gray-900 flex items-center gap-2">
-                    <Calendar className="w-5 h-5 text-blue-600" />
+                  <h3 className="text-sm sm:text-base font-bold text-emerald-600 flex items-center gap-2">
+                    <Calendar className="w-5 h-5 text-emerald-600" />
                     Smart Date Filter
                   </h3>
                   <p className="text-xs sm:text-sm text-gray-600 mt-1">Quick date selection</p>

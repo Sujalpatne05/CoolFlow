@@ -25,7 +25,7 @@ export default function TableConfirmation() {
         </div>
 
         {/* Message */}
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">Order Confirmed!</h1>
+        <h1 className="text-3xl font-bold text-emerald-600 mb-2">Order Confirmed!</h1>
         <p className="text-gray-600 mb-6">Your order has been sent to the kitchen</p>
 
         {/* Order Details */}

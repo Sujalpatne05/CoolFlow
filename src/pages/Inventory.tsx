@@ -240,7 +240,7 @@ const Inventory = () => {
       <div className="space-y-6">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-bold">Inventory</h1>
+            <h1 className="text-2xl font-bold text-emerald-600">Inventory</h1>
             <p className="text-muted-foreground">Track stock levels and supplies</p>
           </div>
           <Button className="gradient-warm text-primary-foreground gap-2" onClick={() => setShowAddModal(true)}>

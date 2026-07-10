@@ -50,7 +50,7 @@ export default function TablePayment() {
       <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full p-8">
         {/* Header */}
         <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-gray-900">Payment</h1>
+          <h1 className="text-3xl font-bold text-emerald-600">Payment</h1>
           <p className="text-gray-600 mt-2">Table {tableId} • Order #{orderId}</p>
         </div>
 

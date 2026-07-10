@@ -303,7 +303,7 @@ const Reports = () => {
       <div className="space-y-4 sm:space-y-6 p-3 sm:p-4 md:p-6">
         {/* Header */}
         <div>
-          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 flex items-center gap-2">
+          <h1 className="text-2xl sm:text-3xl font-bold text-emerald-600 flex items-center gap-2">
             <BarChart3 className="text-teal-500 flex-shrink-0" size={24} /> Reports & Analytics
           </h1>
           <div className="flex flex-col sm:flex-row flex-wrap gap-2 mt-2 sm:mt-3">
@@ -330,7 +330,7 @@ const Reports = () => {
               {/* Header */}
               <div className="flex items-center justify-between">
                 <div>
-                  <h3 className="text-sm sm:text-base font-bold text-gray-900 flex items-center gap-2">
+                  <h3 className="text-sm sm:text-base font-bold text-emerald-600 flex items-center gap-2">
                     <Calendar className="w-5 h-5 text-teal-600" />
                     Smart Date Filter
                   </h3>
@@ -865,7 +865,7 @@ const Reports = () => {
                           {/* Row 1: Bill ID and Amount */}
                           <div className="flex justify-between items-center mb-1">
                             <span className="font-bold text-emerald-600 text-xs">ORD-{order.id}</span>
-                            <span className="font-bold text-sm text-gray-900">₹{Number(order.total).toLocaleString("en-IN")}</span>
+                            <span className="font-bold text-sm text-emerald-600">₹{Number(order.total).toLocaleString("en-IN")}</span>
                           </div>
 
                           {/* Row 2: Type and Payment */}

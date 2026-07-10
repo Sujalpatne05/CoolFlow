@@ -61,7 +61,7 @@ export default function SuperAdminSettings() {
   return (
     <SuperAdminLayout>
       <div className="flex-1 p-2 sm:p-6 md:p-10">
-        <h1 className="text-3xl font-extrabold text-gray-900 mb-2">System Settings</h1>
+        <h1 className="text-3xl font-extrabold text-emerald-600 mb-2">System Settings</h1>
         <p className="text-gray-500 mb-8">Configure platform-wide settings</p>
         {error && <p className="mb-4 rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">{error}</p>}
         {loading && <p className="mb-4 text-sm text-slate-500">Loading settings...</p>}
@@ -71,7 +71,7 @@ export default function SuperAdminSettings() {
               <div className="flex items-center gap-4">
                 {setting.icon}
                 <div>
-                  <div className="font-bold text-gray-900">{setting.key}</div>
+                  <div className="font-bold text-emerald-600">{setting.key}</div>
                   <div className="text-gray-500 text-sm">{setting.description}</div>
                 </div>
               </div>

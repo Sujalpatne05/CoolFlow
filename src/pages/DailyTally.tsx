@@ -254,7 +254,7 @@ export default function DailyTally() {
         {/* Header */}
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900 flex items-center gap-2">
+            <h1 className="text-3xl font-bold text-emerald-600 flex items-center gap-2">
               <Calendar className="text-emerald-500" /> Daily Tally Report
             </h1>
             <p className="text-gray-600 mt-1">Track your revenue and bills</p>

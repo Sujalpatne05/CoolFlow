@@ -149,7 +149,7 @@ export default function TableQROrdering() {
         <div className="max-w-4xl mx-auto px-4 py-4">
           <div className="flex justify-between items-center">
             <div>
-              <h1 className="text-2xl font-bold text-gray-900">Table {tableId}</h1>
+              <h1 className="text-2xl font-bold text-emerald-600">Table {tableId}</h1>
               <p className="text-sm text-gray-600">Scan & Order</p>
             </div>
             <div className="bg-emerald-100 text-emerald-700 px-4 py-2 rounded-lg font-semibold">
@@ -178,12 +178,12 @@ export default function TableQROrdering() {
                     />
                   )}
                   <div className="p-4">
-                    <h3 className="font-semibold text-gray-900">{item.name}</h3>
+                    <h3 className="font-semibold text-emerald-600">{item.name}</h3>
                     <p className="text-lg font-bold text-emerald-600 mt-2">Rs. {item.price}</p>
                     <button
                       onClick={() => addToCart(item)}
                       disabled={!item.available}
-                      className="w-full mt-3 bg-emerald-500 hover:bg-emerald-600 disabled:bg-gray-300 text-white disabled:text-gray-900 font-semibold py-2 rounded-lg transition flex items-center justify-center gap-2"
+                      className="w-full mt-3 bg-emerald-500 hover:bg-emerald-600 disabled:bg-gray-300 text-white disabled:text-emerald-600 font-semibold py-2 rounded-lg transition flex items-center justify-center gap-2"
                     >
                       <Plus className="h-4 w-4" />
                       Add to Cart
@@ -246,7 +246,7 @@ export default function TableQROrdering() {
                     <button
                       onClick={handlePlaceOrder}
                       disabled={submitting}
-                      className="w-full bg-green-500 hover:bg-green-600 disabled:bg-gray-300 text-white disabled:text-gray-900 font-bold py-3 rounded-lg transition flex items-center justify-center gap-2"
+                      className="w-full bg-green-500 hover:bg-green-600 disabled:bg-gray-300 text-white disabled:text-emerald-600 font-bold py-3 rounded-lg transition flex items-center justify-center gap-2"
                     >
                       <Check className="h-5 w-5" />
                       {submitting ? "Placing Order..." : "Place Order"}

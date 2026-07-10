@@ -534,7 +534,7 @@ export default function TableManagement() {
         {/* Header */}
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
           <div>
-            <h1 className="text-2xl md:text-3xl font-bold text-gray-900">Table Management</h1>
+            <h1 className="text-2xl md:text-3xl font-bold text-emerald-600">Table Management</h1>
             <p className="text-gray-600 mt-1">Manage restaurant seating and table availability</p>
           </div>
           <Dialog open={isAddDialogOpen} onOpenChange={(open) => {
