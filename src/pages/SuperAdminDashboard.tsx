@@ -1,4 +1,4 @@
-﻿import React, { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import {
   AlertTriangle, Building, CreditCard, Users, BarChart2,
@@ -147,7 +147,7 @@ export default function SuperAdminDashboard() {
                 { label: "Add New Restaurant", icon: Building, color: "text-blue-600 bg-blue-50", route: "/superadmin-restaurants" },
                 { label: "Manage Subscriptions", icon: CreditCard, color: "text-green-600 bg-green-50", route: "/superadmin-subscriptions" },
                 { label: "View All Users", icon: Users, color: "text-purple-600 bg-purple-50", route: "/superadmin-users" },
-                { label: "Revenue Reports", icon: BarChart2, color: "text-orange-600 bg-orange-50", route: "/superadmin-revenue" },
+                { label: "Revenue Reports", icon: BarChart2, color: "text-emerald-600 bg-emerald-50", route: "/superadmin-revenue" },
                 { label: "Support Tickets", icon: AlertTriangle, color: "text-red-600 bg-red-50", route: "/superadmin-support" },
                 { label: "System Settings", icon: ShieldCheck, color: "text-slate-600 bg-slate-50", route: "/superadmin-settings" },
               ].map(action => (
@@ -193,7 +193,7 @@ export default function SuperAdminDashboard() {
                     <tr key={r.id} className="border-b hover:bg-gray-50">
                       <td className="py-3 px-4 font-semibold text-gray-900">{r.name}</td>
                       <td className="py-3 px-4 text-gray-600">{r.owner}</td>
-                      <td className="py-3 px-4 text-gray-600">{r.city || "�"}</td>
+                      <td className="py-3 px-4 text-gray-600">{r.city || "?"}</td>
                       <td className="py-3 px-4">
                         <span className="px-2 py-1 rounded-full text-xs font-semibold bg-blue-100 text-blue-700">{r.plan || "Standard"}</span>
                       </td>

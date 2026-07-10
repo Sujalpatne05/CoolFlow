@@ -340,7 +340,7 @@ export default function SuperAdminUsers() {
                           <td className="px-4 py-3">
                             <span className={`inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-bold ${
                               user.role === "superadmin" ? "bg-purple-100 text-purple-800" :
-                              user.role === "admin" ? "bg-amber-100 text-amber-800" :
+                              user.role === "admin" ? "bg-teal-100 text-teal-800" :
                               user.role === "manager" ? "bg-blue-100 text-blue-800" :
                               "bg-green-100 text-green-800"
                             }`}>

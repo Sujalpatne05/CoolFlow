@@ -226,7 +226,7 @@ export default function Payroll() {
       <div className="space-y-6">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <Users className="h-8 w-8 text-orange-500 drop-shadow" />
+            <Users className="h-8 w-8 text-emerald-500 drop-shadow" />
             <div>
               <h1 className="text-2xl font-bold">Payroll</h1>
               <p className="text-muted-foreground">Manage staff attendance, leaves & payroll</p>
@@ -236,16 +236,16 @@ export default function Payroll() {
             <UserPlus className="h-4 w-4" /> Add Staff
           </Button>
         </div>
-        <Card className="shadow-card bg-gradient-to-br from-orange-50 via-white to-orange-100 border-orange-100">
+        <Card className="shadow-card bg-gradient-to-br from-emerald-50 via-white to-emerald-100 border-emerald-100">
           <CardHeader className="flex flex-row items-center gap-2">
-            <Users className="h-5 w-5 text-orange-400 mr-1" />
+            <Users className="h-5 w-5 text-emerald-400 mr-1" />
             <CardTitle className="text-base">Staff List</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="overflow-x-auto">
               <table className="min-w-full text-sm">
                 <thead>
-                  <tr className="border-b bg-orange-50">
+                  <tr className="border-b bg-emerald-50">
                     <th className="text-left py-2">Name</th>
                     <th className="text-left py-2">Role</th>
                     <th className="text-center py-2">Present</th>
@@ -259,16 +259,16 @@ export default function Payroll() {
                     <tr>
                       <td className="py-8 text-center text-muted-foreground opacity-70" colSpan={6}>
                         <div className="flex flex-col items-center justify-center gap-2">
-                          <UserX className="h-12 w-12 mb-2 text-orange-200" />
+                          <UserX className="h-12 w-12 mb-2 text-emerald-200" />
                           <span className="text-base">No staff found for this restaurant.</span>
                         </div>
                       </td>
                     </tr>
                   )}
                   {staff.map((s) => (
-                    <tr key={s.id} className="border-b last:border-0 hover:bg-orange-50/60 transition-all">
+                    <tr key={s.id} className="border-b last:border-0 hover:bg-emerald-50/60 transition-all">
                       <td className="py-2 font-medium flex items-center gap-2">
-                        <UserCheck className="h-4 w-4 text-orange-400" /> {s.name}
+                        <UserCheck className="h-4 w-4 text-emerald-400" /> {s.name}
                       </td>
                       <td className="py-2">{s.role}</td>
                       <td className="py-2 text-center">
@@ -293,7 +293,7 @@ export default function Payroll() {
                       </td>
                       <td className="py-2 text-right">{s.salary.toLocaleString()}</td>
                       <td className="py-2 text-center">
-                        <button onClick={() => handleEditStaff(s)} className="inline-flex items-center gap-1 px-2 py-1 rounded hover:bg-orange-100 text-orange-600 font-semibold text-xs mr-1">
+                        <button onClick={() => handleEditStaff(s)} className="inline-flex items-center gap-1 px-2 py-1 rounded hover:bg-emerald-100 text-emerald-600 font-semibold text-xs mr-1">
                           <Edit className="h-4 w-4" /> Edit
                         </button>
                         <button onClick={() => handleDeleteStaff(s.id)} className="inline-flex items-center gap-1 px-2 py-1 rounded hover:bg-red-100 text-red-600 font-semibold text-xs">
@@ -310,7 +310,7 @@ export default function Payroll() {
         {showModal && (
           <Dialog open={showModal} onClose={() => { setShowModal(false); setEditingId(null); setNewName(""); setNewRole(""); setNewSalary(""); }} className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
             <Dialog.Panel className="bg-white p-6 rounded-xl shadow-xl w-[350px]">
-              <h3 className="text-lg font-bold mb-4 flex items-center gap-2"><UserPlus className="h-5 w-5 text-orange-400" /> {editingId ? "Edit Staff" : "Add Staff"}</h3>
+              <h3 className="text-lg font-bold mb-4 flex items-center gap-2"><UserPlus className="h-5 w-5 text-emerald-400" /> {editingId ? "Edit Staff" : "Add Staff"}</h3>
               <input
                 type="text"
                 placeholder="Name"
@@ -333,7 +333,7 @@ export default function Payroll() {
                 onChange={e => setNewSalary(e.target.value)}
               />
               <button
-                className="bg-orange-500 text-white px-4 py-2 rounded font-semibold hover:bg-orange-600 transition mr-2"
+                className="bg-emerald-500 text-white px-4 py-2 rounded font-semibold hover:bg-emerald-600 transition mr-2"
                 onClick={editingId ? handleUpdateStaff : handleAddStaff}
               >
                 <UserPlus className="h-4 w-4 inline mr-1" /> {editingId ? "Update" : "Add"}
@@ -350,7 +350,7 @@ export default function Payroll() {
         {editingAttendanceId !== null && (
           <Dialog open={editingAttendanceId !== null} onClose={() => { setEditingAttendanceId(null); setAttendancePresent(false); setAttendanceLeaves(0); }} className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
             <Dialog.Panel className="bg-white p-6 rounded-xl shadow-xl w-[350px]">
-              <h3 className="text-lg font-bold mb-4 flex items-center gap-2"><UserCheck className="h-5 w-5 text-orange-400" /> Update Attendance</h3>
+              <h3 className="text-lg font-bold mb-4 flex items-center gap-2"><UserCheck className="h-5 w-5 text-emerald-400" /> Update Attendance</h3>
               <div className="mb-4">
                 <label className="block text-sm font-medium mb-2">Present</label>
                 <div className="flex gap-2">
@@ -387,7 +387,7 @@ export default function Payroll() {
                 />
               </div>
               <button
-                className="bg-orange-500 text-white px-4 py-2 rounded font-semibold hover:bg-orange-600 transition mr-2"
+                className="bg-emerald-500 text-white px-4 py-2 rounded font-semibold hover:bg-emerald-600 transition mr-2"
                 onClick={handleUpdateAttendance}
               >
                 <UserCheck className="h-4 w-4 inline mr-1" /> Update

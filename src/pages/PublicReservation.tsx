@@ -99,7 +99,7 @@ const PublicReservation: React.FC = () => {
 
   if (submitted) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-orange-50 via-white to-orange-100 flex items-center justify-center p-4">
+      <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-white to-emerald-100 flex items-center justify-center p-4">
         <Card className="w-full max-w-md bg-white shadow-xl">
           <CardContent className="p-8 text-center">
             <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
@@ -109,7 +109,7 @@ const PublicReservation: React.FC = () => {
             <p className="text-gray-600 mb-4">
               Thank you for booking with {restaurantName}. We've received your reservation and will confirm it shortly.
             </p>
-            <div className="bg-orange-50 p-4 rounded-lg mb-4">
+            <div className="bg-emerald-50 p-4 rounded-lg mb-4">
               <p className="text-sm text-gray-700">
                 <strong>Name:</strong> {formData.name}
               </p>
@@ -133,14 +133,14 @@ const PublicReservation: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-orange-50 via-white to-orange-100 p-4">
+    <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-white to-emerald-100 p-4">
       <div className="max-w-md mx-auto">
         <Card className="bg-white shadow-xl">
-          <CardHeader className="bg-gradient-to-r from-orange-500 to-orange-600 text-white rounded-t-lg">
+          <CardHeader className="bg-gradient-to-r from-emerald-500 to-teal-600 text-white rounded-t-lg">
             <CardTitle className="text-2xl flex items-center gap-2">
               <Calendar size={28} /> Book Your Table
             </CardTitle>
-            <p className="text-orange-100 text-sm mt-2">{restaurantName}</p>
+            <p className="text-emerald-100 text-sm mt-2">{restaurantName}</p>
           </CardHeader>
 
           <CardContent className="p-6">
@@ -213,7 +213,7 @@ const PublicReservation: React.FC = () => {
                   name="guests"
                   value={formData.guests}
                   onChange={handleChange}
-                  className="w-full border rounded-md px-3 py-2 bg-white focus:outline-none focus:ring-2 focus:ring-orange-500"
+                  className="w-full border rounded-md px-3 py-2 bg-white focus:outline-none focus:ring-2 focus:ring-emerald-500"
                 >
                   {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((num) => (
                     <option key={num} value={num}>
@@ -227,7 +227,7 @@ const PublicReservation: React.FC = () => {
               <Button
                 type="submit"
                 disabled={loading}
-                className="w-full bg-orange-500 hover:bg-orange-600 text-white font-semibold py-2 mt-6"
+                className="w-full bg-emerald-500 hover:bg-emerald-600 text-white font-semibold py-2 mt-6"
               >
                 {loading ? "Booking..." : "Confirm Reservation"}
               </Button>

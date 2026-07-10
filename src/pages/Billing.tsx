@@ -435,19 +435,19 @@ const Billing: React.FC = () => {
 
 	return (
 		<DashboardLayout>
-			<div className="min-h-[calc(100vh-80px)] bg-gradient-to-br from-orange-50 via-white to-orange-100 flex flex-col justify-between">
+			<div className="min-h-[calc(100vh-80px)] bg-gradient-to-br from-emerald-50 via-teal-50 to-cyan-50 flex flex-col justify-between">
 				{/* Header */}
 				<div className="py-4 px-3 sm:py-6 sm:px-4 md:px-0 max-w-6xl mx-auto w-full">
 					<div className="flex flex-col gap-3 mb-6">
 						<div>
-							<h1 className="text-2xl sm:text-3xl font-bold text-orange-700 flex items-center gap-2 mb-1">
-								<ShoppingCart className="inline-block text-orange-500 flex-shrink-0" size={24} /> POS Billing
+							<h1 className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent flex items-center gap-2 mb-1">
+								<ShoppingCart className="inline-block text-emerald-500 flex-shrink-0" size={24} /> POS Billing
 							</h1>
 							<div className="text-muted-foreground text-xs sm:text-sm">Welcome to Logdine! Please select items and complete the order below.</div>
 						</div>
 						<div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
-							<span className="bg-orange-100 text-orange-700 px-2 sm:px-3 py-1 rounded-full font-semibold text-xs sm:text-sm truncate">Restaurant: {getStoredRestaurantName() || "Restaurant"}</span>
-							<span className="bg-orange-100 text-orange-700 px-2 sm:px-3 py-1 rounded-full font-semibold text-xs sm:text-sm flex items-center gap-1 w-fit">KDS <Monitor className="inline-block flex-shrink-0" size={14} /></span>
+							<span className="bg-gradient-to-r from-emerald-500 to-teal-500 text-white px-3 sm:px-4 py-1.5 rounded-full font-semibold text-xs sm:text-sm truncate shadow-lg">Restaurant: {getStoredRestaurantName() || "Restaurant"}</span>
+							<span className="bg-gradient-to-r from-emerald-500 to-teal-500 text-white px-3 sm:px-4 py-1.5 rounded-full font-semibold text-xs sm:text-sm flex items-center gap-1 w-fit shadow-lg">KDS <Monitor className="inline-block flex-shrink-0" size={14} /></span>
 						</div>
 					</div>
 
@@ -456,7 +456,7 @@ const Billing: React.FC = () => {
 						<Card className="lg:col-span-2 bg-white/90 shadow-lg">
 							<CardHeader className="p-3 sm:p-6">
 								<CardTitle className="text-lg sm:text-xl flex items-center gap-2">
-									<UtensilsCrossed className="text-orange-500 flex-shrink-0" /> Menu
+									<UtensilsCrossed className="text-emerald-600 flex-shrink-0" /> Menu
 								</CardTitle>
 								<Tabs value={orderType} onValueChange={v => setOrderType(v as typeof orderType)}>
 									<TabsList className="mt-2 w-full grid grid-cols-3">
@@ -469,11 +469,11 @@ const Billing: React.FC = () => {
 								</Tabs>
 								{orderType === "dine-in" && (
 									<div className="my-4 sm:my-6">
-										<div className="border-t border-orange-100 mb-4"></div>
-										<label className="block mb-2 text-sm sm:text-base font-semibold text-orange-700">Table</label>
+										<div className="border-t border-emerald-100 mb-4"></div>
+										<label className="block mb-2 text-sm sm:text-base font-semibold text-emerald-700">Table</label>
 										<div className="flex gap-2 items-center">
 													<select
-														className="border rounded px-2 sm:px-3 py-2 bg-orange-50 focus:border-orange-400 focus:ring-2 focus:ring-orange-200 transition-all text-sm w-full"
+														className="border-2 border-emerald-200 rounded-lg px-2 sm:px-3 py-2 bg-gradient-to-br from-white to-emerald-50 focus:border-emerald-400 focus:ring-2 focus:ring-emerald-300 transition-all text-sm w-full shadow-sm"
 														value={selectedTable ?? ""}
 														onChange={e => setSelectedTable(Number(e.target.value))}
 														disabled={loadingTables}
@@ -505,7 +505,7 @@ const Billing: React.FC = () => {
 								)}
 								{/* Banner when dine-in but no table selected */}
 								{orderType === "dine-in" && !selectedTable && (
-									<div className="mx-0 mb-2 px-3 py-2 bg-orange-50 border border-orange-200 rounded-lg text-xs text-orange-600 text-center">
+									<div className="mx-0 mb-2 px-3 py-2.5 bg-gradient-to-r from-emerald-100 to-teal-100 border-2 border-emerald-300 rounded-xl text-xs text-emerald-700 text-center font-semibold shadow-sm">
 										⚠️ Please select a table to add items
 									</div>
 								)}
@@ -527,8 +527,8 @@ const Billing: React.FC = () => {
 												onClick={() => setMenuCategory(category)}
 												className={
 													menuCategory === category
-														? "h-8 shrink-0 bg-orange-500 px-3 text-xs text-white hover:bg-orange-600"
-														: "h-8 shrink-0 border-orange-200 px-3 text-xs text-orange-700 hover:bg-orange-50 hover:text-gray-950"
+														? "h-8 shrink-0 bg-gradient-to-r from-emerald-500 to-teal-500 px-3 text-xs text-white hover:from-emerald-600 hover:to-teal-600 shadow-md"
+														: "h-8 shrink-0 border-2 border-emerald-200 px-3 text-xs text-emerald-700 hover:bg-gradient-to-r hover:from-emerald-50 hover:to-teal-50 hover:text-gray-950"
 												}
 											>
 												{category}
@@ -545,15 +545,15 @@ const Billing: React.FC = () => {
 										<div className="col-span-full text-center text-muted-foreground py-8 text-sm">No items found.</div>
 									) : (
 										filteredMenu.map(item => (
-											<Card key={item.id} className="relative flex flex-col items-center overflow-hidden border-orange-100 bg-white p-4 shadow-sm transition-all hover:-translate-y-0.5 hover:shadow-md sm:min-h-[150px] sm:p-3">
+											<Card key={item.id} className="relative flex flex-col items-center overflow-hidden border-2 border-emerald-200 bg-gradient-to-br from-white to-emerald-50/30 p-4 shadow-md transition-all hover:-translate-y-1 hover:shadow-xl hover:border-emerald-300 sm:min-h-[150px] sm:p-3">
 												{getItemQty(item.id) > 0 && (
-													<div className="absolute right-2 top-2 hidden rounded-full bg-green-600 px-2 py-0.5 text-[11px] font-bold text-white sm:block">
+													<div className="absolute right-2 top-2 hidden rounded-full bg-gradient-to-r from-green-500 to-emerald-500 px-2 py-0.5 text-[11px] font-bold text-white sm:block shadow-lg">
 														{getItemQty(item.id)} in cart
 													</div>
 												)}
-												<div className="mb-2 text-2xl sm:text-3xl"><UtensilsCrossed className="text-orange-500" /></div>
+												<div className="mb-2 text-2xl sm:text-3xl"><UtensilsCrossed className="text-emerald-600" /></div>
 												<span className="font-semibold text-xs sm:text-base mb-1 text-center line-clamp-2">{item.name}</span>
-												<Badge className="mb-2 bg-orange-500/90 text-white text-xs">₹{item.price}</Badge>
+												<Badge className="mb-2 bg-gradient-to-r from-emerald-500 to-teal-500 text-white text-xs shadow-md">₹{item.price}</Badge>
 												{getItemQty(item.id) > 0 ? (
 													<div className="w-full space-y-2">
 														<div className="grid h-9 w-full grid-cols-3 overflow-hidden rounded-md border border-green-600 bg-green-50">
@@ -576,7 +576,7 @@ const Billing: React.FC = () => {
 														/>
 													</div>
 												) : (
-													<Button size="sm" onClick={() => addItem(item)} variant="outline" disabled={!item.available || (orderType === "dine-in" && !selectedTable)} className="h-9 w-full border-orange-300 text-xs font-bold text-orange-700 hover:bg-orange-50 hover:text-gray-950 disabled:bg-orange-50 disabled:text-gray-900">Add</Button>
+													<Button size="sm" onClick={() => addItem(item)} variant="outline" disabled={!item.available || (orderType === "dine-in" && !selectedTable)} className="h-9 w-full border-2 border-emerald-400 text-xs font-bold text-emerald-700 hover:bg-gradient-to-r hover:from-emerald-500 hover:to-teal-500 hover:text-white disabled:bg-emerald-100 disabled:text-gray-900 transition-all shadow-sm">Add</Button>
 												)}
 												{!item.available && <span className="text-xs text-red-500 mt-1">Unavailable</span>}
 											</Card>
@@ -587,11 +587,11 @@ const Billing: React.FC = () => {
 						</Card>
 
 						{/* Order Summary Section */}
-						<Card ref={orderSummaryRef} className="bg-gradient-to-br from-orange-50 to-white shadow-xl border-orange-200 lg:sticky lg:top-4 lg:self-start">
-							<CardHeader className="p-4 sm:p-6 bg-gradient-to-r from-orange-500 to-orange-600 text-white rounded-t-lg">
+						<Card ref={orderSummaryRef} className="bg-gradient-to-br from-emerald-50 via-teal-50 to-white shadow-2xl border-2 border-emerald-300 lg:sticky lg:top-4 lg:self-start">
+							<CardHeader className="p-4 sm:p-6 bg-gradient-to-r from-emerald-500 via-emerald-600 to-teal-600 text-white rounded-t-lg shadow-lg">
 								<CardTitle className="text-lg sm:text-2xl flex items-center gap-2 flex-wrap">
 									<ShoppingCart className="flex-shrink-0" size={28} /> Order Summary
-									{existingOrder && existingOrder.status !== 'served' && existingOrder.status !== 'completed' && <Badge className="bg-white text-orange-600 text-xs ml-auto">Editing #{existingOrder.id}</Badge>}
+									{existingOrder && existingOrder.status !== 'served' && existingOrder.status !== 'completed' && <Badge className="bg-white text-emerald-600 text-xs ml-auto font-bold shadow-md">Editing #{existingOrder.id}</Badge>}
 								</CardTitle>
 							</CardHeader>
 							<CardContent className="p-4 sm:p-6">
@@ -610,31 +610,31 @@ const Billing: React.FC = () => {
 											</div>
 											<div className="space-y-2 pr-2">
 												{orderItems.map((item, idx) => (
-													<div key={item.id} className="bg-white border-2 border-orange-200 rounded-lg p-3 hover:shadow-md transition-shadow">
+													<div key={item.id} className="bg-gradient-to-br from-white to-emerald-50 border-2 border-emerald-300 rounded-xl p-3 hover:shadow-xl transition-all hover:border-emerald-400">
 														<div className="flex items-start justify-between gap-2">
 															<div className="flex-1 min-w-0">
 																<div className="flex items-center gap-2 mb-1">
-																	<span className="inline-block bg-orange-100 text-orange-700 text-xs font-bold rounded-full w-6 h-6 flex items-center justify-center">{idx + 1}</span>
+																	<span className="inline-block bg-gradient-to-r from-emerald-500 to-teal-500 text-white text-xs font-bold rounded-full w-6 h-6 flex items-center justify-center shadow-md">{idx + 1}</span>
 																	<h4 className="font-semibold text-sm text-gray-800 truncate">{item.name}</h4>
 																</div>
 																<div className="flex items-center justify-between mb-2">
 																	<div className="flex items-center gap-2">
-																		<Button size="sm" variant="outline" onClick={(e) => removeItem(item.id, e)} className="h-7 w-7 p-0 text-orange-600 border-orange-300 hover:bg-orange-50">
+																		<Button size="sm" variant="outline" onClick={(e) => removeItem(item.id, e)} className="h-7 w-7 p-0 text-emerald-700 border-2 border-emerald-400 hover:bg-gradient-to-r hover:from-emerald-500 hover:to-teal-500 hover:text-white transition-all">
 																			<Minus size={16} />
 																		</Button>
-																		<span className="font-bold text-orange-600 min-w-6 text-center">{item.qty}</span>
-																		<Button size="sm" variant="outline" onClick={(e) => addItem(item, e)} className="h-7 w-7 p-0 text-orange-600 border-orange-300 hover:bg-orange-50">
+																		<span className="font-bold text-emerald-600 min-w-6 text-center">{item.qty}</span>
+																		<Button size="sm" variant="outline" onClick={(e) => addItem(item, e)} className="h-7 w-7 p-0 text-emerald-700 border-2 border-emerald-400 hover:bg-gradient-to-r hover:from-emerald-500 hover:to-teal-500 hover:text-white transition-all">
 																			<Plus size={16} />
 																		</Button>
 																	</div>
-																	<span className="font-bold text-orange-700 text-sm">₹{item.price * item.qty}</span>
+																	<span className="font-bold text-emerald-700 text-sm">₹{item.price * item.qty}</span>
 																</div>
 																<Input
 																	type="text"
 																	placeholder="Add note (optional)"
 																	value={item.notes || ""}
 																	onChange={(e) => updateItemNote(item.id, e.target.value)}
-																	className="text-xs h-7 bg-orange-50 border-orange-200 focus:border-orange-400"
+																	className="text-xs h-7 bg-emerald-50 border-emerald-300 focus:border-emerald-500 shadow-sm"
 																/>
 																<div className="mt-2 flex gap-1.5 overflow-x-auto pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
 																	{quickNotes.map(note => (
@@ -646,8 +646,8 @@ const Billing: React.FC = () => {
 																			onClick={() => toggleQuickNote(item.id, note)}
 																			className={
 																				hasQuickNote(item.id, note)
-																					? "h-7 shrink-0 bg-orange-500 px-2 text-[11px] text-white hover:bg-orange-600"
-																					: "h-7 shrink-0 border-orange-200 px-2 text-[11px] text-orange-700 hover:bg-orange-50"
+																					? "h-7 shrink-0 bg-gradient-to-r from-emerald-500 to-teal-500 px-2 text-[11px] text-white hover:from-emerald-600 hover:to-teal-600 shadow-md"
+																					: "h-7 shrink-0 border-2 border-emerald-300 px-2 text-[11px] text-emerald-700 hover:bg-gradient-to-r hover:from-emerald-50 hover:to-teal-50"
 																			}
 																		>
 																			{note}
@@ -662,10 +662,10 @@ const Billing: React.FC = () => {
 										</div>
 
 										{/* Divider */}
-										<div className="border-t-2 border-orange-200 my-4"></div>
+										<div className="border-t-2 border-emerald-300 my-4"></div>
 
 										{/* Price Breakdown */}
-										<div className="bg-gradient-to-br from-orange-50 to-orange-100 rounded-lg p-4 mb-4 space-y-3 border border-orange-200">
+										<div className="bg-gradient-to-br from-emerald-100 via-teal-100 to-cyan-100 rounded-xl p-4 mb-4 space-y-3 border-2 border-emerald-300 shadow-inner">
 											{/* Subtotal */}
 											<div className="flex justify-between items-center">
 												<span className="text-gray-700 font-medium">Subtotal</span>
@@ -674,13 +674,13 @@ const Billing: React.FC = () => {
 											
 											{/* Tax - Highlighted */}
 											{tax > 0 && (
-												<div className="bg-white rounded-lg p-3 border-2 border-orange-300">
+												<div className="bg-white rounded-lg p-3 border-2 border-emerald-400 shadow-md">
 													<div className="flex justify-between items-center">
 														<div>
-															<span className="text-orange-700 font-bold">Tax Applied</span>
-															<p className="text-xs text-orange-600 mt-0.5">({taxRate}% of subtotal)</p>
+															<span className="text-emerald-700 font-bold">Tax Applied</span>
+															<p className="text-xs text-emerald-600 mt-0.5">({taxRate}% of subtotal)</p>
 														</div>
-														<span className="font-bold text-lg text-orange-600">₹{tax}</span>
+														<span className="font-bold text-lg text-emerald-600">₹{tax}</span>
 													</div>
 												</div>
 											)}
@@ -694,9 +694,9 @@ const Billing: React.FC = () => {
 											)}
 											
 											{/* Total Amount - Bold and Prominent */}
-											<div className="border-t-2 border-orange-300 pt-3 flex justify-between items-center bg-white rounded-lg p-3 mt-3">
-												<span className="font-bold text-gray-900 text-lg">Total Amount</span>
-												<span className="font-bold text-2xl text-orange-600">₹{total}</span>
+											<div className="border-t-2 border-emerald-400 pt-3 flex justify-between items-center bg-gradient-to-r from-emerald-500 to-teal-500 text-white rounded-lg p-3 mt-3 shadow-lg">
+												<span className="font-bold text-white text-lg">Total Amount</span>
+												<span className="font-bold text-2xl text-white">₹{total}</span>
 											</div>
 										</div>
 									</>
@@ -775,12 +775,12 @@ const Billing: React.FC = () => {
 										</div>
 									</div>
 								)}
-								<Button className="w-full bg-orange-500 hover:bg-orange-600 text-sm disabled:bg-orange-100 disabled:text-gray-900" onClick={handlePlaceOrder} disabled={orderItems.length === 0}>
+								<Button className="w-full bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-sm disabled:bg-emerald-100 disabled:text-gray-900 text-white font-bold shadow-lg" onClick={handlePlaceOrder} disabled={orderItems.length === 0}>
 									{existingOrder && existingOrder.status !== 'served' && existingOrder.status !== 'completed' ? "Update Order" : "Place Order"}
 								</Button>
 								<Button 
 									variant="outline" 
-									className="w-full border-orange-300 bg-white text-gray-900 hover:bg-orange-50 hover:text-gray-950 text-sm mt-2"
+									className="w-full border-2 border-emerald-400 bg-white text-emerald-700 hover:bg-gradient-to-r hover:from-emerald-50 hover:to-teal-50 hover:text-gray-950 text-sm mt-2 font-semibold shadow-md"
 									onClick={handlePrintKOT}
 									aria-disabled={orderItems.length === 0}
 								>
@@ -818,7 +818,7 @@ const Billing: React.FC = () => {
 					<Card className="bg-white/90 shadow-lg">
 						<CardHeader className="p-3 sm:p-6">
 							<CardTitle className="text-base sm:text-lg flex items-center gap-2">
-								<ShoppingCart className="text-orange-500 flex-shrink-0" size={20} /> Recent Orders
+								<ShoppingCart className="text-emerald-600 flex-shrink-0" size={20} /> Recent Orders
 							</CardTitle>
 						</CardHeader>
 						<CardContent className="p-3 sm:p-6">
@@ -830,7 +830,7 @@ const Billing: React.FC = () => {
 								<div className="overflow-x-auto -mx-3 sm:-mx-6 px-3 sm:px-6">
 									<table className="w-full text-xs sm:text-sm">
 										<thead>
-											<tr className="border-b bg-orange-50">
+											<tr className="border-b bg-gradient-to-r from-emerald-100 to-teal-100">
 												<th className="text-left py-2 px-2 sm:px-3 font-semibold">Order ID</th>
 												<th className="text-left py-2 px-2 sm:px-3 font-semibold">Type</th>
 												<th className="text-left py-2 px-2 sm:px-3 font-semibold hidden sm:table-cell">Items</th>
@@ -840,12 +840,12 @@ const Billing: React.FC = () => {
 										</thead>
 										<tbody>
 											{recentOrders.map((order) => (
-												<tr key={order.id} className="border-b hover:bg-orange-50/50">
-													<td className="py-2 px-2 sm:px-3 font-medium text-orange-600">ORD-{order.id}</td>
+												<tr key={order.id} className="border-b hover:bg-gradient-to-r hover:from-emerald-50 hover:to-teal-50 transition-colors">
+													<td className="py-2 px-2 sm:px-3 font-medium text-emerald-700">ORD-{order.id}</td>
 													<td className="py-2 px-2 sm:px-3">
 														<Badge className={
 															order.orderType === "dine-in" ? "bg-blue-100 text-blue-800 text-xs" :
-															order.orderType === "take-away" ? "bg-orange-100 text-orange-800 text-xs" :
+															order.orderType === "take-away" ? "bg-teal-100 text-teal-800 text-xs" :
 															"bg-purple-100 text-purple-800 text-xs"
 														}>
 															{order.orderType === "dine-in" ? "Dine-in" : order.orderType === "take-away" ? "Takeaway" : "Delivery"}

@@ -472,7 +472,7 @@ export default function TableManagement() {
                   </div>
                   <div>
                     <p className="text-xs text-gray-600 font-semibold">Payment Status</p>
-                    <Badge className={selectedOrderForView.paymentStatus === "paid" ? "bg-green-100 text-green-800" : "bg-orange-100 text-orange-800"}>
+                    <Badge className={selectedOrderForView.paymentStatus === "paid" ? "bg-green-100 text-green-800" : "bg-emerald-100 text-emerald-800"}>
                       {selectedOrderForView.paymentStatus === "paid" ? "Paid" : "Unpaid"}
                     </Badge>
                   </div>
@@ -720,7 +720,7 @@ export default function TableManagement() {
                 {openBillsByTable.get(table.number) ? (
                   <div className="text-sm">
                     <span className="font-medium">Open bill: </span>
-                    <span className="text-amber-700">Rs. {(openBillsByTable.get(table.number) || 0).toLocaleString("en-IN")}</span>
+                    <span className="text-teal-700">Rs. {(openBillsByTable.get(table.number) || 0).toLocaleString("en-IN")}</span>
                   </div>
                 ) : null}
                 {reservationByTable.get(table.number) ? (

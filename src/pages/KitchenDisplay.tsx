@@ -253,7 +253,7 @@ export default function KitchenDisplay() {
     switch (station) {
       case "hot": return <Flame className="h-4 w-4 text-red-500" />;
       case "cold": return <Snowflake className="h-4 w-4 text-blue-500" />;
-      case "grill": return <ChefHat className="h-4 w-4 text-orange-500" />;
+      case "grill": return <ChefHat className="h-4 w-4 text-emerald-500" />;
       case "bar": return <Clock className="h-4 w-4 text-purple-500" />;
       default: return null;
     }
@@ -287,11 +287,11 @@ export default function KitchenDisplay() {
         <CardHeader className="pb-3">
           <div className="flex justify-between items-start">
             <div>
-              <div className="text-xs font-bold uppercase tracking-wide text-orange-600">KOT</div>
+              <div className="text-xs font-bold uppercase tracking-wide text-emerald-600">KOT</div>
               <CardTitle className="text-xl">{order.orderNumber}</CardTitle>
               <div className="text-sm mt-1">
                 {order.type === "dine-in" ? `Table ${order.tableNumber}` : (
-                  <Badge className={order.type === "takeout" ? "bg-orange-500" : "bg-purple-500"}>
+                  <Badge className={order.type === "takeout" ? "bg-emerald-500" : "bg-purple-500"}>
                     {order.type === "takeout" ? "TAKEAWAY" : "DELIVERY"}
                   </Badge>
                 )}
@@ -340,8 +340,8 @@ export default function KitchenDisplay() {
                     <span className="text-sm">{item.name}</span>
                   </div>
                   {item.notes && (
-                    <div className="mt-2 p-2.5 bg-gradient-to-r from-amber-100 to-orange-100 border-l-3 border-orange-500 rounded">
-                      <p className="text-sm font-semibold text-gray-800"><span className="text-orange-700">NOTE:</span> {item.notes}</p>
+                    <div className="mt-2 p-2.5 bg-gradient-to-r from-emerald-100 to-teal-100 border-l-3 border-emerald-500 rounded">
+                      <p className="text-sm font-semibold text-gray-800"><span className="text-emerald-700">NOTE:</span> {item.notes}</p>
                     </div>
                   )}
                 </div>
@@ -354,15 +354,15 @@ export default function KitchenDisplay() {
           </div>
 
           {order.notes && (
-            <div className="p-4 bg-gradient-to-r from-amber-50 via-orange-50 to-red-50 border-l-4 border-orange-400 rounded-lg shadow-sm">
+            <div className="p-4 bg-gradient-to-r from-emerald-50 via-teal-50 to-cyan-50 border-l-4 border-emerald-400 rounded-lg shadow-sm">
               <div className="flex items-start gap-3">
                 <div className="flex-shrink-0 mt-0.5">
-                  <div className="flex items-center justify-center h-8 w-8 rounded-full bg-orange-100">
-                    <MessageSquare className="h-5 w-5 text-orange-600" />
+                  <div className="flex items-center justify-center h-8 w-8 rounded-full bg-emerald-100">
+                    <MessageSquare className="h-5 w-5 text-emerald-600" />
                   </div>
                 </div>
                 <div className="flex-1">
-                  <p className="text-xs font-semibold text-orange-600 mb-1.5 uppercase tracking-wider">Chef's Note</p>
+                  <p className="text-xs font-semibold text-emerald-600 mb-1.5 uppercase tracking-wider">Chef's Note</p>
                   <p className="text-base font-semibold text-gray-800 break-words leading-relaxed">{order.notes}</p>
                 </div>
               </div>
@@ -419,7 +419,7 @@ export default function KitchenDisplay() {
               <TabsTrigger value="active">
                 Active Orders
                 {activeOrders.length > 0 && (
-                  <Badge className="ml-2 bg-orange-500 text-white text-xs">{activeOrders.length}</Badge>
+                  <Badge className="ml-2 bg-emerald-500 text-white text-xs">{activeOrders.length}</Badge>
                 )}
               </TabsTrigger>
               <TabsTrigger value="completed">

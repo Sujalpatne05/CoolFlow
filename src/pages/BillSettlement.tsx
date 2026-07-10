@@ -198,12 +198,12 @@ const BillSettlement: React.FC = () => {
 
   return (
     <DashboardLayout>
-      <div className="min-h-[calc(100vh-80px)] bg-gradient-to-br from-orange-50 via-white to-orange-100 p-6">
+      <div className="min-h-[calc(100vh-80px)] bg-gradient-to-br from-emerald-50 via-white to-emerald-100 p-6">
         <div className="max-w-6xl mx-auto">
           {/* Header */}
           <div className="mb-8">
-            <h1 className="text-3xl font-bold text-orange-700 flex items-center gap-2 mb-2">
-              <CreditCard className="text-orange-500" /> Bill Settlement
+            <h1 className="text-3xl font-bold text-emerald-700 flex items-center gap-2 mb-2">
+              <CreditCard className="text-emerald-500" /> Bill Settlement
             </h1>
             <p className="text-muted-foreground">Collect payments from completed dine-in orders</p>
           </div>
@@ -221,7 +221,7 @@ const BillSettlement: React.FC = () => {
                 <p className="text-muted-foreground text-sm max-w-xs">
                   No pending payments right now. All dine-in tables have been cleared.
                 </p>
-                <p className="text-xs text-muted-foreground mt-4 bg-orange-50 px-4 py-2 rounded-full">
+                <p className="text-xs text-muted-foreground mt-4 bg-emerald-50 px-4 py-2 rounded-full">
                   New orders will appear here automatically
                 </p>
               </div>
@@ -242,13 +242,13 @@ const BillSettlement: React.FC = () => {
                 return (
                   <Card 
                     key={tableNumber} 
-                    className="bg-white/90 shadow-lg border-orange-100 hover:shadow-xl transition-all cursor-pointer"
+                    className="bg-white/90 shadow-lg border-emerald-100 hover:shadow-xl transition-all cursor-pointer"
                     onClick={() => setExpandedOrderId(isExpanded ? null : tableNumber)}
                   >
                     <CardHeader>
                       <div className="flex justify-between items-start">
                         <div>
-                          <CardTitle className="text-xl text-orange-700">
+                          <CardTitle className="text-xl text-emerald-700">
                             Table {tableNumber}
                           </CardTitle>
                           {tableInfo && (
@@ -270,7 +270,7 @@ const BillSettlement: React.FC = () => {
                       <div className="mb-4 pb-4 border-b">
                         <p className="font-semibold text-sm mb-2">Orders:</p>
                         {tableOrders.map((order, idx) => (
-                          <div key={order.id} className="text-sm mb-2 p-2 bg-orange-50 rounded">
+                          <div key={order.id} className="text-sm mb-2 p-2 bg-emerald-50 rounded">
                             <p className="font-medium">Order #{order.id}</p>
                             <ul className="text-xs text-muted-foreground ml-2">
                               {order.items.map((item, i) => {
@@ -305,13 +305,13 @@ const BillSettlement: React.FC = () => {
                           <span className="font-semibold">₹{(totalAmount / (1 + taxRate / 100)).toFixed(2)}</span>
                         </div>
                         {taxRate > 0 && (
-                          <div className="bg-white rounded-lg p-2 border-2 border-orange-300">
+                          <div className="bg-white rounded-lg p-2 border-2 border-emerald-300">
                             <div className="flex justify-between items-center">
                               <div>
-                                <span className="text-orange-700 font-bold text-sm">Tax Applied</span>
-                                <p className="text-xs text-orange-600">({taxRate}%)</p>
+                                <span className="text-emerald-700 font-bold text-sm">Tax Applied</span>
+                                <p className="text-xs text-emerald-600">({taxRate}%)</p>
                               </div>
-                              <span className="font-bold text-orange-600">₹{(totalAmount * taxRate / (100 + taxRate)).toFixed(2)}</span>
+                              <span className="font-bold text-emerald-600">₹{(totalAmount * taxRate / (100 + taxRate)).toFixed(2)}</span>
                             </div>
                           </div>
                         )}
@@ -325,9 +325,9 @@ const BillSettlement: React.FC = () => {
 
                       {/* Total */}
                       <div className="mb-4 pb-4 border-b">
-                        <div className="flex justify-between items-center bg-gradient-to-r from-orange-50 to-orange-100 p-3 rounded-lg">
+                        <div className="flex justify-between items-center bg-gradient-to-r from-emerald-50 to-emerald-100 p-3 rounded-lg">
                           <span className="font-bold text-lg">Total Amount:</span>
-                          <span className="text-2xl font-bold text-orange-600">
+                          <span className="text-2xl font-bold text-emerald-600">
                             ₹{totalAmount.toFixed(2)}
                           </span>
                         </div>
@@ -380,7 +380,7 @@ const BillSettlement: React.FC = () => {
                         </Button>
                         <Button
                           variant="outline"
-                          className="w-full border-orange-300 text-orange-700 hover:bg-orange-50 hover:text-gray-950 disabled:bg-orange-50 disabled:text-gray-900"
+                          className="w-full border-emerald-300 text-emerald-700 hover:bg-emerald-50 hover:text-gray-950 disabled:bg-emerald-50 disabled:text-gray-900"
                           onClick={(e) => {
                             e.stopPropagation();
                             handlePrintBill(tableNumber, tableOrders);

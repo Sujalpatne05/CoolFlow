@@ -675,7 +675,7 @@ const MenuManagement = () => {
                     <span className="text-sm font-semibold">{importResult.inserted} items imported successfully</span>
                   </div>
                   {importResult.skipped > 0 && (
-                    <div className="flex items-center gap-2 text-orange-700 bg-orange-50 border border-orange-200 rounded-lg p-3">
+                    <div className="flex items-center gap-2 text-emerald-700 bg-emerald-50 border border-emerald-200 rounded-lg p-3">
                       <AlertCircle size={16} />
                       <span className="text-sm">{importResult.skipped} rows skipped (missing name or invalid price)</span>
                     </div>

@@ -28,13 +28,13 @@ type Ticket = {
 
 function getStatusBadge(status: TicketStatus) {
   if (status === "open") return "bg-red-50 text-red-600 border-red-200";
-  if (status === "in-progress") return "bg-amber-50 text-amber-700 border-amber-200";
+  if (status === "in-progress") return "bg-teal-50 text-teal-700 border-teal-200";
   return "bg-emerald-50 text-emerald-700 border-emerald-200";
 }
 
 function getPriorityBadge(priority: TicketPriority) {
   if (priority === "high") return "bg-red-100 text-red-700";
-  if (priority === "medium") return "bg-amber-100 text-amber-800";
+  if (priority === "medium") return "bg-teal-100 text-teal-800";
   return "bg-slate-100 text-slate-700";
 }
 
@@ -115,7 +115,7 @@ export default function SuperAdminSupport() {
     const resolved = ticketList.filter((ticket) => ticket.status === "resolved").length;
     return [
       { label: "Open Tickets", value: open, icon: <MessageSquare className="h-6 w-6 text-red-600" />, color: "bg-red-50 border-red-100", text: "text-red-700" },
-      { label: "In Progress", value: inProgress, icon: <Clock className="h-6 w-6 text-amber-600" />, color: "bg-amber-50 border-amber-100", text: "text-amber-700" },
+      { label: "In Progress", value: inProgress, icon: <Clock className="h-6 w-6 text-teal-600" />, color: "bg-teal-50 border-teal-100", text: "text-teal-700" },
       { label: "Resolved", value: resolved, icon: <CheckCircle className="h-6 w-6 text-emerald-600" />, color: "bg-emerald-50 border-emerald-100", text: "text-emerald-700" },
     ];
   }, [ticketList]);
@@ -268,7 +268,7 @@ export default function SuperAdminSupport() {
                     </td>
                     <td className="px-4 py-3 text-slate-700">{ticket.assignee || "Unassigned"}</td>
                     <td className="px-4 py-3">
-                      <span className={`inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-bold ${(ticket.sla || "").includes("left") ? "bg-amber-100 text-amber-800" : "bg-emerald-100 text-emerald-700"}`}>
+                      <span className={`inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-bold ${(ticket.sla || "").includes("left") ? "bg-teal-100 text-teal-800" : "bg-emerald-100 text-emerald-700"}`}>
                         {(ticket.sla || "").includes("left") ? <Siren className="h-3.5 w-3.5" /> : <CheckCircle className="h-3.5 w-3.5" />}
                         {ticket.sla || "N/A"}
                       </span>

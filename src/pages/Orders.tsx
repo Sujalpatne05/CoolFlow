@@ -211,7 +211,7 @@ export default function Orders() {
       case "dine-in":
         return "bg-blue-100 text-blue-800";
       case "take-away":
-        return "bg-orange-100 text-orange-800";
+        return "bg-teal-100 text-teal-800";
       case "delivery":
         return "bg-purple-100 text-purple-800";
       default:
@@ -325,14 +325,14 @@ export default function Orders() {
                         </div>
                         <div className="flex items-center gap-1">
                           <span className="text-gray-600">Status</span>
-                          <span className={`font-semibold ${order.paymentStatus === "paid" ? "text-green-600" : "text-orange-600"}`}>
+                          <span className={`font-semibold ${order.paymentStatus === "paid" ? "text-green-600" : "text-teal-600"}`}>
                             {order.paymentStatus === "paid" ? "Paid" : "Unpaid"}
                           </span>
                         </div>
                       </div>
                       <PrintBillButton
                         orderId={order.id}
-                        className="w-full sm:w-auto border-orange-300 text-orange-700 hover:bg-orange-50 hover:text-gray-950"
+                        className="w-full sm:w-auto border-teal-300 text-teal-700 hover:bg-teal-50 hover:text-gray-950"
                       />
                     </div>
                   </div>
@@ -389,8 +389,8 @@ export default function Orders() {
                         onClick={() => handleQuickDate(0)}
                         className={`px-3 py-2 rounded-lg text-xs font-semibold transition whitespace-nowrap ${
                           selectedDate?.toDateString() === new Date().toDateString()
-                            ? "bg-orange-600 text-white shadow-md"
-                            : "bg-white border border-gray-300 text-gray-700 hover:bg-orange-50"
+                            ? "bg-emerald-600 text-white shadow-md"
+                            : "bg-white border border-gray-300 text-gray-700 hover:bg-emerald-50"
                         }`}
                       >
                         Today
@@ -399,8 +399,8 @@ export default function Orders() {
                         onClick={() => handleQuickDate(1)}
                         className={`px-3 py-2 rounded-lg text-xs font-semibold transition whitespace-nowrap ${
                           selectedDate?.toDateString() === new Date(Date.now() - 86400000).toDateString()
-                            ? "bg-orange-600 text-white shadow-md"
-                            : "bg-white border border-gray-300 text-gray-700 hover:bg-orange-50"
+                            ? "bg-emerald-600 text-white shadow-md"
+                            : "bg-white border border-gray-300 text-gray-700 hover:bg-emerald-50"
                         }`}
                       >
                         Yesterday

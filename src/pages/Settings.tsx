@@ -174,15 +174,15 @@ const Settings: React.FC = () => {
   return (
     <DashboardLayout>
       <div className="max-w-2xl mx-auto py-8 px-4 space-y-6">
-        <h1 className="text-2xl font-bold text-orange-700 flex items-center gap-2">
-          <Settings2 className="text-orange-500" /> Restaurant Settings
+        <h1 className="text-2xl font-bold text-emerald-700 flex items-center gap-2">
+          <Settings2 className="text-emerald-500" /> Restaurant Settings
         </h1>
 
         {/* Restaurant Info */}
         <Card>
           <CardHeader className="pb-3">
             <CardTitle className="text-base flex items-center gap-2">
-              <Building2 size={16} className="text-orange-500" /> Restaurant Info
+              <Building2 size={16} className="text-emerald-500" /> Restaurant Info
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
@@ -201,7 +201,7 @@ const Settings: React.FC = () => {
                     </button>
                   </div>
                 ) : (
-                  <div className="h-16 w-16 rounded-lg border-2 border-dashed border-orange-200 flex items-center justify-center text-orange-300">
+                  <div className="h-16 w-16 rounded-lg border-2 border-dashed border-emerald-200 flex items-center justify-center text-emerald-300">
                     <Upload size={20} />
                   </div>
                 )}
@@ -248,7 +248,7 @@ const Settings: React.FC = () => {
         <Card>
           <CardHeader className="pb-3">
             <CardTitle className="text-base flex items-center gap-2">
-              <Receipt size={16} className="text-orange-500" /> Billing & Tax
+              <Receipt size={16} className="text-emerald-500" /> Billing & Tax
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
@@ -287,7 +287,7 @@ const Settings: React.FC = () => {
         <Card>
           <CardHeader className="pb-3">
             <CardTitle className="text-base flex items-center gap-2">
-              <Printer size={16} className="text-orange-500" /> Printer Configuration
+              <Printer size={16} className="text-emerald-500" /> Printer Configuration
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
@@ -345,7 +345,7 @@ const Settings: React.FC = () => {
         <Card>
           <CardHeader className="pb-3">
             <CardTitle className="text-base flex items-center gap-2">
-              <Truck size={16} className="text-orange-500" /> Delivery
+              <Truck size={16} className="text-emerald-500" /> Delivery
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -357,7 +357,7 @@ const Settings: React.FC = () => {
                   size="sm"
                   variant={data.default_delivery_partner === p ? "default" : "outline"}
                   onClick={() => setData(d => ({ ...d, default_delivery_partner: p }))}
-                  className={data.default_delivery_partner === p ? "bg-orange-500 hover:bg-orange-600" : ""}
+                  className={data.default_delivery_partner === p ? "bg-emerald-500 hover:bg-emerald-600" : ""}
                 >
                   {p === "in-house" ? "In-House" : p.charAt(0).toUpperCase() + p.slice(1)}
                 </Button>
@@ -371,7 +371,7 @@ const Settings: React.FC = () => {
         <Card>
           <CardHeader className="pb-3">
             <CardTitle className="text-base flex items-center gap-2">
-              <Printer size={16} className="text-orange-500" /> Printers
+              <Printer size={16} className="text-emerald-500" /> Printers
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
@@ -425,7 +425,7 @@ const Settings: React.FC = () => {
         <Card>
           <CardHeader className="pb-3">
             <CardTitle className="text-base flex items-center gap-2">
-              <LayoutGrid size={16} className="text-orange-500" /> Table Sections
+              <LayoutGrid size={16} className="text-emerald-500" /> Table Sections
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-3">
@@ -437,7 +437,7 @@ const Settings: React.FC = () => {
                 <span className="text-xs text-muted-foreground italic">No sections added yet.</span>
               )}
               {data.table_sections.map((s, i) => (
-                <span key={i} className="flex items-center gap-1 bg-orange-100 text-orange-700 text-xs px-3 py-1 rounded-full font-medium">
+                <span key={i} className="flex items-center gap-1 bg-emerald-100 text-emerald-700 text-xs px-3 py-1 rounded-full font-medium">
                   {s}
                   <button
                     onClick={() => setData(d => ({ ...d, table_sections: d.table_sections.filter((_, idx) => idx !== i) }))}
@@ -485,7 +485,7 @@ const Settings: React.FC = () => {
         <Button
           onClick={handleSave}
           disabled={saving}
-          className="w-full bg-orange-500 hover:bg-orange-600"
+          className="w-full bg-emerald-500 hover:bg-emerald-600"
         >
           {saving ? "Saving..." : "Save All Settings"}
         </Button>

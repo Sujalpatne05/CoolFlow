@@ -118,7 +118,7 @@ export default function PaymentsOverview() {
       case "upi":
         return "bg-purple-100 text-purple-700 border-purple-300";
       case "all":
-        return "bg-orange-100 text-orange-700 border-orange-300";
+        return "bg-emerald-100 text-emerald-700 border-emerald-300";
       default:
         return "bg-gray-100 text-gray-700 border-gray-300";
     }
@@ -157,7 +157,7 @@ export default function PaymentsOverview() {
       case "dine-in":
         return "bg-blue-100 text-blue-800";
       case "take-away":
-        return "bg-orange-100 text-orange-800";
+        return "bg-emerald-100 text-emerald-800";
       case "delivery":
         return "bg-purple-100 text-purple-800";
       default:
@@ -174,7 +174,7 @@ export default function PaymentsOverview() {
             <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">Payments Overview</h1>
             <p className="text-xs sm:text-sm text-gray-600 mt-1">Track payments by method and view order details</p>
           </div>
-          <div className="bg-gradient-to-r from-orange-500 to-orange-600 text-white px-4 sm:px-6 py-2 sm:py-3 rounded-lg shadow-lg w-full sm:w-fit">
+          <div className="bg-gradient-to-r from-emerald-500 to-teal-600 text-white px-4 sm:px-6 py-2 sm:py-3 rounded-lg shadow-lg w-full sm:w-fit">
             <p className="text-xs sm:text-sm opacity-90">Total Revenue</p>
             <p className="text-2xl sm:text-3xl font-bold">₹{totalRevenue.toLocaleString("en-IN")}</p>
           </div>
@@ -320,7 +320,7 @@ export default function PaymentsOverview() {
                         </td>
                         <td className="py-2 sm:py-3 px-2 sm:px-4 text-center hidden md:table-cell">
                           {order.table_number ? (
-                            <Badge className="bg-orange-100 text-orange-700 text-xs">Table {order.table_number}</Badge>
+                            <Badge className="bg-emerald-100 text-emerald-700 text-xs">Table {order.table_number}</Badge>
                           ) : (
                             <span className="text-gray-500 text-xs">-</span>
                           )}
@@ -384,13 +384,13 @@ export default function PaymentsOverview() {
                   </div>
                   <div className="bg-gray-50 p-3 sm:p-4 rounded-lg">
                     <p className="text-xs sm:text-sm text-gray-600">Payment Status</p>
-                    <p className={`text-base sm:text-lg font-bold mt-1 ${selectedOrder.paymentStatus === "paid" ? "text-green-600" : "text-orange-600"}`}>
+                    <p className={`text-base sm:text-lg font-bold mt-1 ${selectedOrder.paymentStatus === "paid" ? "text-green-600" : "text-emerald-600"}`}>
                       {selectedOrder.paymentStatus === "paid" ? "Paid" : "Unpaid"}
                     </p>
                   </div>
                   <div className="bg-gray-50 p-3 sm:p-4 rounded-lg">
                     <p className="text-xs sm:text-sm text-gray-600">Table Number</p>
-                    <p className="text-xl sm:text-2xl font-bold text-orange-600 mt-1">
+                    <p className="text-xl sm:text-2xl font-bold text-emerald-600 mt-1">
                       {selectedOrder.table_number ? `Table ${selectedOrder.table_number}` : "N/A"}
                     </p>
                   </div>
@@ -419,10 +419,10 @@ export default function PaymentsOverview() {
                 </div>
 
                 {/* Amount */}
-                <div className="bg-gradient-to-r from-orange-50 to-yellow-50 p-3 sm:p-4 rounded-lg border-2 border-orange-200">
+                <div className="bg-gradient-to-r from-emerald-50 to-yellow-50 p-3 sm:p-4 rounded-lg border-2 border-emerald-200">
                   <div className="flex justify-between items-center">
                     <span className="text-base sm:text-lg font-semibold text-gray-700">Total Amount</span>
-                    <span className="text-2xl sm:text-3xl font-bold text-orange-600">₹{Number(selectedOrder.total).toLocaleString("en-IN")}</span>
+                    <span className="text-2xl sm:text-3xl font-bold text-emerald-600">₹{Number(selectedOrder.total).toLocaleString("en-IN")}</span>
                   </div>
                 </div>
 

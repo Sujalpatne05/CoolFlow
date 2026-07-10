@@ -143,7 +143,7 @@ const LoginFixed = () => {
           <div style={{ textAlign: "center", marginBottom: 35 }}>
             <div style={{ marginBottom: 20 }}>
               <img 
-                src="/logdine-restro-logo.png" 
+                src="/logdine-logo.png" 
                 alt="LogDine Restro" 
                 style={{ width: 100, height: 100, margin: "0 auto", borderRadius: 15 }}
               />

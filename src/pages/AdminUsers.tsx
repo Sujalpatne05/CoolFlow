@@ -20,10 +20,10 @@ type StaffUser = {
 const ROLES = ["manager", "staff", "cashier", "chef"];
 
 const roleColors: Record<string, string> = {
-  admin: "bg-amber-100 text-amber-800",
+  admin: "bg-teal-100 text-teal-800",
   manager: "bg-blue-100 text-blue-800",
   cashier: "bg-purple-100 text-purple-800",
-  chef: "bg-orange-100 text-orange-800",
+  chef: "bg-emerald-100 text-emerald-800",
   staff: "bg-green-100 text-green-800",
 };
 
@@ -123,18 +123,18 @@ const AdminUsers: React.FC = () => {
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-2xl font-bold flex items-center gap-2">
-              <UserCog className="text-orange-500" /> Staff Management
+              <UserCog className="text-emerald-500" /> Staff Management
             </h1>
             <p className="text-sm text-muted-foreground mt-1">Manage your restaurant's staff accounts</p>
           </div>
-          <Button onClick={() => setShowAdd(true)} className="bg-orange-500 hover:bg-orange-600">
+          <Button onClick={() => setShowAdd(true)} className="bg-emerald-500 hover:bg-emerald-600">
             <Plus size={16} className="mr-1" /> Add Staff
           </Button>
         </div>
 
         {/* Add Staff Form */}
         {showAdd && (
-          <Card className="border-orange-200">
+          <Card className="border-emerald-200">
             <CardHeader className="pb-3">
               <CardTitle className="text-base">Add New Staff Member</CardTitle>
             </CardHeader>
@@ -160,7 +160,7 @@ const AdminUsers: React.FC = () => {
                 </div>
                 <div className="sm:col-span-2 flex gap-2 justify-end">
                   <Button type="button" variant="outline" onClick={() => setShowAdd(false)}>Cancel</Button>
-                  <Button type="submit" disabled={saving} className="bg-orange-500 hover:bg-orange-600">
+                  <Button type="submit" disabled={saving} className="bg-emerald-500 hover:bg-emerald-600">
                     {saving ? "Adding..." : "Add Staff"}
                   </Button>
                 </div>

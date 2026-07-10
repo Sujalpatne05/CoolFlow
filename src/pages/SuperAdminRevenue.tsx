@@ -83,10 +83,10 @@ export default function SuperAdminRevenue() {
             <p className="text-2xl font-extrabold text-gray-900 mt-1">{loading ? "..." : `₹${paidRevenue.toLocaleString("en-IN")}`}</p>
           </div>
 
-          <div className="bg-white rounded-xl border border-orange-200 bg-gradient-to-b from-orange-50 to-white p-5 shadow-sm">
+          <div className="bg-white rounded-xl border border-emerald-200 bg-gradient-to-b from-emerald-50 to-white p-5 shadow-sm">
             <div className="flex justify-between items-start mb-3">
-              <div className="bg-orange-100 p-2 rounded-lg"><TrendingDown className="h-5 w-5 text-orange-600" /></div>
-              <span className="text-xs font-bold text-orange-600">Pending</span>
+              <div className="bg-emerald-100 p-2 rounded-lg"><TrendingDown className="h-5 w-5 text-emerald-600" /></div>
+              <span className="text-xs font-bold text-emerald-600">Pending</span>
             </div>
             <p className="text-sm text-gray-500">Unpaid Amount</p>
             <p className="text-2xl font-extrabold text-gray-900 mt-1">{loading ? "..." : `₹${unpaidRevenue.toLocaleString("en-IN")}`}</p>

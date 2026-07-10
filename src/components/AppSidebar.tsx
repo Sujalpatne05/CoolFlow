@@ -178,10 +178,10 @@ export function AppSidebar() {
                           end
                           className={
                             isActive
-                              ? "bg-orange-600 text-white font-semibold shadow-sm hover:bg-orange-100 hover:text-gray-950"
+                              ? "bg-gradient-to-r from-emerald-500 to-teal-600 text-white font-semibold shadow-lg hover:from-emerald-600 hover:to-teal-700"
                               : "hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
                           }
-                          activeClassName="bg-orange-600 text-white font-semibold"
+                          activeClassName="bg-gradient-to-r from-emerald-500 to-teal-600 text-white font-semibold"
                         >
                           <item.icon className="mr-2 h-4 w-4" />
                           {!collapsed && <span>{item.title}</span>}

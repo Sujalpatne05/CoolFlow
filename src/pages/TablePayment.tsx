@@ -55,9 +55,9 @@ export default function TablePayment() {
         </div>
 
         {/* Amount */}
-        <div className="bg-gradient-to-r from-orange-100 to-yellow-100 rounded-lg p-6 mb-8 text-center">
+        <div className="bg-gradient-to-r from-emerald-100 to-yellow-100 rounded-lg p-6 mb-8 text-center">
           <p className="text-gray-600 mb-2">Total Amount</p>
-          <p className="text-4xl font-bold text-orange-600">Rs. {Math.round(orderTotal)}</p>
+          <p className="text-4xl font-bold text-emerald-600">Rs. {Math.round(orderTotal)}</p>
         </div>
 
         {/* Payment Methods */}

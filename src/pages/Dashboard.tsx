@@ -129,14 +129,14 @@ export default function Dashboard() {
       <div className="space-y-6 p-4 md:p-6">
 
         {/* Header */}
-        <div className="rounded-2xl bg-gradient-to-br from-orange-500 to-orange-600 text-white p-6 flex flex-col sm:flex-row items-center justify-between gap-4">
+        <div className="rounded-2xl bg-gradient-to-r from-emerald-500 via-emerald-600 to-teal-600 text-white p-6 flex flex-col sm:flex-row items-center justify-between gap-4 shadow-2xl">
           <div className="flex items-center gap-4">
             <div>
               <h1 className="text-2xl sm:text-3xl font-extrabold mb-1">Welcome back, {restaurantName || getStoredRestaurantName() || "Restaurant"}!</h1>
-              <p className="text-orange-100 text-sm">Here's your restaurant at a glance — {new Date().toLocaleDateString("en-IN", { weekday: "long", year: "numeric", month: "long", day: "numeric" })}</p>
+              <p className="text-emerald-100 text-sm">Here's your restaurant at a glance — {new Date().toLocaleDateString("en-IN", { weekday: "long", year: "numeric", month: "long", day: "numeric" })}</p>
             </div>
           </div>
-          <ChefHat className="h-16 w-16 text-orange-200 hidden sm:block" />
+          <ChefHat className="h-16 w-16 text-emerald-200 hidden sm:block" />
         </div>
 
         {/* Key Stats - Role Based */}
@@ -191,14 +191,14 @@ export default function Dashboard() {
           {/* Unpaid Bills - Admin only */}
           {userRole === "admin" && (
             <div onClick={() => navigate("/bill-settlement")} className="cursor-pointer">
-              <Card className="hover:shadow-lg transition-shadow border-l-4 border-l-orange-500">
+              <Card className="hover:shadow-lg transition-shadow border-l-4 border-l-teal-500">
                 <CardContent className="pt-4 pb-4">
                   <div className="flex justify-between items-start">
                     <div>
                       <p className="text-xs text-gray-500 mb-1">Unpaid Bills</p>
-                      <p className="text-2xl font-bold text-orange-600">{stats.unpaidOrders.length}</p>
+                      <p className="text-2xl font-bold text-teal-600">{stats.unpaidOrders.length}</p>
                     </div>
-                    <div className="bg-orange-100 p-2 rounded-lg"><CreditCard className="h-5 w-5 text-orange-600" /></div>
+                    <div className="bg-teal-100 p-2 rounded-lg"><CreditCard className="h-5 w-5 text-teal-600" /></div>
                   </div>
                 </CardContent>
               </Card>
@@ -208,26 +208,26 @@ export default function Dashboard() {
 
         {/* Pending Actions */}
         {(stats.unpaidOrders.length > 0 || stats.kitchenPending > 0 || stats.lowStock.length > 0) && (
-          <Card className="border-orange-200 bg-orange-50">
+          <Card className="border-2 border-emerald-300 bg-gradient-to-br from-emerald-50 to-teal-50 shadow-lg">
             <CardHeader className="pb-2">
-              <CardTitle className="text-base flex items-center gap-2 text-orange-700">
+              <CardTitle className="text-base flex items-center gap-2 text-emerald-700 font-bold">
                 <AlertTriangle size={18} /> Pending Actions
               </CardTitle>
             </CardHeader>
             <CardContent>
               <div className="flex flex-wrap gap-3">
                 {stats.unpaidOrders.length > 0 && (
-                  <Button size="sm" variant="outline" className="border-orange-400 text-orange-700 hover:bg-orange-100" onClick={() => navigate("/bill-settlement")}>
+                  <Button size="sm" variant="outline" className="border-2 border-emerald-400 text-emerald-700 hover:bg-gradient-to-r hover:from-emerald-500 hover:to-teal-500 hover:text-white font-semibold shadow-sm" onClick={() => navigate("/bill-settlement")}>
                     <CreditCard size={14} className="mr-1" /> {stats.unpaidOrders.length} Unpaid Bills
                   </Button>
                 )}
                 {stats.kitchenPending > 0 && (
-                  <Button size="sm" variant="outline" className="border-blue-400 text-blue-700 hover:bg-blue-50" onClick={() => navigate("/kitchen-display")}>
+                  <Button size="sm" variant="outline" className="border-2 border-blue-400 text-blue-700 hover:bg-gradient-to-r hover:from-blue-500 hover:to-blue-600 hover:text-white font-semibold shadow-sm" onClick={() => navigate("/kitchen-display")}>
                     <ChefHat size={14} className="mr-1" /> {stats.kitchenPending} Orders in Kitchen
                   </Button>
                 )}
                 {stats.lowStock.length > 0 && (
-                  <Button size="sm" variant="outline" className="border-red-400 text-red-700 hover:bg-red-50" onClick={() => navigate("/inventory")}>
+                  <Button size="sm" variant="outline" className="border-2 border-red-400 text-red-700 hover:bg-gradient-to-r hover:from-red-500 hover:to-red-600 hover:text-white font-semibold shadow-sm" onClick={() => navigate("/inventory")}>
                     <AlertTriangle size={14} className="mr-1" /> {stats.lowStock.length} Low Stock Items
                   </Button>
                 )}
@@ -244,9 +244,9 @@ export default function Dashboard() {
               <CardHeader className="pb-3">
                 <div className="flex justify-between items-center">
                   <CardTitle className="text-base flex items-center gap-2">
-                    <Table size={18} className="text-orange-500" /> Live Table Status
+                    <Table size={18} className="text-emerald-600" /> Live Table Status
                   </CardTitle>
-                  <Button size="sm" variant="ghost" onClick={() => navigate("/table-management")} className="text-orange-600 text-xs">
+                  <Button size="sm" variant="ghost" onClick={() => navigate("/table-management")} className="text-emerald-700 hover:bg-emerald-50 text-xs font-semibold">
                     Manage <ArrowRight size={14} className="ml-1" />
                   </Button>
                 </div>
@@ -287,9 +287,9 @@ export default function Dashboard() {
             <CardHeader className="pb-3">
               <div className="flex justify-between items-center">
                 <CardTitle className="text-base flex items-center gap-2">
-                  <ChefHat size={18} className="text-orange-500" /> Kitchen Status
+                  <ChefHat size={18} className="text-emerald-600" /> Kitchen Status
                 </CardTitle>
-                <Button size="sm" variant="ghost" onClick={() => navigate("/kitchen-display")} className="text-orange-600 text-xs">
+                <Button size="sm" variant="ghost" onClick={() => navigate("/kitchen-display")} className="text-emerald-700 hover:bg-emerald-50 text-xs font-semibold">
                   View <ArrowRight size={14} className="ml-1" />
                 </Button>
               </div>
@@ -320,7 +320,7 @@ export default function Dashboard() {
             <Card>
               <CardHeader className="pb-3">
                 <CardTitle className="text-base flex items-center gap-2">
-                  <TrendingUp size={18} className="text-orange-500" /> Top Selling Items
+                  <TrendingUp size={18} className="text-emerald-600" /> Top Selling Items
                 </CardTitle>
               </CardHeader>
               <CardContent>
@@ -333,14 +333,14 @@ export default function Dashboard() {
                       const pct = Math.round((count / maxCount) * 100);
                       return (
                         <div key={name} className="flex items-center gap-3">
-                          <span className="text-xs font-bold text-orange-500 w-4">#{idx + 1}</span>
+                          <span className="text-xs font-bold text-emerald-600 w-4">#{idx + 1}</span>
                           <div className="flex-1">
                             <div className="flex justify-between text-sm mb-1">
                               <span className="font-medium">{name}</span>
                               <span className="text-gray-500">{count} sold</span>
                             </div>
                             <div className="w-full bg-gray-100 rounded-full h-2">
-                              <div className="bg-orange-500 h-2 rounded-full transition-all" style={{ width: `${pct}%` }}></div>
+                              <div className="bg-gradient-to-r from-emerald-500 to-teal-500 h-2 rounded-full transition-all shadow-sm" style={{ width: `${pct}%` }}></div>
                             </div>
                           </div>
                         </div>
@@ -357,9 +357,9 @@ export default function Dashboard() {
             <CardHeader className="pb-3">
               <div className="flex justify-between items-center">
                 <CardTitle className="text-base flex items-center gap-2">
-                  <Activity size={18} className="text-orange-500" /> Recent Activity
+                  <Activity size={18} className="text-emerald-600" /> Recent Activity
                 </CardTitle>
-                <Button size="sm" variant="ghost" onClick={() => navigate("/orders")} className="text-orange-600 text-xs">
+                <Button size="sm" variant="ghost" onClick={() => navigate("/orders")} className="text-emerald-700 hover:bg-emerald-50 text-xs font-semibold">
                   All Orders <ArrowRight size={14} className="ml-1" />
                 </Button>
               </div>
@@ -377,7 +377,7 @@ export default function Dashboard() {
                       </div>
                       <div className="flex items-center gap-2">
                         <span className="text-sm font-semibold">₹{activity.amount}</span>
-                        <Badge className={activity.paid ? "bg-green-100 text-green-700" : "bg-orange-100 text-orange-700"}>
+                        <Badge className={activity.paid ? "bg-green-100 text-green-700" : "bg-emerald-100 text-emerald-700"}>
                           {activity.paid ? "Paid" : "Unpaid"}
                         </Badge>
                       </div>
