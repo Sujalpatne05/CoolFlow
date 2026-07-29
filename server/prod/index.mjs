@@ -1,6 +1,8 @@
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
+import { fileURLToPath } from 'url';
+import { dirname, join } from 'path';
 import { setupSchema } from './schema.mjs';
 
 import authRoutes from './routes/auth.mjs';
@@ -12,7 +14,11 @@ import deliveriesRoutes from './routes/deliveries.mjs';
 import miscRoutes from './routes/misc.mjs';
 import superadminRoutes from './routes/superadmin.mjs';
 
-dotenv.config();
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
+// Load .env from server directory
+dotenv.config({ path: join(__dirname, '../.env') });
 
 const app = express();
 const PORT = Number(process.env.PORT || 5001);

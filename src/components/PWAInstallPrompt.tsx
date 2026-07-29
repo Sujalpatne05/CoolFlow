@@ -53,12 +53,12 @@ const PWAInstallPrompt: React.FC = () => {
       border: "1px solid #f0f0f0", animation: "slideUp 0.3s ease"
     }}>
       <img
-        src="/logdine-restro-logo.png"
-        alt="Logdine"
+        src="/ordernest-logo.png"
+        alt="OrderNest"
         style={{ width: 44, height: 44, borderRadius: 10, flexShrink: 0, objectFit: "cover" }}
       />
       <div style={{ flex: 1, minWidth: 0 }}>
-        <div style={{ fontWeight: 700, fontSize: 14, color: "#1a1a2e" }}>Install Logdine</div>
+        <div style={{ fontWeight: 700, fontSize: 14, color: "#1a1a2e" }}>Install OrderNest</div>
         <div style={{ fontSize: 12, color: "#888", marginTop: 2 }}>Add to home screen for quick access</div>
       </div>
       <div style={{ display: "flex", gap: 8, flexShrink: 0 }}>

@@ -41,7 +41,7 @@ export const printBill = (billData: BillData) => {
     paymentMethod,
     customerName,
     customerPhone,
-    restaurantName = "Logdine",
+    restaurantName = "OrderNest",
     timestamp = new Date(),
   } = billData;
 
@@ -326,7 +326,7 @@ export const printBill = (billData: BillData) => {
 
         <div class="footer">
           <div class="thank-you">Thank You!</div>
-          <div class="powered-by">Powered by LogDine Restro</div>
+          <div class="powered-by">Powered by OrderNest</div>
         </div>
       </div>
     </body>

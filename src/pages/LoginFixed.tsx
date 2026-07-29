@@ -143,12 +143,12 @@ const LoginFixed = () => {
           <div style={{ textAlign: "center", marginBottom: 35 }}>
             <div style={{ marginBottom: 20 }}>
               <img 
-                src="/logdine-logo.png" 
-                alt="LogDine Restro" 
+                src="/ordernest-logo.png" 
+                alt="OrderNest" 
                 style={{ width: 100, height: 100, margin: "0 auto", borderRadius: 15 }}
               />
             </div>
-            <h1 style={{ fontSize: 32, fontWeight: 900, color: "#1f2937", margin: "0 0 8px" }}>LogDine Restro</h1>
+            <h1 style={{ fontSize: 32, fontWeight: 900, color: "#1f2937", margin: "0 0 8px" }}>OrderNest</h1>
             <p style={{ color: "#10b981", fontSize: 18, margin: 0, fontWeight: 700, letterSpacing: "0.01em" }}>Restaurant Management System</p>
           </div>
 

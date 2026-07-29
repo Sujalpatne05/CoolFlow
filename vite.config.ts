@@ -27,10 +27,10 @@ export default defineConfig(({ mode }) => ({
       registerType: "autoUpdate",
       includeAssets: ['favicon.svg', 'icon-192x192.png', 'icon-512x512.png'],
       manifest: {
-        name: 'Logdine - Restaurant Management',
-        short_name: 'Logdine',
+        name: 'OrderNest - Restaurant Management',
+        short_name: 'OrderNest',
         description: 'Complete Restaurant Management System - POS, Billing, Kitchen Display, Orders & More',
-        theme_color: '#e53935',
+        theme_color: '#40E0D0',
         background_color: '#1a1a2e',
         display: 'standalone',
         orientation: 'portrait-primary',

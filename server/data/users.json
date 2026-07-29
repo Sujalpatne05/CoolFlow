@@ -2,7 +2,7 @@
   {
     "id": 1,
     "name": "Super Admin",
-    "email": "superadmin@logdine.local",
+    "email": "superadmin@ordernest.local",
     "password": "super123",
     "role": "superadmin",
     "restaurant_id": null,

@@ -443,7 +443,7 @@ const Billing: React.FC = () => {
 							<h1 className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent flex items-center gap-2 mb-1">
 								<ShoppingCart className="inline-block text-emerald-500 flex-shrink-0" size={24} /> POS Billing
 							</h1>
-							<div className="text-muted-foreground text-xs sm:text-sm">Welcome to Logdine! Please select items and complete the order below.</div>
+							<div className="text-muted-foreground text-xs sm:text-sm">Welcome to OrderNest! Please select items and complete the order below.</div>
 						</div>
 						<div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
 							<span className="bg-gradient-to-r from-emerald-500 to-teal-500 text-white px-3 sm:px-4 py-1.5 rounded-full font-semibold text-xs sm:text-sm truncate shadow-lg">Restaurant: {getStoredRestaurantName() || "Restaurant"}</span>
@@ -878,7 +878,7 @@ const Billing: React.FC = () => {
 
 				{/* Footer */}
 				<footer className="w-full text-center py-3 sm:py-4 text-muted-foreground text-xs bg-transparent mt-6 sm:mt-8 px-3">
-					&copy; {new Date().getFullYear()} Logdine POS &mdash; Powered by {getStoredRestaurantName() || "Logdine"}
+					&copy; {new Date().getFullYear()} OrderNest POS &mdash; Powered by {getStoredRestaurantName() || "OrderNest"}
 				</footer>
 			</div>
 		</DashboardLayout>

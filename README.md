@@ -1,8 +1,8 @@
-# Restaurant Management System
+# OrderNest - Restaurant Management System
 
 ## Project Info
 
-This project is a Restaurant Management System built with modern web technologies for restaurant operations, menu management, orders, analytics, and more.
+OrderNest is a comprehensive Restaurant Management System built with modern web technologies for restaurant operations, menu management, orders, analytics, and more.
 
 ## Technologies Used
 
@@ -11,6 +11,8 @@ This project is a Restaurant Management System built with modern web technologie
 - React
 - shadcn-ui
 - Tailwind CSS
+- PostgreSQL (Neon)
+- Express.js
 
 ## How to Run Locally
 
@@ -26,47 +28,94 @@ This project is a Restaurant Management System built with modern web technologie
    ```sh
    npm install
    ```
-4. **Start the development server:**
+4. **Setup Environment Variables:**
+   - Copy `.env.example` to `.env` in root folder
+   - Copy `server/.env.example` to `server/.env`
+   - Update database connection string in `server/.env`
+
+5. **Start the backend server:**
+   ```sh
+   npm run backend
+   ```
+   
+6. **Start the frontend development server (in a new terminal):**
    ```sh
    npm run dev
    ```
-   The app will be available at `http://localhost:3000` or the port shown in your terminal.
+   
+   The app will be available at `http://localhost:8080`
 
-## How to Deploy
+## Default Login Credentials
 
-You can deploy this project using Vercel, Netlify, or any static hosting provider that supports Vite/React apps.
-
-### Vercel Deployment Steps
-1. Create a free account at [vercel.com](https://vercel.com/).
-2. Install Vercel CLI:
-   ```sh
-   npm i -g vercel
-   ```
-3. Login to Vercel:
-   ```sh
-   vercel login
-   ```
-4. Deploy:
-   ```sh
-   vercel --prod
-   ```
-
-## Custom Domain
-
-You can connect a custom domain using your hosting provider's domain settings.
-
-## Editing Code
-
-- Edit files in your favorite IDE (VS Code recommended).
-- Supports hot-reloading for instant preview.
-- All source code is in the `src/` folder.
+**Super Admin:**
+- Email: `superadmin@ordernest.com`
+- Password: `Admin@123`
 
 ## Features
-- Admin and Super Admin dashboards
-- Restaurant, menu, orders, billing, payroll, analytics, and more
-- Responsive UI with Tailwind CSS
-- Modern React components
+
+- 🏪 Multi-tenant restaurant management
+- 👥 Role-based access control (RBAC)
+- 📋 POS & Billing system
+- 🍽️ Menu management with categories
+- 📊 Kitchen Display System (KDS)
+- 🚚 Delivery management
+- 📅 Table reservations
+- 💰 Payments & reports
+- 👨‍💼 Staff & payroll management
+- 📱 Progressive Web App (PWA)
+- 🖨️ Print bills & KOT
+- 📈 Analytics & insights
+
+## Project Structure
+
+```
+hotel/
+├── public/          # Static assets
+├── server/          # Backend server (Express + PostgreSQL)
+│   └── prod/        # Production server files
+├── src/             # Frontend source code
+│   ├── components/  # Reusable components
+│   ├── pages/       # Page components
+│   └── lib/         # Utilities & helpers
+├── .env             # Frontend environment variables
+└── server/.env      # Backend environment variables
+```
+
+## Deployment
+
+You can deploy this project using:
+- **Frontend**: Vercel, Netlify, or Render
+- **Backend**: Render, Railway, or any Node.js hosting
+- **Database**: Neon, Supabase, or any PostgreSQL provider
+
+Configuration files included:
+- `vercel.json` - Vercel deployment
+- `netlify.toml` - Netlify deployment  
+- `render.yaml` - Render deployment
+
+## Development
+
+```sh
+# Install dependencies
+npm install
+
+# Run backend
+npm run backend
+
+# Run frontend (in another terminal)
+npm run dev
+
+# Build for production
+npm run build
+
+# Run tests
+npm run test
+```
+
+## License
+
+This project is private and proprietary.
 
 ---
 
-For any issues, open an issue in the repository or contact the maintainer.
+**OrderNest** - Your kitchen, your control 🍽️

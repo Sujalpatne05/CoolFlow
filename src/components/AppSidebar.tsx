@@ -200,7 +200,7 @@ export function AppSidebar() {
         {!collapsed && (
           <div className="text-center border-t border-sidebar-border pt-3">
             <p className="text-xs text-sidebar-foreground/60">
-              Created by <span className="font-semibold">Logdine</span>
+              Created by <span className="font-semibold">OrderNest</span>
             </p>
             <p className="text-xs text-sidebar-foreground/50 mt-1">
               © {new Date().getFullYear()}

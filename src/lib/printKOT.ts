@@ -25,7 +25,7 @@ export const printKOT = (kotData: KOTData) => {
     items,
     customerName,
     customerPhone,
-    restaurantName = "Logdine",
+    restaurantName = "OrderNest",
     timestamp = new Date(),
   } = kotData;
 
