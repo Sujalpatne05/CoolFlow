@@ -5,10 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import { buildAuthHeaders, clearAuthSession, isAuthError, getStoredRestaurantName } from "@/lib/session";
-import {
-  IndianRupee, ShoppingCart, TrendingUp, ChefHat, AlertTriangle, Clock, CheckCircle,
-  Table, CreditCard, Activity, ArrowRight, UtensilsCrossed,
-} from "lucide-react";
+import { IndianRupee, ShoppingCart, TrendingUp, ChefHat, TriangleAlert as AlertTriangle, Clock, CircleCheck as CheckCircle, Table, CreditCard, Activity, ArrowRight, UtensilsCrossed } from "lucide-react";
 import {
   AreaChart, Area, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip,
   ResponsiveContainer, PieChart, Pie, Cell,
@@ -20,7 +17,7 @@ const API_BASE_URL = (() => {
   return configured || (typeof window !== "undefined" && (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1") ? "http://localhost:5001" : "/api");
 })();
 
-const PIE_COLORS = ["hsl(221 83% 53%)", "hsl(172 66% 50%)", "hsl(38 92% 50%)", "hsl(142 71% 45%)"];
+const PIE_COLORS = ["hsl(162 73% 30%)", "hsl(199 89% 44%)", "hsl(36 96% 47%)", "hsl(142 71% 38%)"];
 
 const tableTextColor = (status: string) => {
   switch (status) {
@@ -157,12 +154,12 @@ export default function Dashboard() {
             <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
               {new Date().toLocaleDateString("en-IN", { weekday: "long", month: "long", day: "numeric" })}
             </p>
-            <h1 className="text-2xl sm:text-3xl font-bold tracking-tight mt-1">
-              Welcome back, <span className="text-gradient">{activeName}</span>
+            <h1 className="text-2xl sm:text-3xl font-bold tracking-tight mt-1 text-foreground">
+              Welcome back, {activeName}
             </h1>
             <p className="text-sm text-muted-foreground mt-1.5">Here's what's happening across your restaurant today.</p>
           </div>
-          <Button onClick={() => navigate("/billing")} className="gradient-brand text-white shadow-soft hover:shadow-elevated w-fit">
+          <Button onClick={() => navigate("/billing")} className="w-fit">
             <UtensilsCrossed className="h-4 w-4 mr-2" />
             New Order
           </Button>
@@ -170,7 +167,7 @@ export default function Dashboard() {
 
         {/* Pending actions banner */}
         {(stats.unpaidOrders.length > 0 || stats.kitchenPending > 0 || stats.lowStock.length > 0) && (
-          <Card className="border-primary/20 bg-primary/5 animate-slide-up">
+          <Card className="border-primary/20 bg-primary/[0.03] animate-fade-in">
             <CardContent className="p-4 flex flex-wrap items-center gap-3">
               <div className="flex items-center gap-2 mr-2">
                 <AlertTriangle className="h-4 w-4 text-primary" />
@@ -178,17 +175,17 @@ export default function Dashboard() {
               </div>
               <div className="flex flex-wrap gap-2">
                 {stats.unpaidOrders.length > 0 && (
-                  <button onClick={() => navigate("/bill-settlement")} className="rounded-lg border border-border bg-card px-3 py-1.5 text-xs font-medium hover:border-primary/40 transition-colors">
+                  <button onClick={() => navigate("/bill-settlement")} className="rounded-md border border-border bg-card px-3 py-1.5 text-xs font-medium hover:border-input transition-colors">
                     {stats.unpaidOrders.length} unpaid bills
                   </button>
                 )}
                 {stats.kitchenPending > 0 && (
-                  <button onClick={() => navigate("/kitchen-display")} className="rounded-lg border border-border bg-card px-3 py-1.5 text-xs font-medium hover:border-primary/40 transition-colors">
+                  <button onClick={() => navigate("/kitchen-display")} className="rounded-md border border-border bg-card px-3 py-1.5 text-xs font-medium hover:border-input transition-colors">
                     {stats.kitchenPending} in kitchen
                   </button>
                 )}
                 {stats.lowStock.length > 0 && (
-                  <button onClick={() => navigate("/inventory")} className="rounded-lg border border-border bg-card px-3 py-1.5 text-xs font-medium hover:border-primary/40 transition-colors">
+                  <button onClick={() => navigate("/inventory")} className="rounded-md border border-border bg-card px-3 py-1.5 text-xs font-medium hover:border-input transition-colors">
                     {stats.lowStock.length} low stock
                   </button>
                 )}
@@ -214,7 +211,7 @@ export default function Dashboard() {
         {/* Main grid */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Revenue chart */}
-          <Card className="lg:col-span-2 animate-slide-up">
+          <Card className="lg:col-span-2 animate-fade-in">
             <CardHeader>
               <div className="flex items-center justify-between">
                 <div>
@@ -230,20 +227,20 @@ export default function Dashboard() {
                   <AreaChart data={dailyRevenue} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
                     <defs>
                       <linearGradient id="revFill" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="0%" stopColor="hsl(221 83% 53%)" stopOpacity={0.35} />
-                        <stop offset="100%" stopColor="hsl(221 83% 53%)" stopOpacity={0.02} />
+                        <stop offset="0%" stopColor="hsl(162 73% 30%)" stopOpacity={0.18} />
+                        <stop offset="100%" stopColor="hsl(162 73% 30%)" stopOpacity={0.01} />
                       </linearGradient>
                     </defs>
-                    <CartesianGrid strokeDasharray="3 3" stroke="hsl(217 33% 20%)" vertical={false} />
-                    <XAxis dataKey="day" stroke="hsl(215 20% 55%)" fontSize={12} tickLine={false} axisLine={false} />
-                    <YAxis stroke="hsl(215 20% 55%)" fontSize={12} tickLine={false} axisLine={false} tickFormatter={(v) => `₹${v}`} />
+                    <CartesianGrid strokeDasharray="3 3" stroke="hsl(220 13% 90%)" vertical={false} />
+                    <XAxis dataKey="day" stroke="hsl(220 9% 55%)" fontSize={12} tickLine={false} axisLine={false} />
+                    <YAxis stroke="hsl(220 9% 55%)" fontSize={12} tickLine={false} axisLine={false} tickFormatter={(v) => `₹${v}`} />
                     <Tooltip
-                      contentStyle={{ background: "hsl(222 47% 11%)", border: "1px solid hsl(217 33% 20%)", borderRadius: "8px", fontSize: "12px" }}
-                      labelStyle={{ color: "hsl(215 20% 65%)" }}
-                      itemStyle={{ color: "hsl(210 40% 98%)" }}
+                      contentStyle={{ background: "#fff", border: "1px solid hsl(220 13% 88%)", borderRadius: "6px", fontSize: "12px", boxShadow: "0 2px 8px rgba(0,0,0,0.08)" }}
+                      labelStyle={{ color: "hsl(220 9% 46%)" }}
+                      itemStyle={{ color: "hsl(222 47% 11%)" }}
                       formatter={(v: number) => [`₹${v.toLocaleString("en-IN")}`, "Revenue"]}
                     />
-                    <Area type="monotone" dataKey="revenue" stroke="hsl(221 83% 53%)" strokeWidth={2.5} fill="url(#revFill)" />
+                    <Area type="monotone" dataKey="revenue" stroke="hsl(162 73% 30%)" strokeWidth={2} fill="url(#revFill)" />
                   </AreaChart>
                 </ResponsiveContainer>
               </div>
@@ -251,7 +248,7 @@ export default function Dashboard() {
           </Card>
 
           {/* Order type split */}
-          <Card className="animate-slide-up">
+          <Card className="animate-fade-in">
             <CardHeader>
               <CardTitle>Revenue split</CardTitle>
               <CardDescription>By order type</CardDescription>
@@ -264,9 +261,9 @@ export default function Dashboard() {
                   <ResponsiveContainer width="100%" height="100%">
                     <PieChart>
                       <Pie data={revenueByType} cx="50%" cy="50%" innerRadius={45} outerRadius={70} paddingAngle={3} dataKey="value">
-                        {revenueByType.map((_, i) => <Cell key={i} fill={PIE_COLORS[i % PIE_COLORS.length]} stroke="hsl(222 47% 11%)" strokeWidth={2} />)}
+                        {revenueByType.map((_, i) => <Cell key={i} fill={PIE_COLORS[i % PIE_COLORS.length]} stroke="#fff" strokeWidth={2} />)}
                       </Pie>
-                      <Tooltip contentStyle={{ background: "hsl(222 47% 11%)", border: "1px solid hsl(217 33% 20%)", borderRadius: "8px", fontSize: "12px" }} formatter={(v: number) => `₹${v.toLocaleString("en-IN")}`} />
+                      <Tooltip contentStyle={{ background: "#fff", border: "1px solid hsl(220 13% 88%)", borderRadius: "6px", fontSize: "12px", boxShadow: "0 2px 8px rgba(0,0,0,0.08)" }} formatter={(v: number) => `₹${v.toLocaleString("en-IN")}`} />
                     </PieChart>
                   </ResponsiveContainer>
                 </div>
@@ -289,7 +286,7 @@ export default function Dashboard() {
         {/* Tables + Kitchen */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {(userRole === "admin" || userRole === "manager") && (
-            <Card className="lg:col-span-2 animate-slide-up">
+            <Card className="lg:col-span-2 animate-fade-in">
               <CardHeader>
                 <div className="flex items-center justify-between">
                   <div>
@@ -312,7 +309,7 @@ export default function Dashboard() {
                       <button
                         key={table.id}
                         onClick={() => table.status === "occupied" ? navigate(`/billing?table=${table.table_number ?? table.number}`) : navigate("/table-management")}
-                        className={`rounded-lg border p-3 text-center transition-all hover:scale-[1.03] ${tableTextColor(table.status)}`}
+                        className={`rounded-md border p-3 text-center transition-colors hover:border-input ${tableTextColor(table.status)}`}
                       >
                         <div className={`mx-auto mb-1.5 h-2 w-2 rounded-full ${tableDotColor(table.status)}`} />
                         <p className="text-sm font-bold">T{table.table_number ?? table.number}</p>
@@ -331,7 +328,7 @@ export default function Dashboard() {
           )}
 
           {/* Kitchen status */}
-          <Card className="animate-slide-up">
+          <Card className="animate-fade-in">
             <CardHeader>
               <div className="flex items-center justify-between">
                 <div>
@@ -344,14 +341,14 @@ export default function Dashboard() {
               </div>
             </CardHeader>
             <CardContent className="space-y-3">
-              <div className="flex items-center justify-between rounded-lg border border-warning/20 bg-warning/5 p-3.5">
+              <div className="flex items-center justify-between rounded-md border border-warning/20 bg-warning/[0.06] p-3.5">
                 <div className="flex items-center gap-2.5">
                   <Clock className="h-4 w-4 text-warning" />
                   <span className="text-sm font-medium">Pending</span>
                 </div>
                 <span className="text-xl font-bold text-warning tabular-nums">{stats.kitchenPending}</span>
               </div>
-              <div className="flex items-center justify-between rounded-lg border border-success/20 bg-success/5 p-3.5">
+              <div className="flex items-center justify-between rounded-md border border-success/20 bg-success/[0.06] p-3.5">
                 <div className="flex items-center gap-2.5">
                   <CheckCircle className="h-4 w-4 text-success" />
                   <span className="text-sm font-medium">Ready to serve</span>
@@ -365,7 +362,7 @@ export default function Dashboard() {
         {/* Top items + activity */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {userRole === "admin" && (
-            <Card className="animate-slide-up">
+            <Card className="animate-fade-in">
               <CardHeader>
                 <CardTitle>Top selling items</CardTitle>
                 <CardDescription>Best performers this period</CardDescription>
@@ -386,8 +383,8 @@ export default function Dashboard() {
                               <span className="font-medium truncate">{name}</span>
                               <span className="text-muted-foreground tabular-nums">{count}</span>
                             </div>
-                            <div className="h-1.5 rounded-full bg-muted overflow-hidden">
-                              <div className="h-full gradient-brand rounded-full transition-all" style={{ width: `${pct}%` }} />
+                            <div className="h-1.5 rounded-full bg-secondary overflow-hidden">
+                              <div className="h-full bg-primary rounded-full transition-all" style={{ width: `${pct}%` }} />
                             </div>
                           </div>
                         </div>
@@ -399,7 +396,7 @@ export default function Dashboard() {
             </Card>
           )}
 
-          <Card className="animate-slide-up">
+          <Card className="animate-fade-in">
             <CardHeader>
               <div className="flex items-center justify-between">
                 <div>
@@ -438,7 +435,7 @@ export default function Dashboard() {
 
         {/* Low stock */}
         {userRole === "admin" && stats.lowStock.length > 0 && (
-          <Card className="border-destructive/30 animate-slide-up">
+          <Card className="border-destructive/30 animate-fade-in">
             <CardHeader>
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
@@ -468,7 +465,7 @@ function StatCardLink({ title, value, icon, onClick }: { title: string; value: s
   return (
     <button
       onClick={onClick}
-      className="text-left rounded-xl border border-border bg-card p-5 shadow-soft transition-all duration-200 hover:border-primary/40 hover:shadow-elevated animate-slide-up disabled:opacity-60"
+      className="text-left rounded-lg border border-border bg-card p-5 transition-colors duration-150 hover:border-input animate-fade-in disabled:opacity-60"
       disabled={!onClick}
     >
       <div className="flex items-start justify-between">
@@ -476,7 +473,7 @@ function StatCardLink({ title, value, icon, onClick }: { title: string; value: s
           <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">{title}</p>
           <p className="text-2xl font-bold text-foreground mt-2 tabular-nums">{value}</p>
         </div>
-        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary ring-1 ring-primary/15">
+        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md bg-primary/10 text-primary">
           {icon}
         </div>
       </div>
@@ -506,7 +503,7 @@ function SkeletonGrid() {
   return (
     <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 gap-3">
       {Array.from({ length: 12 }).map((_, i) => (
-        <div key={i} className="h-20 rounded-lg animate-shimmer" />
+        <div key={i} className="h-20 rounded-md animate-shimmer" />
       ))}
     </div>
   );

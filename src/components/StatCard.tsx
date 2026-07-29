@@ -16,7 +16,7 @@ export function StatCard({ title, value, change, changeType = "neutral", icon, c
   return (
     <div
       className={cn(
-        "rounded-xl border border-border bg-card p-5 shadow-soft transition-all duration-200 hover:border-primary/30 hover:shadow-elevated animate-slide-up",
+        "rounded-lg border border-border bg-card p-5 transition-colors duration-150 hover:border-input animate-fade-in",
         className,
       )}
     >
@@ -37,7 +37,7 @@ export function StatCard({ title, value, change, changeType = "neutral", icon, c
             </p>
           )}
         </div>
-        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary ring-1 ring-primary/15">
+        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md bg-primary/10 text-primary">
           {icon}
         </div>
       </div>
@@ -63,19 +63,19 @@ export function NotificationBell() {
   return (
     <div className="relative">
       <button
-        className="relative flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground hover:bg-sidebar-accent hover:text-foreground transition-colors"
+        className="relative flex h-9 w-9 items-center justify-center rounded-md text-muted-foreground hover:bg-secondary hover:text-foreground transition-colors"
         onClick={() => setOpen((o) => !o)}
         aria-label="Show notifications"
       >
         <Bell className="h-[18px] w-[18px]" />
         {notifications.length > 0 && (
-          <span className="absolute top-2 right-2 h-2 w-2 rounded-full bg-primary ring-2 ring-card" />
+          <span className="absolute top-2 right-2 h-1.5 w-1.5 rounded-full bg-primary ring-2 ring-card" />
         )}
       </button>
       {open && (
         <>
           <div className="fixed inset-0 z-40" onClick={() => setOpen(false)} />
-          <div className="absolute right-0 mt-2 w-72 rounded-xl border border-border bg-popover shadow-elevated z-50 overflow-hidden animate-scale-in">
+          <div className="absolute right-0 mt-2 w-72 rounded-lg border border-border bg-popover shadow-lg z-50 overflow-hidden animate-fade-in">
             <div className="px-4 py-3 border-b border-border">
               <p className="text-sm font-semibold">Notifications</p>
             </div>
@@ -83,7 +83,7 @@ export function NotificationBell() {
               {notifications.map((n, i) => (
                 <li key={i}>
                   <button
-                    className="flex w-full items-center gap-3 px-4 py-2.5 text-sm text-left hover:bg-sidebar-accent transition-colors"
+                    className="flex w-full items-center gap-3 px-4 py-2.5 text-sm text-left hover:bg-secondary transition-colors"
                     onClick={n.onClick}
                   >
                     <span className={cn("h-2 w-2 rounded-full shrink-0", dotColor[n.tone])} />

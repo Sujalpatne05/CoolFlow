@@ -115,13 +115,13 @@ export function AppSidebar() {
     <Sidebar collapsible="icon">
       <SidebarHeader className="px-3 py-4">
         <div className="flex items-center gap-3 px-1">
-          <img src={logo || FALLBACK_LOGO} alt="Logo" className="h-9 w-9 rounded-lg object-cover ring-1 ring-sidebar-border flex-shrink-0" />
+          <img src={logo || FALLBACK_LOGO} alt="Logo" className="h-8 w-8 rounded-md object-cover border border-sidebar-border flex-shrink-0" />
           {!collapsed && (
             <div className="min-w-0">
               <p className="text-sm font-semibold text-sidebar-accent-foreground truncate leading-tight">
                 {restaurantName || "Management System"}
               </p>
-              <p className="text-[11px] text-sidebar-foreground/50 capitalize mt-0.5">
+              <p className="text-[11px] text-sidebar-foreground capitalize mt-0.5">
                 {userRole || "staff"} workspace
               </p>
             </div>
@@ -133,7 +133,7 @@ export function AppSidebar() {
         {menuGroups.map((group) => (
           <SidebarGroup key={group.label} className="py-1">
             {!collapsed && (
-              <SidebarGroupLabel className="text-[10px] font-semibold uppercase tracking-[0.08em] text-sidebar-foreground/40 px-3 py-2">
+              <SidebarGroupLabel className="text-[10px] font-semibold uppercase tracking-[0.06em] text-sidebar-foreground/70 px-3 py-2">
                 {group.label}
               </SidebarGroupLabel>
             )}
@@ -149,10 +149,10 @@ export function AppSidebar() {
                           end
                           className={
                             isActive
-                              ? "bg-primary/15 text-primary font-semibold"
+                              ? "bg-primary/10 text-primary font-semibold"
                               : "text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
                           }
-                          activeClassName="bg-primary/15 text-primary font-semibold"
+                          activeClassName="bg-primary/10 text-primary font-semibold"
                         >
                           <item.icon className="h-[18px] w-[18px] shrink-0" />
                           {!collapsed && <span className="text-[13px]">{item.title}</span>}
@@ -169,11 +169,11 @@ export function AppSidebar() {
 
       <SidebarFooter className="px-3 py-3">
         {!collapsed && (
-          <div className="rounded-lg border border-sidebar-border bg-sidebar-accent/40 px-3 py-2.5">
-            <p className="text-[11px] font-medium text-sidebar-foreground/70">
+          <div className="rounded-md border border-sidebar-border bg-secondary/50 px-3 py-2.5">
+            <p className="text-[11px] font-medium text-sidebar-foreground/80">
               OrderNest Platform
             </p>
-            <p className="text-[10px] text-sidebar-foreground/40 mt-0.5">
+            <p className="text-[10px] text-sidebar-foreground/60 mt-0.5">
               v2.0 · © {new Date().getFullYear()}
             </p>
           </div>

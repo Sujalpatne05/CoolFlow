@@ -11,7 +11,7 @@ const API_BASE_URL = (() => {
   return configured || (typeof window !== "undefined" && (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1") ? "http://localhost:5001" : "/api");
 })();
 
-const FALLBACK_LOGO = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Crect width='40' height='40' rx='10' fill='%232563eb'/%3E%3Cpath d='M12 14h16M14 14v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V14' stroke='white' stroke-width='2' stroke-linecap='round' fill='none'/%3E%3Ccircle cx='20' cy='11' r='2' fill='white'/%3E%3C/svg%3E";
+const FALLBACK_LOGO = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Crect width='40' height='40' rx='8' fill='%2310805a'/%3E%3Cpath d='M12 14h16M14 14v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V14' stroke='white' stroke-width='2' stroke-linecap='round' fill='none'/%3E%3Ccircle cx='20' cy='11' r='2' fill='white'/%3E%3C/svg%3E";
 
 export function DashboardLayout({ children }: { children: React.ReactNode }) {
   const [logo, setLogo] = useState<string>(FALLBACK_LOGO);
@@ -41,11 +41,11 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
       <div className="min-h-screen flex w-full bg-background">
         <AppSidebar />
         <div className="min-w-0 flex-1 flex flex-col relative">
-          <header className="sticky top-0 z-30 flex h-14 items-center justify-between gap-3 border-b border-border bg-card/80 px-4 backdrop-blur-xl">
+          <header className="sticky top-0 z-30 flex h-14 items-center justify-between gap-3 border-b border-border bg-card px-4">
             <div className="flex items-center gap-3 min-w-0">
               <SidebarTrigger className="h-8 w-8 text-muted-foreground hover:text-foreground" />
               <div className="hidden sm:flex items-center gap-2.5 min-w-0">
-                <img src={logo} alt="" className="h-7 w-7 rounded-md object-cover ring-1 ring-border" />
+                <img src={logo} alt="" className="h-7 w-7 rounded-md object-cover border border-border" />
                 <span className="text-sm font-semibold text-foreground truncate">
                   {getStoredRestaurantName() || "Dashboard"}
                 </span>
@@ -54,18 +54,18 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
 
             <div className="flex items-center gap-1.5 sm:gap-2">
               <button
-                className="hidden md:flex items-center gap-2 rounded-lg border border-border bg-background/60 px-3 h-9 text-sm text-muted-foreground hover:border-primary/40 hover:text-foreground transition-colors w-56"
+                className="hidden md:flex items-center gap-2 rounded-md border border-border bg-card px-3 h-9 text-sm text-muted-foreground hover:border-input hover:text-foreground transition-colors w-56"
                 onClick={() => {/* command palette hook point */}}
               >
                 <Search className="h-4 w-4" />
                 <span className="text-xs">Search…</span>
-                <kbd className="ml-auto rounded bg-muted px-1.5 py-0.5 text-[10px] font-medium text-muted-foreground">⌘K</kbd>
+                <kbd className="ml-auto rounded bg-secondary px-1.5 py-0.5 text-[10px] font-medium text-muted-foreground">⌘K</kbd>
               </button>
               <NotificationBell />
               <div className="h-6 w-px bg-border mx-1 hidden sm:block" />
               <button
                 onClick={handleLogout}
-                className="flex items-center gap-2 rounded-lg px-2.5 h-9 text-sm font-medium text-muted-foreground hover:bg-destructive/10 hover:text-destructive transition-colors"
+                className="flex items-center gap-2 rounded-md px-2.5 h-9 text-sm font-medium text-muted-foreground hover:bg-destructive/5 hover:text-destructive transition-colors"
                 title="Logout"
               >
                 <LogOut className="h-4 w-4" />
