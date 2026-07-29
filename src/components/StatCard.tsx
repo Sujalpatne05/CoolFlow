@@ -1,11 +1,11 @@
-import { ReactNode, useState, useRef } from "react";
+import { ReactNode, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { cn } from "@/lib/utils";
-import Image from "next/image";
+import { Bell } from "lucide-react";
 
 interface StatCardProps {
   title: string;
-  value: string;
+  value: string | number;
   change?: string;
   changeType?: "positive" | "negative" | "neutral";
   icon: ReactNode;
@@ -14,29 +14,30 @@ interface StatCardProps {
 
 export function StatCard({ title, value, change, changeType = "neutral", icon, className }: StatCardProps) {
   return (
-    <div className={cn(
-      "bg-gradient-to-br from-emerald-100 via-white to-emerald-200 rounded-lg p-5 shadow-lg shadow-emerald-100/40 animate-scale-in border transition-all duration-300 ease-in-out",
-      "w-full max-w-full sm:max-w-xs mx-auto mb-4",
-      className
-    )}>
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between">
-        <div className="w-full">
-          <p className="text-sm text-muted-foreground transition-all duration-300 ease-in-out">{title}</p>
-          <p className="text-2xl font-bold mt-1 transition-all duration-300 ease-in-out">{value}</p>
+    <div
+      className={cn(
+        "rounded-xl border border-border bg-card p-5 shadow-soft transition-all duration-200 hover:border-primary/30 hover:shadow-elevated animate-slide-up",
+        className,
+      )}
+    >
+      <div className="flex items-start justify-between">
+        <div className="min-w-0">
+          <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">{title}</p>
+          <p className="text-2xl font-bold text-foreground mt-2 tabular-nums">{value}</p>
           {change && (
             <p
               className={cn(
-                "text-xs mt-1 font-medium transition-all duration-300 ease-in-out",
+                "text-xs mt-2 font-medium",
                 changeType === "positive" && "text-success",
                 changeType === "negative" && "text-destructive",
-                changeType === "neutral" && "text-muted-foreground"
+                changeType === "neutral" && "text-muted-foreground",
               )}
             >
               {change}
             </p>
           )}
         </div>
-        <div className="gradient-warm rounded-lg p-2.5 text-primary-foreground transition-all duration-300 ease-in-out mt-4 sm:mt-0">
+        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary ring-1 ring-primary/15">
           {icon}
         </div>
       </div>
@@ -44,62 +45,60 @@ export function StatCard({ title, value, change, changeType = "neutral", icon, c
   );
 }
 
-// Support StatCard example
-export function SupportStatCard() {
-  return (
-    <div className="bg-gradient-to-br from-emerald-100 via-white to-emerald-200 rounded-lg p-5 shadow-lg shadow-emerald-100/40 animate-scale-in border transition-all duration-300 ease-in-out w-full max-w-full sm:max-w-xs mx-auto mb-4">
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between">
-        <div className="w-full">
-          <p className="text-sm text-muted-foreground transition-all duration-300 ease-in-out">Support</p>
-          <p className="text-2xl font-bold mt-1 transition-all duration-300 ease-in-out">24/7 multiple language support</p>
-        </div>
-        <div className="gradient-warm rounded-lg p-2.5 text-primary-foreground transition-all duration-300 ease-in-out mt-4 sm:mt-0">
-          <img src="/placeholder.svg" alt="Support Icon" width={32} height={32} />
-        </div>
-      </div>
-    </div>
-  );
-}
-
-// Real-Time Notification Dropdown
 export function NotificationBell() {
   const [open, setOpen] = useState(false);
   const navigate = useNavigate();
   const notifications = [
-    { icon: "<span class='text-lg'>🔔</span>", text: "New order received!", onClick: () => { navigate("/orders"); setOpen(false); } },
-    { icon: "<span class='text-lg'>⚠️</span>", text: "Low stock warning!", onClick: () => { navigate("/inventory"); setOpen(false); } },
-    { icon: "<span class='text-lg'>💰</span>", text: "High revenue milestone!", onClick: () => { navigate("/reports"); setOpen(false); } },
+    { text: "New order received", tone: "info", onClick: () => { navigate("/orders"); setOpen(false); } },
+    { text: "Low stock warning", tone: "warning", onClick: () => { navigate("/inventory"); setOpen(false); } },
+    { text: "High revenue milestone", tone: "success", onClick: () => { navigate("/reports"); setOpen(false); } },
   ];
+
+  const dotColor: Record<string, string> = {
+    info: "bg-info",
+    warning: "bg-warning",
+    success: "bg-success",
+  };
 
   return (
     <div className="relative">
       <button
-        className="relative w-10 h-10 rounded-full flex items-center justify-center bg-card hover:bg-emerald-100 transition-all"
+        className="relative flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground hover:bg-sidebar-accent hover:text-foreground transition-colors"
         onClick={() => setOpen((o) => !o)}
         aria-label="Show notifications"
       >
-        <span className="text-xl">🔔</span>
+        <Bell className="h-[18px] w-[18px]" />
         {notifications.length > 0 && (
-          <span className="absolute top-1 right-1 h-3 w-3 rounded-full bg-emerald-500" />
+          <span className="absolute top-2 right-2 h-2 w-2 rounded-full bg-primary ring-2 ring-card" />
         )}
       </button>
       {open && (
-        <div className="absolute right-0 mt-2 w-64 bg-white rounded-xl shadow-lg border p-3 z-50">
-          <div className="font-bold mb-2 text-emerald-700">Notifications</div>
-          <ul className="space-y-2">
-            {notifications.map((n, i) => (
-              <li
-                key={i}
-                className="flex items-center gap-2 text-sm cursor-pointer hover:bg-emerald-50 rounded px-2 py-1 font-semibold text-emerald-700 transition-colors"
-                onClick={n.onClick}
-              >
-                <span dangerouslySetInnerHTML={{ __html: n.icon }} />
-                <span>{n.text}</span>
-              </li>
-            ))}
-          </ul>
-        </div>
+        <>
+          <div className="fixed inset-0 z-40" onClick={() => setOpen(false)} />
+          <div className="absolute right-0 mt-2 w-72 rounded-xl border border-border bg-popover shadow-elevated z-50 overflow-hidden animate-scale-in">
+            <div className="px-4 py-3 border-b border-border">
+              <p className="text-sm font-semibold">Notifications</p>
+            </div>
+            <ul className="py-1.5">
+              {notifications.map((n, i) => (
+                <li key={i}>
+                  <button
+                    className="flex w-full items-center gap-3 px-4 py-2.5 text-sm text-left hover:bg-sidebar-accent transition-colors"
+                    onClick={n.onClick}
+                  >
+                    <span className={cn("h-2 w-2 rounded-full shrink-0", dotColor[n.tone])} />
+                    <span className="text-foreground/90">{n.text}</span>
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </>
       )}
     </div>
   );
+}
+
+export function SupportStatCard() {
+  return null;
 }

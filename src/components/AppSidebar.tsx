@@ -1,22 +1,4 @@
-import {
-  LayoutDashboard,
-  Receipt,
-  Users,
-  BarChart3,
-  UtensilsCrossed,
-  Package,
-  ShoppingCart,
-  ChefHat,
-  Table,
-  Calendar,
-  CreditCard,
-  Monitor,
-  Truck,
-  BookOpen,
-  UserCog,
-  Wallet,
-  Settings2,
-} from "lucide-react";
+import { LayoutDashboard, Receipt, Users, ChartBar as BarChart3, UtensilsCrossed, Package, ShoppingCart, ChefHat, Table, Calendar, CreditCard, Monitor, Truck, UserCog, Wallet, Settings2 } from "lucide-react";
 import { NavLink } from "@/components/NavLink";
 import { useLocation } from "react-router-dom";
 import React, { useEffect, useState } from "react";
@@ -41,7 +23,6 @@ const API_BASE_URL = (() => {
   return configured || (typeof window !== "undefined" && (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1") ? "http://localhost:5001" : "/api");
 })();
 
-// Role-based menu configuration
 const getMenuGroups = (role: string | null) => {
   const baseMenuGroups = [
     {
@@ -91,7 +72,6 @@ const getMenuGroups = (role: string | null) => {
     },
   ];
 
-  // Filter menu groups and items based on role
   return baseMenuGroups
     .map((group) => ({
       ...group,
@@ -99,6 +79,8 @@ const getMenuGroups = (role: string | null) => {
     }))
     .filter((group) => group.items.length > 0);
 };
+
+const FALLBACK_LOGO = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Crect width='40' height='40' rx='10' fill='%232563eb'/%3E%3Cpath d='M12 14h16M14 14v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V14' stroke='white' stroke-width='2' stroke-linecap='round' fill='none'/%3E%3Ccircle cx='20' cy='11' r='2' fill='white'/%3E%3C/svg%3E";
 
 export function AppSidebar() {
   const { state } = useSidebar();
@@ -114,20 +96,13 @@ export function AppSidebar() {
       try {
         const headers = buildAuthHeaders();
         if (!headers) return;
-
         const profileRes = await fetch(`${API_BASE_URL}/profile`, { headers });
         const profileData = await profileRes.json();
-        
-        if (profileData?.restaurantLogo) {
-          setLogo(profileData.restaurantLogo);
-        } else {
-          setLogo("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect fill='%23FF6B35' width='100' height='100'/%3E%3Ctext x='50' y='50' font-size='40' fill='white' text-anchor='middle' dy='.3em'%3E🍽️%3C/text%3E%3C/svg%3E");
-        }
+        setLogo(profileData?.restaurantLogo || FALLBACK_LOGO);
       } catch (e) {
-        setLogo("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect fill='%23FF6B35' width='100' height='100'/%3E%3Ctext x='50' y='50' font-size='40' fill='white' text-anchor='middle' dy='.3em'%3E🍽️%3C/text%3E%3C/svg%3E");
+        setLogo(FALLBACK_LOGO);
       }
     };
-
     fetchLogo();
   }, []);
 
@@ -138,30 +113,27 @@ export function AppSidebar() {
 
   return (
     <Sidebar collapsible="icon">
-      <SidebarHeader className="p-4">
-        <div className="flex flex-col items-center gap-3">
-          {logo && (
-            <img 
-              src={logo} 
-              alt="Restaurant Logo" 
-              className="h-16 w-16 rounded-lg flex-shrink-0"
-            />
-          )}
+      <SidebarHeader className="px-3 py-4">
+        <div className="flex items-center gap-3 px-1">
+          <img src={logo || FALLBACK_LOGO} alt="Logo" className="h-9 w-9 rounded-lg object-cover ring-1 ring-sidebar-border flex-shrink-0" />
           {!collapsed && (
-            <div className="text-center">
-              <p className="text-sm font-semibold text-sidebar-foreground">
-                {restaurantName ? restaurantName : "Management System"}
+            <div className="min-w-0">
+              <p className="text-sm font-semibold text-sidebar-accent-foreground truncate leading-tight">
+                {restaurantName || "Management System"}
+              </p>
+              <p className="text-[11px] text-sidebar-foreground/50 capitalize mt-0.5">
+                {userRole || "staff"} workspace
               </p>
             </div>
           )}
         </div>
       </SidebarHeader>
 
-      <SidebarContent>
+      <SidebarContent className="px-2">
         {menuGroups.map((group) => (
-          <SidebarGroup key={group.label}>
+          <SidebarGroup key={group.label} className="py-1">
             {!collapsed && (
-              <SidebarGroupLabel className="text-xs font-semibold uppercase tracking-wider text-sidebar-foreground/40 px-3 py-1">
+              <SidebarGroupLabel className="text-[10px] font-semibold uppercase tracking-[0.08em] text-sidebar-foreground/40 px-3 py-2">
                 {group.label}
               </SidebarGroupLabel>
             )}
@@ -169,7 +141,6 @@ export function AppSidebar() {
               <SidebarMenu>
                 {group.items.map((item) => {
                   const isActive = location.pathname === item.url;
-
                   return (
                     <SidebarMenuItem key={item.title} data-sidebar-active={isActive ? "true" : undefined}>
                       <SidebarMenuButton asChild isActive={isActive}>
@@ -178,13 +149,13 @@ export function AppSidebar() {
                           end
                           className={
                             isActive
-                              ? "bg-gradient-to-r from-emerald-500 to-teal-600 text-white font-semibold shadow-lg hover:from-emerald-600 hover:to-teal-700"
-                              : "hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
+                              ? "bg-primary/15 text-primary font-semibold"
+                              : "text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
                           }
-                          activeClassName="bg-gradient-to-r from-emerald-500 to-teal-600 text-white font-semibold"
+                          activeClassName="bg-primary/15 text-primary font-semibold"
                         >
-                          <item.icon className="mr-2 h-4 w-4" />
-                          {!collapsed && <span>{item.title}</span>}
+                          <item.icon className="h-[18px] w-[18px] shrink-0" />
+                          {!collapsed && <span className="text-[13px]">{item.title}</span>}
                         </NavLink>
                       </SidebarMenuButton>
                     </SidebarMenuItem>
@@ -196,14 +167,14 @@ export function AppSidebar() {
         ))}
       </SidebarContent>
 
-      <SidebarFooter className="p-4">
+      <SidebarFooter className="px-3 py-3">
         {!collapsed && (
-          <div className="text-center border-t border-sidebar-border pt-3">
-            <p className="text-xs text-sidebar-foreground/60">
-              Created by <span className="font-semibold">OrderNest</span>
+          <div className="rounded-lg border border-sidebar-border bg-sidebar-accent/40 px-3 py-2.5">
+            <p className="text-[11px] font-medium text-sidebar-foreground/70">
+              OrderNest Platform
             </p>
-            <p className="text-xs text-sidebar-foreground/50 mt-1">
-              © {new Date().getFullYear()}
+            <p className="text-[10px] text-sidebar-foreground/40 mt-0.5">
+              v2.0 · © {new Date().getFullYear()}
             </p>
           </div>
         )}

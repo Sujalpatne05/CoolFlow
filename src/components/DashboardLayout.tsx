@@ -1,10 +1,9 @@
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { AppSidebar } from "@/components/AppSidebar";
 import { NotificationBell } from "@/components/StatCard";
-import { UserCog, LogOut } from "lucide-react";
+import { LogOut, Search } from "lucide-react";
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
-import { buildAuthHeaders, clearAuthSession } from "@/lib/session";
+import { buildAuthHeaders, clearAuthSession, getStoredRestaurantName } from "@/lib/session";
 
 const API_BASE_URL = (() => {
   const configured = (import.meta.env.VITE_API_URL || "").trim();
@@ -12,26 +11,23 @@ const API_BASE_URL = (() => {
   return configured || (typeof window !== "undefined" && (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1") ? "http://localhost:5001" : "/api");
 })();
 
+const FALLBACK_LOGO = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 40 40'%3E%3Crect width='40' height='40' rx='10' fill='%232563eb'/%3E%3Cpath d='M12 14h16M14 14v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V14' stroke='white' stroke-width='2' stroke-linecap='round' fill='none'/%3E%3Ccircle cx='20' cy='11' r='2' fill='white'/%3E%3C/svg%3E";
+
 export function DashboardLayout({ children }: { children: React.ReactNode }) {
-  const [logo, setLogo] = useState<string>("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect fill='%23FF6B35' width='100' height='100'/%3E%3Ctext x='50' y='50' font-size='40' fill='white' text-anchor='middle' dy='.3em'%3E🍽️%3C/text%3E%3C/svg%3E");
+  const [logo, setLogo] = useState<string>(FALLBACK_LOGO);
 
   useEffect(() => {
     const fetchLogo = async () => {
       try {
         const headers = buildAuthHeaders();
         if (!headers) return;
-
         const profileRes = await fetch(`${API_BASE_URL}/profile`, { headers });
         const profileData = await profileRes.json();
-        
-        if (profileData?.restaurantLogo) {
-          setLogo(profileData.restaurantLogo);
-        }
+        if (profileData?.restaurantLogo) setLogo(profileData.restaurantLogo);
       } catch (e) {
-        // Logo fetch failed, will use default
+        // use fallback
       }
     };
-
     fetchLogo();
   }, []);
 
@@ -42,24 +38,42 @@ export function DashboardLayout({ children }: { children: React.ReactNode }) {
 
   return (
     <SidebarProvider>
-      <div className="min-h-screen flex w-full">
+      <div className="min-h-screen flex w-full bg-background">
         <AppSidebar />
         <div className="min-w-0 flex-1 flex flex-col relative">
-          <header className="sticky top-0 z-30 min-h-14 flex items-center justify-between border-b px-3 py-2 sm:px-4 bg-card relative gap-2">
-            <SidebarTrigger className="h-10 w-10 shrink-0" />
-            <div className="flex items-center gap-1 sm:gap-2 flex-wrap justify-end">
+          <header className="sticky top-0 z-30 flex h-14 items-center justify-between gap-3 border-b border-border bg-card/80 px-4 backdrop-blur-xl">
+            <div className="flex items-center gap-3 min-w-0">
+              <SidebarTrigger className="h-8 w-8 text-muted-foreground hover:text-foreground" />
+              <div className="hidden sm:flex items-center gap-2.5 min-w-0">
+                <img src={logo} alt="" className="h-7 w-7 rounded-md object-cover ring-1 ring-border" />
+                <span className="text-sm font-semibold text-foreground truncate">
+                  {getStoredRestaurantName() || "Dashboard"}
+                </span>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-1.5 sm:gap-2">
+              <button
+                className="hidden md:flex items-center gap-2 rounded-lg border border-border bg-background/60 px-3 h-9 text-sm text-muted-foreground hover:border-primary/40 hover:text-foreground transition-colors w-56"
+                onClick={() => {/* command palette hook point */}}
+              >
+                <Search className="h-4 w-4" />
+                <span className="text-xs">Search…</span>
+                <kbd className="ml-auto rounded bg-muted px-1.5 py-0.5 text-[10px] font-medium text-muted-foreground">⌘K</kbd>
+              </button>
               <NotificationBell />
+              <div className="h-6 w-px bg-border mx-1 hidden sm:block" />
               <button
                 onClick={handleLogout}
-                className="flex items-center gap-2 px-3 py-2 rounded-md hover:bg-red-50 text-red-600 hover:text-red-700 transition-colors"
+                className="flex items-center gap-2 rounded-lg px-2.5 h-9 text-sm font-medium text-muted-foreground hover:bg-destructive/10 hover:text-destructive transition-colors"
                 title="Logout"
               >
                 <LogOut className="h-4 w-4" />
-                <span className="hidden sm:inline text-sm font-medium">Logout</span>
+                <span className="hidden sm:inline">Logout</span>
               </button>
             </div>
           </header>
-          <main className="min-w-0 flex-1 overflow-x-hidden overflow-y-auto p-2 sm:p-4 md:p-6">{children}</main>
+          <main className="min-w-0 flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8">{children}</main>
         </div>
       </div>
     </SidebarProvider>

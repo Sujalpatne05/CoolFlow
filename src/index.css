@@ -1,67 +1,70 @@
 /* Hide scrollbar for sidebar content */
 .hide-scrollbar {
-  scrollbar-width: none; /* Firefox */
-  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;
+  -ms-overflow-style: none;
 }
 .hide-scrollbar::-webkit-scrollbar {
-  display: none; /* Chrome, Safari, Opera */
+  display: none;
 }
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
   :root {
-    --background: 30 25% 97%;
-    --foreground: 20 20% 12%;
+    /* Surfaces */
+    --background: 222 47% 7%;
+    --foreground: 210 40% 98%;
 
-    --card: 0 0% 100%;
-    --card-foreground: 20 20% 12%;
+    --card: 222 47% 11%;
+    --card-foreground: 210 40% 98%;
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 20 20% 12%;
+    --popover: 222 47% 11%;
+    --popover-foreground: 210 40% 98%;
 
-    --primary: 25 95% 53%;
-    --primary-foreground: 0 0% 100%;
+    /* Brand: indigo */
+    --primary: 221 83% 53%;
+    --primary-foreground: 210 40% 98%;
 
-    --secondary: 30 30% 92%;
-    --secondary-foreground: 20 20% 20%;
+    --secondary: 217 33% 17%;
+    --secondary-foreground: 210 40% 98%;
 
-    --muted: 30 15% 94%;
-    --muted-foreground: 20 10% 45%;
+    --muted: 217 33% 17%;
+    --muted-foreground: 215 20% 65%;
 
-    --accent: 16 80% 50%;
-    --accent-foreground: 0 0% 100%;
+    /* Accent: teal */
+    --accent: 172 66% 50%;
+    --accent-foreground: 222 47% 11%;
 
-    --destructive: 0 84% 60%;
-    --destructive-foreground: 0 0% 100%;
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 210 40% 98%;
 
-    --border: 30 15% 88%;
-    --input: 30 15% 88%;
-    --ring: 25 95% 53%;
+    --border: 217 33% 20%;
+    --input: 217 33% 20%;
+    --ring: 221 83% 53%;
 
-    --radius: 0.75rem;
+    --radius: 0.625rem;
 
-    --sidebar-background: 20 20% 12%;
-    --sidebar-foreground: 30 15% 85%;
-    --sidebar-primary: 25 95% 53%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 20 18% 18%;
-    --sidebar-accent-foreground: 30 15% 92%;
-    --sidebar-border: 20 15% 20%;
-    --sidebar-ring: 25 95% 53%;
+    --sidebar-background: 222 47% 9%;
+    --sidebar-foreground: 215 20% 65%;
+    --sidebar-primary: 221 83% 53%;
+    --sidebar-primary-foreground: 210 40% 98%;
+    --sidebar-accent: 217 33% 15%;
+    --sidebar-accent-foreground: 210 40% 98%;
+    --sidebar-border: 217 33% 16%;
+    --sidebar-ring: 221 83% 53%;
 
-    --success: 142 70% 45%;
-    --success-foreground: 0 0% 100%;
+    --success: 142 71% 45%;
+    --success-foreground: 210 40% 98%;
     --warning: 38 92% 50%;
-    --warning-foreground: 0 0% 100%;
-    --info: 210 80% 55%;
-    --info-foreground: 0 0% 100%;
+    --warning-foreground: 222 47% 11%;
+    --info: 199 89% 48%;
+    --info-foreground: 210 40% 98%;
 
-    --gradient-warm: linear-gradient(135deg, hsl(25 95% 53%), hsl(16 80% 50%));
-    --gradient-card: linear-gradient(135deg, hsl(30 25% 97%), hsl(0 0% 100%));
-    --shadow-card: 0 1px 3px hsl(20 20% 12% / 0.06), 0 4px 12px hsl(20 20% 12% / 0.04);
-    --shadow-elevated: 0 4px 16px hsl(20 20% 12% / 0.08), 0 8px 32px hsl(20 20% 12% / 0.04);
+    --gradient-brand: linear-gradient(135deg, hsl(221 83% 53%), hsl(172 66% 50%));
+    --shadow-soft: 0 1px 2px hsl(222 47% 4% / 0.4), 0 4px 12px hsl(222 47% 4% / 0.25);
+    --shadow-elevated: 0 4px 16px hsl(222 47% 4% / 0.45), 0 12px 40px hsl(222 47% 4% / 0.35);
   }
 }
 
@@ -71,48 +74,93 @@
   }
 
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground antialiased;
     font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  }
+
+  ::selection {
+    background: hsl(var(--primary) / 0.3);
+    color: hsl(var(--foreground));
+  }
+
+  /* Refined scrollbar */
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  ::-webkit-scrollbar-track {
+    background: hsl(var(--background));
+  }
+  ::-webkit-scrollbar-thumb {
+    background: hsl(217 33% 22%);
+    border-radius: 999px;
+    border: 2px solid hsl(var(--background));
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: hsl(217 33% 28%);
   }
 }
 
 @layer utilities {
-  .gradient-warm {
-    background: linear-gradient(135deg, hsl(25 95% 53%), hsl(16 80% 50%));
+  .gradient-brand {
+    background: linear-gradient(135deg, hsl(221 83% 53%), hsl(172 66% 50%));
   }
 
-  .shadow-card {
-    box-shadow: var(--shadow-card);
+  .gradient-brand-soft {
+    background: linear-gradient(135deg, hsl(221 83% 53% / 0.15), hsl(172 66% 50% / 0.15));
+  }
+
+  .shadow-soft {
+    box-shadow: var(--shadow-soft);
   }
 
   .shadow-elevated {
     box-shadow: var(--shadow-elevated);
   }
 
-  .animate-slide-up {
-    animation: slideUp 0.5s ease-out;
+  .glass {
+    background: hsl(var(--card) / 0.7);
+    backdrop-filter: blur(12px) saturate(140%);
+    -webkit-backdrop-filter: blur(12px) saturate(140%);
   }
 
+  .text-gradient {
+    background: linear-gradient(135deg, hsl(221 83% 60%), hsl(172 66% 55%));
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .animate-slide-up {
+    animation: slideUp 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+  }
   .animate-fade-in {
     animation: fadeIn 0.4s ease-out;
   }
-
   .animate-scale-in {
-    animation: scaleIn 0.3s ease-out;
+    animation: scaleIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .animate-shimmer {
+    background: linear-gradient(90deg, hsl(217 33% 17%) 0%, hsl(217 33% 22%) 50%, hsl(217 33% 17%) 100%);
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
   }
 }
 
 @keyframes slideUp {
-  from { opacity: 0; transform: translateY(20px); }
+  from { opacity: 0; transform: translateY(12px); }
   to { opacity: 1; transform: translateY(0); }
 }
-
 @keyframes fadeIn {
   from { opacity: 0; }
   to { opacity: 1; }
 }
-
 @keyframes scaleIn {
-  from { opacity: 0; transform: scale(0.95); }
+  from { opacity: 0; transform: scale(0.96); }
   to { opacity: 1; transform: scale(1); }
+}
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
 }
