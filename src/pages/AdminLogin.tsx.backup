@@ -1,4 +1,4 @@
-﻿import React, { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { saveAuthSession } from "@/lib/session";
 import { ChefHat, Mail, Lock, Eye, EyeOff } from "lucide-react";
 
