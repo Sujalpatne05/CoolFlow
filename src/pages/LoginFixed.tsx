@@ -70,45 +70,44 @@ const LoginFixed = () => {
   return (
     <div className="min-h-screen flex bg-background">
       {/* Left: brand panel */}
-      <div className="hidden lg:flex lg:w-1/2 relative overflow-hidden bg-card">
-        <div className="absolute inset-0 gradient-brand opacity-90" />
-        <div className="absolute -top-32 -right-32 h-96 w-96 rounded-full bg-white/10 blur-3xl" />
-        <div className="absolute -bottom-40 -left-20 h-96 w-96 rounded-full bg-accent/30 blur-3xl" />
+      <div className="hidden lg:flex lg:w-1/2 relative overflow-hidden bg-card border-r border-border">
+        <div className="absolute inset-0 bg-primary/[0.04]" />
+        <div className="absolute top-0 right-0 h-72 w-72 rounded-full bg-primary/5 blur-3xl" />
 
-        <div className="relative z-10 flex flex-col justify-between p-12 xl:p-16 text-white w-full">
+        <div className="relative z-10 flex flex-col justify-between p-12 xl:p-16 w-full">
           <div className="flex items-center gap-3">
-            <div className="h-11 w-11 rounded-xl bg-white/15 backdrop-blur flex items-center justify-center ring-1 ring-white/20">
-              <UtensilsCrossed className="h-6 w-6" />
+            <div className="h-10 w-10 rounded-lg bg-primary flex items-center justify-center">
+              <UtensilsCrossed className="h-5 w-5 text-primary-foreground" />
             </div>
             <div>
-              <p className="text-lg font-bold tracking-tight">OrderNest</p>
-              <p className="text-xs text-white/70">Restaurant Platform</p>
+              <p className="text-lg font-bold tracking-tight text-foreground">OrderNest</p>
+              <p className="text-xs text-muted-foreground">Restaurant Platform</p>
             </div>
           </div>
 
           <div className="max-w-md">
-            <h1 className="text-4xl xl:text-5xl font-extrabold leading-[1.1] tracking-tight">
+            <h1 className="text-4xl xl:text-5xl font-extrabold leading-[1.1] tracking-tight text-foreground">
               Run your restaurant with clarity.
             </h1>
-            <p className="mt-5 text-base text-white/80 leading-relaxed">
+            <p className="mt-5 text-base text-muted-foreground leading-relaxed">
               POS, kitchen display, inventory, reservations, and analytics — unified in one fast, modern workspace built for hospitality teams.
             </p>
 
-            <div className="mt-10 grid grid-cols-3 gap-4">
+            <div className="mt-10 grid grid-cols-3 gap-3">
               {[
                 { icon: Zap, label: "Real-time POS" },
                 { icon: ShieldCheck, label: "Role-based access" },
                 { icon: UtensilsCrossed, label: "Multi-tenant" },
               ].map((f) => (
-                <div key={f.label} className="rounded-xl bg-white/10 backdrop-blur ring-1 ring-white/15 px-3 py-3">
-                  <f.icon className="h-5 w-5 mb-2" />
-                  <p className="text-xs font-medium leading-snug">{f.label}</p>
+                <div key={f.label} className="rounded-lg border border-border bg-card px-3 py-3">
+                  <f.icon className="h-5 w-5 mb-2 text-primary" />
+                  <p className="text-xs font-medium leading-snug text-foreground/80">{f.label}</p>
                 </div>
               ))}
             </div>
           </div>
 
-          <p className="text-xs text-white/60">© {new Date().getFullYear()} OrderNest. All rights reserved.</p>
+          <p className="text-xs text-muted-foreground">© {new Date().getFullYear()} OrderNest. All rights reserved.</p>
         </div>
       </div>
 
@@ -116,22 +115,22 @@ const LoginFixed = () => {
       <div className="flex-1 flex items-center justify-center px-6 py-12">
         <div className="w-full max-w-sm">
           <div className="lg:hidden flex items-center gap-2.5 mb-10">
-            <div className="h-10 w-10 rounded-xl gradient-brand flex items-center justify-center">
-              <UtensilsCrossed className="h-5 w-5 text-white" />
+            <div className="h-10 w-10 rounded-lg bg-primary flex items-center justify-center">
+              <UtensilsCrossed className="h-5 w-5 text-primary-foreground" />
             </div>
             <div>
-              <p className="text-base font-bold">OrderNest</p>
+              <p className="text-base font-bold text-foreground">OrderNest</p>
               <p className="text-[11px] text-muted-foreground">Restaurant Platform</p>
             </div>
           </div>
 
           <div className="mb-8">
-            <h2 className="text-2xl font-bold tracking-tight">Welcome back</h2>
+            <h2 className="text-2xl font-bold tracking-tight text-foreground">Welcome back</h2>
             <p className="text-sm text-muted-foreground mt-1.5">Sign in to your workspace to continue.</p>
           </div>
 
           {error && (
-            <div className="mb-5 rounded-lg border border-destructive/30 bg-destructive/10 px-3.5 py-3 text-sm text-destructive animate-slide-up">
+            <div className="mb-5 rounded-md border border-destructive/30 bg-destructive/5 px-3.5 py-3 text-sm text-destructive animate-fade-in">
               {error}
             </div>
           )}
@@ -147,7 +146,7 @@ const LoginFixed = () => {
                 onChange={(e) => setUsername(e.target.value)}
                 required
                 placeholder="you@restaurant.com"
-                className="w-full h-11 rounded-lg border border-input bg-background px-3.5 text-sm text-foreground placeholder:text-muted-foreground/60 outline-none transition-all focus:border-primary focus:ring-2 focus:ring-primary/20"
+                className="w-full h-11 rounded-md border border-input bg-card px-3.5 text-sm text-foreground placeholder:text-muted-foreground/60 outline-none transition-all focus:border-primary focus:ring-2 focus:ring-primary/20"
               />
             </div>
 
@@ -164,7 +163,7 @@ const LoginFixed = () => {
                   onChange={(e) => setPassword(e.target.value)}
                   required
                   placeholder="••••••••"
-                  className="w-full h-11 rounded-lg border border-input bg-background px-3.5 pr-11 text-sm text-foreground placeholder:text-muted-foreground/60 outline-none transition-all focus:border-primary focus:ring-2 focus:ring-primary/20"
+                  className="w-full h-11 rounded-md border border-input bg-card px-3.5 pr-11 text-sm text-foreground placeholder:text-muted-foreground/60 outline-none transition-all focus:border-primary focus:ring-2 focus:ring-primary/20"
                 />
                 <button
                   type="button"
@@ -179,11 +178,11 @@ const LoginFixed = () => {
             <button
               type="submit"
               disabled={loading}
-              className="w-full h-11 rounded-lg gradient-brand text-white font-semibold text-sm flex items-center justify-center gap-2 shadow-soft transition-all hover:shadow-elevated hover:brightness-110 disabled:opacity-60 disabled:cursor-not-allowed"
+              className="w-full h-11 rounded-md bg-primary text-primary-foreground font-semibold text-sm flex items-center justify-center gap-2 transition-all hover:bg-primary/90 disabled:opacity-60 disabled:cursor-not-allowed"
             >
               {loading ? (
                 <>
-                  <div className="h-4 w-4 border-2 border-white/40 border-t-white rounded-full animate-spin" />
+                  <div className="h-4 w-4 border-2 border-primary-foreground/40 border-t-primary-foreground rounded-full animate-spin" />
                   <span>Signing in…</span>
                 </>
               ) : (
