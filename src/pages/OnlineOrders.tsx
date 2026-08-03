@@ -152,7 +152,7 @@ export default function OnlineOrders() {
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 animate-fade-in">
           <div>
             <h1 className="text-3xl font-bold">Online Delivery Orders</h1>
-            <p className="text-muted-foreground mt-1">Manage customer orders from your delivery link</p>
+            <p className="text-gray-800 font-semibold mt-1">Manage customer orders from your delivery link</p>
           </div>
           <Button 
             onClick={loadData} 
@@ -168,37 +168,37 @@ export default function OnlineOrders() {
         <div className="grid grid-cols-2 lg:grid-cols-6 gap-4">
           <Card className="hover-lift">
             <CardContent className="p-4">
-              <p className="text-xs font-medium text-muted-foreground uppercase">Total Orders</p>
+              <p className="text-xs font-bold text-gray-900 uppercase">Total Orders</p>
               <p className="text-2xl font-bold mt-1">{stats.total}</p>
             </CardContent>
           </Card>
           <Card className="hover-lift">
             <CardContent className="p-4">
-              <p className="text-xs font-medium text-muted-foreground uppercase">Pending</p>
+              <p className="text-xs font-bold text-gray-900 uppercase">Pending</p>
               <p className="text-2xl font-bold mt-1 text-warning">{stats.pending}</p>
             </CardContent>
           </Card>
           <Card className="hover-lift">
             <CardContent className="p-4">
-              <p className="text-xs font-medium text-muted-foreground uppercase">Preparing</p>
+              <p className="text-xs font-bold text-gray-900 uppercase">Preparing</p>
               <p className="text-2xl font-bold mt-1 text-info">{stats.preparing}</p>
             </CardContent>
           </Card>
           <Card className="hover-lift">
             <CardContent className="p-4">
-              <p className="text-xs font-medium text-muted-foreground uppercase">Out</p>
+              <p className="text-xs font-bold text-gray-900 uppercase">Out</p>
               <p className="text-2xl font-bold mt-1 text-primary">{stats.outForDelivery}</p>
             </CardContent>
           </Card>
           <Card className="hover-lift">
             <CardContent className="p-4">
-              <p className="text-xs font-medium text-muted-foreground uppercase">Delivered</p>
+              <p className="text-xs font-bold text-gray-900 uppercase">Delivered</p>
               <p className="text-2xl font-bold mt-1 text-success">{stats.delivered}</p>
             </CardContent>
           </Card>
           <Card className="hover-lift">
             <CardContent className="p-4">
-              <p className="text-xs font-medium text-muted-foreground uppercase">Revenue</p>
+              <p className="text-xs font-bold text-gray-900 uppercase">Revenue</p>
               <p className="text-2xl font-bold mt-1 text-primary">₹{stats.revenue.toLocaleString()}</p>
             </CardContent>
           </Card>
@@ -260,7 +260,7 @@ export default function OnlineOrders() {
                                 <p className="font-semibold">Delivery Address</p>
                                 <p className="text-muted-foreground">{order.delivery_address}</p>
                                 {order.landmark && (
-                                  <p className="text-xs text-muted-foreground">Near: {order.landmark}</p>
+                                  <p className="text-xs text-gray-700">Near: {order.landmark}</p>
                                 )}
                               </div>
                             </div>
@@ -268,7 +268,7 @@ export default function OnlineOrders() {
                             <div>
                               <p className="font-semibold mb-2">Order Items</p>
                               {(typeof order.items === 'string' ? JSON.parse(order.items || '[]') : order.items || []).map((item: any, idx: number) => (
-                                <p key={idx} className="text-xs text-muted-foreground">
+                                <p key={idx} className="text-xs text-gray-800">
                                   {item.name} x{item.quantity}
                                 </p>
                               ))}
@@ -287,7 +287,7 @@ export default function OnlineOrders() {
                           <div className="bg-primary/5 rounded-xl p-4">
                             <p className="text-sm text-muted-foreground mb-1">Total Amount</p>
                             <p className="text-2xl font-bold text-primary">₹{Number(order.total).toFixed(2)}</p>
-                            <p className="text-xs text-muted-foreground mt-2">
+                            <p className="text-xs text-gray-800 font-medium mt-2">
                               Payment: {order.payment_method === 'cod' ? 'Cash on Delivery' : 'Online'}
                             </p>
                           </div>
@@ -348,7 +348,7 @@ export default function OnlineOrders() {
                   <div className="flex items-center gap-3 p-6 border-2 border-primary/30 bg-primary/5 rounded-xl">
                     <div className="flex-1 min-w-0">
                       <p className="text-lg font-bold text-primary mb-1">{window.location.origin}/onlineorder</p>
-                      <p className="text-xs text-muted-foreground mt-1">
+                      <p className="text-xs text-gray-800 font-medium mt-1">
                         Share this link on WhatsApp, Instagram, Facebook, or anywhere else
                       </p>
                     </div>

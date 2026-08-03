@@ -221,7 +221,7 @@ const BillSettlement: React.FC = () => {
             <h1 className="text-3xl font-bold text-primary-700 flex items-center gap-2 mb-2">
               <CreditCard className="text-primary-500" /> Bill Settlement
             </h1>
-            <p className="text-muted-foreground">Collect payments from completed dine-in orders</p>
+            <p className="text-gray-800 font-semibold">Collect payments from completed dine-in orders</p>
           </div>
 
           {/* Orders List */}

@@ -417,8 +417,8 @@ export default function KitchenDisplay() {
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
           <div>
             <h1 className="text-2xl md:text-3xl font-bold text-primary-600">Kitchen Display System</h1>
-            <p className="text-gray-600 mt-1">Live order tracking for kitchen staff</p>
-            <p className="text-sm text-gray-500 mt-1">Current Time: {currentTime.toLocaleTimeString()}</p>
+            <p className="text-gray-800 font-semibold mt-1">Live order tracking for kitchen staff</p>
+            <p className="text-sm text-gray-800 font-medium mt-1">Current Time: {currentTime.toLocaleTimeString()}</p>
           </div>
         </div>
 

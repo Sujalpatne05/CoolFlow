@@ -388,7 +388,7 @@ export default function Reservations() {
       <div className="space-y-6">
         <div>
           <h1 className="text-2xl font-bold text-primary-600">Reservations</h1>
-          <p className="text-muted-foreground">Create and manage table reservations</p>
+          <p className="text-gray-800 font-medium">Create and manage table reservations</p>
         </div>
 
         {error && <div className="text-sm text-red-600">{error}</div>}
@@ -464,7 +464,7 @@ export default function Reservations() {
               <div key={reservation.id} className="border rounded-lg p-3 flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
                 <div>
                   <p className="font-semibold">{reservation.name}</p>
-                  <p className="text-xs text-muted-foreground">R-{reservation.id} | {reservation.phone}</p>
+                  <p className="text-xs text-gray-700 font-medium">R-{reservation.id} | {reservation.phone}</p>
                   <p className="text-sm">{formattedDate} at {reservation.time} | Guests: {reservation.guests} | Table: {reservation.tableNumber}</p>
                 </div>
                 <div className="flex items-center gap-2">

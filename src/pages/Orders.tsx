@@ -350,7 +350,7 @@ export default function Orders() {
       <div className="space-y-4 sm:space-y-6 px-2 sm:px-0">
         <div>
           <h1 className="text-xl sm:text-2xl font-bold text-primary-600">Orders</h1>
-          <p className="text-xs sm:text-sm text-muted-foreground">Live order feed from billing and kitchen</p>
+          <p className="text-xs sm:text-sm text-gray-800 font-semibold">Live order feed from billing and kitchen</p>
         </div>
 
         {error && <div className="text-xs sm:text-sm text-red-600">{error}</div>}

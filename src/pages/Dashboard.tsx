@@ -161,7 +161,7 @@ export default function Dashboard() {
             <h1 className="text-3xl sm:text-4xl font-bold tracking-tight mt-2">
               Welcome back, <span className="text-gradient">{activeName}</span>
             </h1>
-            <p className="text-sm text-muted-foreground mt-2">Here's what's happening across your restaurant today.</p>
+            <p className="text-sm text-gray-800 font-medium mt-2">Here's what's happening across your restaurant today.</p>
           </div>
           <Button onClick={() => navigate("/billing")} size="lg" className="gradient-brand text-white shadow-soft hover:shadow-glow hover:scale-105 transition-all w-fit group">
             <UtensilsCrossed className="h-5 w-5 mr-2 group-hover:rotate-12 transition-transform" />
@@ -325,7 +325,7 @@ export default function Dashboard() {
                     ))}
                   </div>
                 )}
-                <div className="flex gap-4 mt-4 pt-4 border-t border-border text-xs text-muted-foreground">
+                <div className="flex gap-4 mt-4 pt-4 border-t border-border text-xs text-gray-800 font-semibold">
                   <LegendDot color="bg-success" label="Available" />
                   <LegendDot color="bg-destructive" label="Occupied" />
                   <LegendDot color="bg-warning" label="Reserved" />

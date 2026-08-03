@@ -174,9 +174,10 @@ const Settings: React.FC = () => {
   return (
     <DashboardLayout>
       <div className="max-w-2xl mx-auto py-8 px-4 space-y-6">
-        <h1 className="text-2xl font-bold text-primary-700 flex items-center gap-2">
+        <h1 className="text-2xl font-bold text-primary-700 flex items-center gap-2 mb-2">
           <Settings2 className="text-primary-500" /> Restaurant Settings
         </h1>
+        <p className="text-gray-800 font-medium">Configure your restaurant details, billing, and printer settings</p>
 
         {/* Restaurant Info */}
         <Card>
@@ -209,7 +210,7 @@ const Settings: React.FC = () => {
                   <Button variant="outline" size="sm" onClick={() => fileRef.current?.click()} className="text-xs">
                     <Upload size={12} className="mr-1" /> Upload Logo
                   </Button>
-                  <p className="text-xs text-muted-foreground mt-1">PNG, JPG up to 2MB</p>
+                  <p className="text-xs text-gray-700 font-medium mt-1">PNG, JPG up to 2MB</p>
                   <input ref={fileRef} type="file" accept="image/*" className="hidden" onChange={handleLogoChange} />
                 </div>
               </div>
@@ -264,7 +265,7 @@ const Settings: React.FC = () => {
                   />
                   <span className="text-sm text-muted-foreground">%</span>
                 </div>
-                <p className="text-xs text-muted-foreground mt-1">Applied on subtotal in POS Billing.</p>
+                <p className="text-xs text-gray-700 font-medium mt-1">Applied on subtotal in POS Billing.</p>
               </div>
               <div>
                 <label className="block text-sm font-medium mb-1">Service Charge (%)</label>
@@ -277,7 +278,7 @@ const Settings: React.FC = () => {
                   />
                   <span className="text-sm text-muted-foreground">%</span>
                 </div>
-                <p className="text-xs text-muted-foreground mt-1">Added separately on top of tax.</p>
+                <p className="text-xs text-gray-700 font-medium mt-1">Added separately on top of tax.</p>
               </div>
             </div>
           </CardContent>
@@ -291,7 +292,7 @@ const Settings: React.FC = () => {
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
-            <p className="text-xs text-muted-foreground">
+            <p className="text-xs text-gray-700 font-medium">
               Set IP addresses and ports for kitchen (KOT) and counter (Bill) printers. Leave empty to disable printing for that device.
             </p>
             
@@ -303,7 +304,7 @@ const Settings: React.FC = () => {
                   value={printers.kitchen_printer_ip}
                   onChange={e => setPrinters(p => ({ ...p, kitchen_printer_ip: e.target.value }))}
                 />
-                <p className="text-xs text-muted-foreground mt-1">For printing KOT (Kitchen Order Tickets)</p>
+                <p className="text-xs text-gray-700 font-medium mt-1">For printing KOT (Kitchen Order Tickets)</p>
               </div>
               <div>
                 <label className="block text-sm font-medium mb-1">Kitchen Printer Port</label>
@@ -313,7 +314,7 @@ const Settings: React.FC = () => {
                   value={printers.kitchen_printer_port}
                   onChange={e => setPrinters(p => ({ ...p, kitchen_printer_port: Number(e.target.value) }))}
                 />
-                <p className="text-xs text-muted-foreground mt-1">Default: 9100</p>
+                <p className="text-xs text-gray-700 font-medium mt-1">Default: 9100</p>
               </div>
             </div>
 
@@ -325,7 +326,7 @@ const Settings: React.FC = () => {
                   value={printers.counter_printer_ip}
                   onChange={e => setPrinters(p => ({ ...p, counter_printer_ip: e.target.value }))}
                 />
-                <p className="text-xs text-muted-foreground mt-1">For printing Bills</p>
+                <p className="text-xs text-gray-700 font-medium mt-1">For printing Bills</p>
               </div>
               <div>
                 <label className="block text-sm font-medium mb-1">Counter Printer Port</label>
@@ -335,7 +336,7 @@ const Settings: React.FC = () => {
                   value={printers.counter_printer_port}
                   onChange={e => setPrinters(p => ({ ...p, counter_printer_port: Number(e.target.value) }))}
                 />
-                <p className="text-xs text-muted-foreground mt-1">Default: 9100</p>
+                <p className="text-xs text-gray-700 font-medium mt-1">Default: 9100</p>
               </div>
             </div>
           </CardContent>
@@ -363,7 +364,7 @@ const Settings: React.FC = () => {
                 </Button>
               ))}
             </div>
-            <p className="text-xs text-muted-foreground mt-2">Pre-selected when placing delivery orders in POS.</p>
+            <p className="text-xs text-gray-700 font-medium mt-2">Pre-selected when placing delivery orders in POS.</p>
           </CardContent>
         </Card>
 
@@ -417,7 +418,7 @@ const Settings: React.FC = () => {
                 />
               </div>
             </div>
-            <p className="text-xs text-muted-foreground">Most thermal printers use port 9100.</p>
+            <p className="text-xs text-gray-700 font-medium">Most thermal printers use port 9100.</p>
           </CardContent>
         </Card>
 
@@ -429,12 +430,12 @@ const Settings: React.FC = () => {
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-3">
-            <p className="text-xs text-muted-foreground">
+            <p className="text-xs text-gray-700 font-medium">
               Define sections for your restaurant (e.g. Rooftop, Garden). These appear as suggestions when adding tables.
             </p>
             <div className="flex flex-wrap gap-2">
               {data.table_sections.length === 0 && (
-                <span className="text-xs text-muted-foreground italic">No sections added yet.</span>
+                <span className="text-xs text-gray-700 italic">No sections added yet.</span>
               )}
               {data.table_sections.map((s, i) => (
                 <span key={i} className="flex items-center gap-1 bg-primary-100 text-primary-700 text-xs px-3 py-1 rounded-full font-medium">

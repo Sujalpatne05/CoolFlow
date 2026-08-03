@@ -369,7 +369,7 @@ export default function PublicOnlineOrder() {
                   <CreditCard className="h-16 w-16 text-primary mx-auto mb-4" />
                   <p className="font-semibold text-lg mb-2">Secure Payment Gateway</p>
                   <p className="text-3xl font-bold text-primary mb-2">₹{total.toFixed(2)}</p>
-                  <p className="text-xs text-muted-foreground">Cards • UPI • Wallets • Net Banking</p>
+                  <p className="text-xs text-gray-700 font-medium">Cards • UPI • Wallets • Net Banking</p>
                 </div>
                 <Button 
                   onClick={handleRazorpayPayment}
@@ -380,7 +380,7 @@ export default function PublicOnlineOrder() {
                   <CreditCard className="h-5 w-5 mr-2" />
                   {submitting ? 'Processing...' : 'Proceed to Payment'}
                 </Button>
-                <p className="text-xs text-muted-foreground">
+                <p className="text-xs text-gray-700 font-medium">
                   🔒 Powered by Razorpay - 100% Secure & Verified
                 </p>
               </div>
@@ -416,7 +416,7 @@ export default function PublicOnlineOrder() {
             )}
             <div>
               <h1 className="text-xl font-bold text-foreground">{restaurant?.name}</h1>
-              <p className="text-xs text-muted-foreground flex items-center gap-1">
+              <p className="text-xs text-gray-700 font-medium flex items-center gap-1">
                 <MapPin className="h-3 w-3" /> {restaurant?.city}
               </p>
             </div>
@@ -602,7 +602,7 @@ export default function PublicOnlineOrder() {
                     <Wallet className="h-5 w-5 text-primary" />
                     <div className="text-left">
                       <p className="font-semibold">Cash on Delivery</p>
-                      <p className="text-xs text-muted-foreground">Pay when you receive your order</p>
+                      <p className="text-xs text-gray-700">Pay when you receive your order</p>
                     </div>
                   </button>
 
@@ -620,7 +620,7 @@ export default function PublicOnlineOrder() {
                           Pay via UPI
                           <Badge variant="outline" className="text-[10px] bg-success/10 text-success">INSTANT</Badge>
                         </p>
-                        <p className="text-xs text-muted-foreground">
+                        <p className="text-xs text-gray-700">
                           {paymentSettings.upiQrCode ? 'Scan QR Code to pay' : 'GPay, PhonePe, Paytm & more'}
                         </p>
                       </div>
@@ -638,14 +638,14 @@ export default function PublicOnlineOrder() {
                       <CreditCard className="h-5 w-5 text-primary" />
                       <div className="text-left">
                         <p className="font-semibold">Pay Online</p>
-                        <p className="text-xs text-muted-foreground">Cards, UPI, Wallets & Net Banking</p>
+                        <p className="text-xs text-gray-700">Cards, UPI, Wallets & Net Banking</p>
                       </div>
                     </button>
                   )}
 
                   {/* No online payment configured message */}
                   {!paymentSettings?.upiEnabled && !paymentSettings?.razorpayEnabled && (
-                    <div className="bg-blue-50 border border-blue-200 rounded-xl p-3 text-xs text-muted-foreground">
+                    <div className="bg-blue-50 border border-blue-200 rounded-xl p-3 text-xs text-gray-800 font-medium">
                       💡 Online payment coming soon! Pay with cash for now.
                     </div>
                   )}

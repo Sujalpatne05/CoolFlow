@@ -535,7 +535,7 @@ export default function TableManagement() {
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
           <div>
             <h1 className="text-2xl md:text-3xl font-bold text-primary-600">Table Management</h1>
-            <p className="text-gray-600 mt-1">Manage restaurant seating and table availability</p>
+            <p className="text-gray-800 font-semibold mt-1">Manage restaurant seating and table availability</p>
           </div>
           <Dialog open={isAddDialogOpen} onOpenChange={(open) => {
               setIsAddDialogOpen(open);
@@ -563,7 +563,7 @@ export default function TableManagement() {
                     onChange={(e) => setNewTable({ ...newTable, number: e.target.value })}
                   />
                   {tables.length > 0 && (
-                    <p className="text-xs text-muted-foreground">
+                    <p className="text-xs text-gray-700 font-medium">
                       Existing: {tables.map(t => t.number).sort((a,b) => a-b).join(", ")}
                     </p>
                   )}
@@ -579,7 +579,7 @@ export default function TableManagement() {
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="section">Section <span className="text-xs text-muted-foreground">(optional)</span></Label>
+                  <Label htmlFor="section">Section <span className="text-xs text-gray-700">(optional)</span></Label>
                   <Input
                     id="section"
                     list="section-suggestions"
@@ -592,7 +592,7 @@ export default function TableManagement() {
                       <option key={s} value={s} />
                     ))}
                   </datalist>
-                  <p className="text-xs text-muted-foreground">Type any section name or pick a suggestion.</p>
+                  <p className="text-xs text-gray-700 font-medium">Type any section name or pick a suggestion.</p>
                 </div>
               </div>
               <DialogFooter>
@@ -609,7 +609,7 @@ export default function TableManagement() {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           <Card>
             <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium text-gray-600">Total Tables</CardTitle>
+              <CardTitle className="text-sm font-bold text-gray-900">Total Tables</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">{stats.total}</div>
@@ -617,7 +617,7 @@ export default function TableManagement() {
           </Card>
           <Card>
             <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium text-green-600">Available</CardTitle>
+              <CardTitle className="text-sm font-bold text-green-700">Available</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold text-green-600">{stats.available}</div>
@@ -625,7 +625,7 @@ export default function TableManagement() {
           </Card>
           <Card>
             <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium text-red-600">Occupied</CardTitle>
+              <CardTitle className="text-sm font-bold text-red-700">Occupied</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold text-red-600">{stats.occupied}</div>
@@ -633,7 +633,7 @@ export default function TableManagement() {
           </Card>
           <Card>
             <CardHeader className="pb-2">
-              <CardTitle className="text-sm font-medium text-yellow-600">Reserved</CardTitle>
+              <CardTitle className="text-sm font-bold text-yellow-700">Reserved</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold text-yellow-600">{stats.reserved}</div>

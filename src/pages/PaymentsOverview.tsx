@@ -191,7 +191,7 @@ export default function PaymentsOverview() {
           >
             <CardHeader className="pb-2 sm:pb-3 p-3 sm:p-6">
               <div className="flex items-center justify-between gap-2">
-                <CardTitle className="text-base sm:text-lg">Card Payments</CardTitle>
+                <CardTitle className="text-base sm:text-lg font-bold text-gray-900">Card Payments</CardTitle>
                 <div className="bg-blue-100 p-1.5 sm:p-2 rounded-lg flex-shrink-0">
                   <CreditCard className="h-4 sm:h-5 w-4 sm:w-5 text-blue-600" />
                 </div>
@@ -200,7 +200,7 @@ export default function PaymentsOverview() {
             <CardContent className="p-3 sm:p-6 pt-0 sm:pt-0">
               <div className="space-y-2">
                 <p className="text-2xl sm:text-3xl font-bold text-blue-600">₹{paymentStats.card.total.toLocaleString("en-IN")}</p>
-                <p className="text-xs sm:text-sm text-gray-600">{paymentStats.card.count} transactions</p>
+                <p className="text-xs sm:text-sm font-semibold text-gray-900">{paymentStats.card.count} transactions</p>
                 <div className="w-full bg-gray-200 rounded-full h-2 mt-2 sm:mt-3">
                   <div
                     className="bg-blue-600 h-2 rounded-full"
@@ -220,7 +220,7 @@ export default function PaymentsOverview() {
           >
             <CardHeader className="pb-2 sm:pb-3 p-3 sm:p-6">
               <div className="flex items-center justify-between gap-2">
-                <CardTitle className="text-base sm:text-lg">Cash Payments</CardTitle>
+                <CardTitle className="text-base sm:text-lg font-bold text-gray-900">Cash Payments</CardTitle>
                 <div className="bg-green-100 p-1.5 sm:p-2 rounded-lg flex-shrink-0">
                   <Banknote className="h-4 sm:h-5 w-4 sm:w-5 text-green-600" />
                 </div>
@@ -229,7 +229,7 @@ export default function PaymentsOverview() {
             <CardContent className="p-3 sm:p-6 pt-0 sm:pt-0">
               <div className="space-y-2">
                 <p className="text-2xl sm:text-3xl font-bold text-green-600">₹{paymentStats.cash.total.toLocaleString("en-IN")}</p>
-                <p className="text-xs sm:text-sm text-gray-600">{paymentStats.cash.count} transactions</p>
+                <p className="text-xs sm:text-sm font-semibold text-gray-900">{paymentStats.cash.count} transactions</p>
                 <div className="w-full bg-gray-200 rounded-full h-2 mt-2 sm:mt-3">
                   <div
                     className="bg-green-600 h-2 rounded-full"
@@ -249,7 +249,7 @@ export default function PaymentsOverview() {
           >
             <CardHeader className="pb-2 sm:pb-3 p-3 sm:p-6">
               <div className="flex items-center justify-between gap-2">
-                <CardTitle className="text-base sm:text-lg">UPI Payments</CardTitle>
+                <CardTitle className="text-base sm:text-lg font-bold text-gray-900">UPI Payments</CardTitle>
                 <div className="bg-purple-100 p-1.5 sm:p-2 rounded-lg flex-shrink-0">
                   <Smartphone className="h-4 sm:h-5 w-4 sm:w-5 text-purple-600" />
                 </div>
@@ -258,7 +258,7 @@ export default function PaymentsOverview() {
             <CardContent className="p-3 sm:p-6 pt-0 sm:pt-0">
               <div className="space-y-2">
                 <p className="text-2xl sm:text-3xl font-bold text-purple-600">₹{paymentStats.upi.total.toLocaleString("en-IN")}</p>
-                <p className="text-xs sm:text-sm text-gray-600">{paymentStats.upi.count} transactions</p>
+                <p className="text-xs sm:text-sm font-semibold text-gray-900">{paymentStats.upi.count} transactions</p>
                 <div className="w-full bg-gray-200 rounded-full h-2 mt-2 sm:mt-3">
                   <div
                     className="bg-purple-600 h-2 rounded-full"

@@ -22,7 +22,7 @@ export function StatCard({ title, value, change, changeType = "neutral", icon, c
     >
       <div className="flex items-start justify-between">
         <div className="min-w-0">
-          <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">{title}</p>
+          <p className="text-xs font-bold text-gray-900 uppercase tracking-wide">{title}</p>
           <p className="text-2xl font-bold text-foreground mt-2 tabular-nums">{value}</p>
           {change && (
             <p
@@ -30,7 +30,7 @@ export function StatCard({ title, value, change, changeType = "neutral", icon, c
                 "text-xs mt-2 font-medium",
                 changeType === "positive" && "text-success",
                 changeType === "negative" && "text-destructive",
-                changeType === "neutral" && "text-muted-foreground",
+                changeType === "neutral" && "text-gray-800",
               )}
             >
               {change}
