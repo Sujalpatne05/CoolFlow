@@ -50,14 +50,14 @@ export default function TablePayment() {
       <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full p-8">
         {/* Header */}
         <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-emerald-600">Payment</h1>
+          <h1 className="text-3xl font-bold text-primary-600">Payment</h1>
           <p className="text-gray-600 mt-2">Table {tableId} • Order #{orderId}</p>
         </div>
 
         {/* Amount */}
-        <div className="bg-gradient-to-r from-emerald-100 to-yellow-100 rounded-lg p-6 mb-8 text-center">
+        <div className="bg-gradient-to-r from-primary-100 to-yellow-100 rounded-lg p-6 mb-8 text-center">
           <p className="text-gray-600 mb-2">Total Amount</p>
-          <p className="text-4xl font-bold text-emerald-600">Rs. {Math.round(orderTotal)}</p>
+          <p className="text-4xl font-bold text-primary-600">Rs. {Math.round(orderTotal)}</p>
         </div>
 
         {/* Payment Methods */}
@@ -116,7 +116,7 @@ export default function TablePayment() {
         <button
           onClick={handlePayment}
           disabled={processing}
-          className="w-full bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 disabled:from-gray-300 disabled:to-gray-400 text-white font-bold py-4 rounded-lg transition flex items-center justify-center gap-2 text-lg"
+          className="w-full bg-gradient-to-r from-green-500 to-primary-600 hover:from-green-600 hover:to-primary-700 disabled:from-gray-300 disabled:to-gray-400 text-white font-bold py-4 rounded-lg transition flex items-center justify-center gap-2 text-lg"
         >
           <Check className="h-5 w-5" />
           {processing ? "Processing..." : "Confirm Payment"}

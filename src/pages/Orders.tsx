@@ -211,7 +211,7 @@ export default function Orders() {
       case "dine-in":
         return "bg-blue-100 text-blue-800";
       case "take-away":
-        return "bg-teal-100 text-teal-800";
+        return "bg-secondary-100 text-secondary-800";
       case "delivery":
         return "bg-purple-100 text-purple-800";
       default:
@@ -325,14 +325,14 @@ export default function Orders() {
                         </div>
                         <div className="flex items-center gap-1">
                           <span className="text-gray-600">Status</span>
-                          <span className={`font-semibold ${order.paymentStatus === "paid" ? "text-green-600" : "text-teal-600"}`}>
+                          <span className={`font-semibold ${order.paymentStatus === "paid" ? "text-green-600" : "text-secondary-600"}`}>
                             {order.paymentStatus === "paid" ? "Paid" : "Unpaid"}
                           </span>
                         </div>
                       </div>
                       <PrintBillButton
                         orderId={order.id}
-                        className="w-full sm:w-auto border-teal-300 text-teal-700 hover:bg-teal-50 hover:text-gray-950"
+                        className="w-full sm:w-auto border-secondary-300 text-secondary-700 hover:bg-secondary-50 hover:text-gray-950"
                       />
                     </div>
                   </div>
@@ -349,7 +349,7 @@ export default function Orders() {
     <DashboardLayout>
       <div className="space-y-4 sm:space-y-6 px-2 sm:px-0">
         <div>
-          <h1 className="text-xl sm:text-2xl font-bold text-emerald-600">Orders</h1>
+          <h1 className="text-xl sm:text-2xl font-bold text-primary-600">Orders</h1>
           <p className="text-xs sm:text-sm text-muted-foreground">Live order feed from billing and kitchen</p>
         </div>
 
@@ -362,8 +362,8 @@ export default function Orders() {
               {/* Header */}
               <div className="flex items-center justify-between">
                 <div>
-                  <h3 className="text-sm sm:text-base font-bold text-emerald-600 flex items-center gap-2">
-                    <Calendar className="w-5 h-5 text-emerald-600" />
+                  <h3 className="text-sm sm:text-base font-bold text-primary-600 flex items-center gap-2">
+                    <Calendar className="w-5 h-5 text-primary-600" />
                     Smart Date Filter
                   </h3>
                   <p className="text-xs sm:text-sm text-gray-600 mt-1">Quick date selection</p>
@@ -389,8 +389,8 @@ export default function Orders() {
                         onClick={() => handleQuickDate(0)}
                         className={`px-3 py-2 rounded-lg text-xs font-semibold transition whitespace-nowrap ${
                           selectedDate?.toDateString() === new Date().toDateString()
-                            ? "bg-emerald-600 text-white shadow-md"
-                            : "bg-white border border-gray-300 text-gray-700 hover:bg-emerald-50"
+                            ? "bg-primary-600 text-white shadow-md"
+                            : "bg-white border border-gray-300 text-gray-700 hover:bg-primary-50"
                         }`}
                       >
                         Today
@@ -399,8 +399,8 @@ export default function Orders() {
                         onClick={() => handleQuickDate(1)}
                         className={`px-3 py-2 rounded-lg text-xs font-semibold transition whitespace-nowrap ${
                           selectedDate?.toDateString() === new Date(Date.now() - 86400000).toDateString()
-                            ? "bg-emerald-600 text-white shadow-md"
-                            : "bg-white border border-gray-300 text-gray-700 hover:bg-emerald-50"
+                            ? "bg-primary-600 text-white shadow-md"
+                            : "bg-white border border-gray-300 text-gray-700 hover:bg-primary-50"
                         }`}
                       >
                         Yesterday

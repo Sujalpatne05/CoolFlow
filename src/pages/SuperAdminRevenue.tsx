@@ -59,7 +59,7 @@ export default function SuperAdminRevenue() {
     <SuperAdminLayout>
       <div className="space-y-6 p-3 sm:p-6">
         <div>
-          <h1 className="text-3xl font-extrabold text-emerald-600">Revenue Overview</h1>
+          <h1 className="text-3xl font-extrabold text-primary-600">Revenue Overview</h1>
           <p className="text-gray-500 mt-1">Platform-wide financial performance and analytics</p>
         </div>
 
@@ -71,7 +71,7 @@ export default function SuperAdminRevenue() {
               <span className="flex items-center gap-1 text-xs font-bold text-green-600"><ArrowUp className="h-3 w-3" />+12.4%</span>
             </div>
             <p className="text-sm text-gray-500">Total Revenue</p>
-            <p className="text-2xl font-extrabold text-emerald-600 mt-1">{loading ? "..." : `₹${totalRevenue.toLocaleString("en-IN")}`}</p>
+            <p className="text-2xl font-extrabold text-primary-600 mt-1">{loading ? "..." : `₹${totalRevenue.toLocaleString("en-IN")}`}</p>
           </div>
 
           <div className="bg-white rounded-xl border border-blue-200 bg-gradient-to-b from-blue-50 to-white p-5 shadow-sm">
@@ -80,16 +80,16 @@ export default function SuperAdminRevenue() {
               <span className="flex items-center gap-1 text-xs font-bold text-blue-600"><ArrowUp className="h-3 w-3" />Collected</span>
             </div>
             <p className="text-sm text-gray-500">Paid Revenue</p>
-            <p className="text-2xl font-extrabold text-emerald-600 mt-1">{loading ? "..." : `₹${paidRevenue.toLocaleString("en-IN")}`}</p>
+            <p className="text-2xl font-extrabold text-primary-600 mt-1">{loading ? "..." : `₹${paidRevenue.toLocaleString("en-IN")}`}</p>
           </div>
 
-          <div className="bg-white rounded-xl border border-emerald-200 bg-gradient-to-b from-emerald-50 to-white p-5 shadow-sm">
+          <div className="bg-white rounded-xl border border-primary-200 bg-gradient-to-b from-primary-50 to-white p-5 shadow-sm">
             <div className="flex justify-between items-start mb-3">
-              <div className="bg-emerald-100 p-2 rounded-lg"><TrendingDown className="h-5 w-5 text-emerald-600" /></div>
-              <span className="text-xs font-bold text-emerald-600">Pending</span>
+              <div className="bg-primary-100 p-2 rounded-lg"><TrendingDown className="h-5 w-5 text-primary-600" /></div>
+              <span className="text-xs font-bold text-primary-600">Pending</span>
             </div>
             <p className="text-sm text-gray-500">Unpaid Amount</p>
-            <p className="text-2xl font-extrabold text-emerald-600 mt-1">{loading ? "..." : `₹${unpaidRevenue.toLocaleString("en-IN")}`}</p>
+            <p className="text-2xl font-extrabold text-primary-600 mt-1">{loading ? "..." : `₹${unpaidRevenue.toLocaleString("en-IN")}`}</p>
           </div>
 
           <div className="bg-white rounded-xl border border-purple-200 bg-gradient-to-b from-purple-50 to-white p-5 shadow-sm">
@@ -98,14 +98,14 @@ export default function SuperAdminRevenue() {
               <span className="flex items-center gap-1 text-xs font-bold text-purple-600"><ArrowUp className="h-3 w-3" />Good</span>
             </div>
             <p className="text-sm text-gray-500">Profit Margin</p>
-            <p className="text-2xl font-extrabold text-emerald-600 mt-1">{profitMargin}%</p>
+            <p className="text-2xl font-extrabold text-primary-600 mt-1">{profitMargin}%</p>
           </div>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* Revenue vs Expenses */}
           <div className="bg-white rounded-xl border p-6 shadow-sm">
-            <h2 className="text-lg font-bold text-emerald-600 mb-4">Revenue vs Expenses (12 Months)</h2>
+            <h2 className="text-lg font-bold text-primary-600 mb-4">Revenue vs Expenses (12 Months)</h2>
             <div className="h-64">
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={monthlyRevenue}>
@@ -122,7 +122,7 @@ export default function SuperAdminRevenue() {
 
           {/* Payment Method Breakdown */}
           <div className="bg-white rounded-xl border p-6 shadow-sm">
-            <h2 className="text-lg font-bold text-emerald-600 mb-4">Payment Method Breakdown</h2>
+            <h2 className="text-lg font-bold text-primary-600 mb-4">Payment Method Breakdown</h2>
             <div className="h-64">
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={paymentMethodData}>
@@ -138,7 +138,7 @@ export default function SuperAdminRevenue() {
 
           {/* Revenue Growth Area Chart */}
           <div className="bg-white rounded-xl border p-6 shadow-sm lg:col-span-2">
-            <h2 className="text-lg font-bold text-emerald-600 mb-4">Revenue Growth Trend</h2>
+            <h2 className="text-lg font-bold text-primary-600 mb-4">Revenue Growth Trend</h2>
             <div className="h-64">
               <ResponsiveContainer width="100%" height="100%">
                 <AreaChart data={monthlyRevenue}>

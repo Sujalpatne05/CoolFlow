@@ -15,6 +15,10 @@ import DeliveryManagement from "./pages/DeliveryManagement";
 import TableQROrdering from "./pages/TableQROrdering";
 import TablePayment from "./pages/TablePayment";
 import TableConfirmation from "./pages/TableConfirmation";
+import CustomerDeliveryOrder from "./pages/CustomerDeliveryOrder";
+import TrackDelivery from "./pages/TrackDelivery";
+import PublicOnlineOrder from "./pages/PublicOnlineOrder";
+import OnlineOrders from "./pages/OnlineOrders";
 import { Toaster } from "@/components/ui/toaster";
 import React from "react";
 import { Toaster as Sonner } from "@/components/ui/sonner";
@@ -38,6 +42,7 @@ import NotFound from "./pages/NotFound";
 import AdminUsers from "./pages/AdminUsers";
 import MyProfile from "./pages/MyProfile";
 import Settings from "./pages/Settings";
+import PaymentSettings from "./pages/PaymentSettings";
 import PublicReservation from "./pages/PublicReservation";
 import { getAuthToken, getStoredRole } from "@/lib/session";
 
@@ -129,6 +134,9 @@ const App = () => {
           <Route path="/settings" element={
             getRole() === "admin" ? <Settings /> : <AdminLogin />
           } />
+          <Route path="/payment-settings" element={
+            getRole() === "admin" ? <PaymentSettings /> : <AdminLogin />
+          } />
           <Route path="/table-management" element={
             (getRole() === "admin" || getRole() === "manager") ? <TableManagement /> : <AdminLogin />
           } />
@@ -141,10 +149,16 @@ const App = () => {
           <Route path="/delivery-management" element={
             (getRole() === "admin" || getRole() === "manager") ? <DeliveryManagement /> : <AdminLogin />
           } />
+          <Route path="/online-orders" element={
+            (getRole() === "admin" || getRole() === "manager") ? <OnlineOrders /> : <AdminLogin />
+          } />
           <Route path="/table-qr/:tableId" element={<TableQROrdering />} />
           <Route path="/table-payment/:tableId/:orderId" element={<TablePayment />} />
           <Route path="/table-confirmation/:tableId/:orderId" element={<TableConfirmation />} />
           <Route path="/book/:token" element={<PublicReservation />} />
+          <Route path="/onlineorder" element={<PublicOnlineOrder />} />
+          <Route path="/order/:token" element={<CustomerDeliveryOrder />} />
+          <Route path="/track-delivery/:orderNumber" element={<TrackDelivery />} />
           <Route path="/superadmin-dashboard" element={isSuperAdmin() ? <SuperAdminDashboard /> : <SuperAdminLogin />} />
           <Route path="/superadmin-restaurants" element={isSuperAdmin() ? <SuperAdminRestaurants /> : <SuperAdminLogin />} />
           <Route path="/superadmin-subscriptions" element={isSuperAdmin() ? <SuperAdminSubscriptions /> : <SuperAdminLogin />} />

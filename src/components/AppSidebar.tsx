@@ -46,6 +46,7 @@ const getMenuGroups = (role: string | null) => {
         { title: "Menu Management", url: "/menu", icon: UtensilsCrossed, roles: ["admin", "manager"] },
         { title: "Table Management", url: "/table-management", icon: Table, roles: ["admin", "manager"] },
         { title: "Reservations", url: "/reservations", icon: Calendar, roles: ["admin", "manager"] },
+        { title: "Online Orders", url: "/online-orders", icon: Truck, roles: ["admin", "manager"] },
         { title: "Delivery Management", url: "/delivery-management", icon: Truck, roles: ["admin", "manager"] },
       ],
     },
@@ -67,6 +68,7 @@ const getMenuGroups = (role: string | null) => {
     {
       label: "Config",
       items: [
+        { title: "Payment Settings", url: "/payment-settings", icon: CreditCard, roles: ["admin"] },
         { title: "Settings", url: "/settings", icon: Settings2, roles: ["admin"] },
       ],
     },
@@ -113,15 +115,21 @@ export function AppSidebar() {
 
   return (
     <Sidebar collapsible="icon">
-      <SidebarHeader className="px-3 py-4">
+      <SidebarHeader className="px-3 py-4 border-b border-sidebar-border">
         <div className="flex items-center gap-3 px-1">
-          <img src={logo || FALLBACK_LOGO} alt="Logo" className="h-9 w-9 rounded-lg object-cover ring-1 ring-sidebar-border flex-shrink-0" />
+          <div className="relative flex-shrink-0">
+            <img 
+              src={logo || FALLBACK_LOGO} 
+              alt="Logo" 
+              className="h-11 w-11 rounded-xl object-cover shadow-soft ring-2 ring-primary/20" 
+            />
+          </div>
           {!collapsed && (
             <div className="min-w-0">
-              <p className="text-sm font-semibold text-sidebar-accent-foreground truncate leading-tight">
+              <p className="text-base font-bold text-foreground truncate leading-tight">
                 {restaurantName || "Management System"}
               </p>
-              <p className="text-[11px] text-sidebar-foreground/50 capitalize mt-0.5">
+              <p className="text-xs text-muted-foreground capitalize mt-1">
                 {userRole || "staff"} workspace
               </p>
             </div>
@@ -167,13 +175,13 @@ export function AppSidebar() {
         ))}
       </SidebarContent>
 
-      <SidebarFooter className="px-3 py-3">
+      <SidebarFooter className="px-3 py-3 border-t border-sidebar-border">
         {!collapsed && (
-          <div className="rounded-lg border border-sidebar-border bg-sidebar-accent/40 px-3 py-2.5">
-            <p className="text-[11px] font-medium text-sidebar-foreground/70">
+          <div className="rounded-xl border-2 border-primary/20 bg-gradient-brand-soft px-4 py-3 shadow-soft">
+            <p className="text-xs font-bold text-foreground">
               OrderNest Platform
             </p>
-            <p className="text-[10px] text-sidebar-foreground/40 mt-0.5">
+            <p className="text-[10px] text-muted-foreground mt-1">
               v2.0 · © {new Date().getFullYear()}
             </p>
           </div>

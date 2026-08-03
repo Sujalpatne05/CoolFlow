@@ -449,7 +449,7 @@ const MenuManagement = () => {
       <div className="space-y-6">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-bold text-emerald-600">Menu Management</h1>
+            <h1 className="text-2xl font-bold text-primary-600">Menu Management</h1>
             <p className="text-muted-foreground">{menuItems.length} items across {dynamicCategories.length - 1} categories</p>
           </div>
           <div className="flex gap-2">
@@ -675,7 +675,7 @@ const MenuManagement = () => {
                     <span className="text-sm font-semibold">{importResult.inserted} items imported successfully</span>
                   </div>
                   {importResult.skipped > 0 && (
-                    <div className="flex items-center gap-2 text-emerald-700 bg-emerald-50 border border-emerald-200 rounded-lg p-3">
+                    <div className="flex items-center gap-2 text-primary-700 bg-primary-50 border border-primary-200 rounded-lg p-3">
                       <AlertCircle size={16} />
                       <span className="text-sm">{importResult.skipped} rows skipped (missing name or invalid price)</span>
                     </div>

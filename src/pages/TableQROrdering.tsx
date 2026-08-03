@@ -111,9 +111,9 @@ export default function TableQROrdering() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-emerald-50 to-yellow-50 flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-br from-primary-50 to-yellow-50 flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-emerald-500 mx-auto mb-4"></div>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-500 mx-auto mb-4"></div>
           <p className="text-gray-600">Loading menu...</p>
         </div>
       </div>
@@ -122,13 +122,13 @@ export default function TableQROrdering() {
 
   if (orderPlaced) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-emerald-50 to-yellow-50 flex items-center justify-center p-4">
+      <div className="min-h-screen bg-gradient-to-br from-primary-50 to-yellow-50 flex items-center justify-center p-4">
         <div className="bg-white rounded-lg shadow-xl p-8 max-w-md w-full text-center">
           <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
             <Check className="text-green-600" size={32} />
           </div>
           <h2 className="text-2xl font-bold text-gray-800 mb-2">Order Placed!</h2>
-          <p className="text-lg font-semibold text-emerald-600 mb-4">
+          <p className="text-lg font-semibold text-primary-600 mb-4">
             Table {tableId}
           </p>
           <p className="text-gray-600 mb-4">
@@ -143,16 +143,16 @@ export default function TableQROrdering() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-emerald-50 to-yellow-50 pb-20">
+    <div className="min-h-screen bg-gradient-to-br from-primary-50 to-yellow-50 pb-20">
       {/* Header */}
       <div className="bg-white shadow-sm sticky top-0 z-10">
         <div className="max-w-4xl mx-auto px-4 py-4">
           <div className="flex justify-between items-center">
             <div>
-              <h1 className="text-2xl font-bold text-emerald-600">Table {tableId}</h1>
+              <h1 className="text-2xl font-bold text-primary-600">Table {tableId}</h1>
               <p className="text-sm text-gray-600">Scan & Order</p>
             </div>
-            <div className="bg-emerald-100 text-emerald-700 px-4 py-2 rounded-lg font-semibold">
+            <div className="bg-primary-100 text-primary-700 px-4 py-2 rounded-lg font-semibold">
               {cart.length} items
             </div>
           </div>
@@ -178,12 +178,12 @@ export default function TableQROrdering() {
                     />
                   )}
                   <div className="p-4">
-                    <h3 className="font-semibold text-emerald-600">{item.name}</h3>
-                    <p className="text-lg font-bold text-emerald-600 mt-2">Rs. {item.price}</p>
+                    <h3 className="font-semibold text-primary-600">{item.name}</h3>
+                    <p className="text-lg font-bold text-primary-600 mt-2">Rs. {item.price}</p>
                     <button
                       onClick={() => addToCart(item)}
                       disabled={!item.available}
-                      className="w-full mt-3 bg-emerald-500 hover:bg-emerald-600 disabled:bg-gray-300 text-white disabled:text-emerald-600 font-semibold py-2 rounded-lg transition flex items-center justify-center gap-2"
+                      className="w-full mt-3 bg-primary-500 hover:bg-primary-600 disabled:bg-gray-300 text-white disabled:text-primary-600 font-semibold py-2 rounded-lg transition flex items-center justify-center gap-2"
                     >
                       <Plus className="h-4 w-4" />
                       Add to Cart
@@ -211,7 +211,7 @@ export default function TableQROrdering() {
                       <div key={item.id} className="flex items-center justify-between bg-gray-50 p-3 rounded-lg">
                         <div className="flex-1">
                           <p className="font-semibold text-sm">{item.name}</p>
-                          <p className="text-emerald-600 font-bold">Rs. {item.price * item.quantity}</p>
+                          <p className="text-primary-600 font-bold">Rs. {item.price * item.quantity}</p>
                         </div>
                         <div className="flex items-center gap-2">
                           <button
@@ -241,12 +241,12 @@ export default function TableQROrdering() {
                   <div className="border-t pt-4">
                     <div className="flex justify-between mb-4">
                       <span className="font-semibold">Total:</span>
-                      <span className="text-2xl font-bold text-emerald-600">Rs. {calculateTotal()}</span>
+                      <span className="text-2xl font-bold text-primary-600">Rs. {calculateTotal()}</span>
                     </div>
                     <button
                       onClick={handlePlaceOrder}
                       disabled={submitting}
-                      className="w-full bg-green-500 hover:bg-green-600 disabled:bg-gray-300 text-white disabled:text-emerald-600 font-bold py-3 rounded-lg transition flex items-center justify-center gap-2"
+                      className="w-full bg-green-500 hover:bg-green-600 disabled:bg-gray-300 text-white disabled:text-primary-600 font-bold py-3 rounded-lg transition flex items-center justify-center gap-2"
                     >
                       <Check className="h-5 w-5" />
                       {submitting ? "Placing Order..." : "Place Order"}

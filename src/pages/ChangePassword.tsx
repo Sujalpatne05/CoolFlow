@@ -103,7 +103,7 @@ export default function ChangePassword() {
           </div>
 
           {error && <div className="text-sm text-red-600">{error}</div>}
-          {success && <div className="text-sm text-emerald-700">{success}</div>}
+          {success && <div className="text-sm text-primary-700">{success}</div>}
 
           <button type="submit" disabled={loading} className="w-full rounded-lg bg-slate-900 px-4 py-2 text-white font-semibold disabled:opacity-60">
             {loading ? "Updating..." : "Update Password"}

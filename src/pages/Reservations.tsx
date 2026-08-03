@@ -387,7 +387,7 @@ export default function Reservations() {
     <DashboardLayout>
       <div className="space-y-6">
         <div>
-          <h1 className="text-2xl font-bold text-emerald-600">Reservations</h1>
+          <h1 className="text-2xl font-bold text-primary-600">Reservations</h1>
           <p className="text-muted-foreground">Create and manage table reservations</p>
         </div>
 

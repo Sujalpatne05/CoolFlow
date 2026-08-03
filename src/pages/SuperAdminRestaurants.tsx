@@ -36,8 +36,8 @@ type Restaurant = {
 };
 
 function getHealthTone(score: number) {
-  if (score >= 85) return "bg-emerald-100 text-emerald-800";
-  if (score >= 70) return "bg-teal-100 text-teal-800";
+  if (score >= 85) return "bg-primary-100 text-primary-800";
+  if (score >= 70) return "bg-secondary-100 text-secondary-800";
   return "bg-red-100 text-red-700";
 }
 
@@ -355,11 +355,11 @@ export default function SuperAdminRestaurants() {
   return (
     <SuperAdminLayout>
       <div className="space-y-6">
-        <section className="rounded-2xl border border-slate-200 bg-gradient-to-r from-cyan-800 via-slate-900 to-blue-900 px-4 py-6 text-white sm:px-6">
+        <section className="rounded-2xl border border-slate-200 bg-gradient-to-r from-primary-800 via-slate-900 to-blue-900 px-4 py-6 text-white sm:px-6">
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div>
               <h1 className="text-2xl font-extrabold sm:text-3xl">Restaurant Portfolio</h1>
-              <p className="mt-1 text-sm text-cyan-100">Monitor tenant health, growth plan, and activation quality.</p>
+              <p className="mt-1 text-sm text-primary-100">Monitor tenant health, growth plan, and activation quality.</p>
             </div>
             <button
               className="inline-flex min-h-11 items-center justify-center gap-2 rounded-lg bg-white px-4 py-2 text-sm font-semibold text-slate-900 transition hover:bg-slate-100"
@@ -376,9 +376,9 @@ export default function SuperAdminRestaurants() {
             <p className="text-xs font-semibold uppercase text-slate-500">Total</p>
             <p className="mt-1 text-2xl font-extrabold text-slate-900">{stats.total}</p>
           </div>
-          <div className="rounded-xl border border-emerald-200 bg-emerald-50 p-4 shadow-sm">
-            <p className="text-xs font-semibold uppercase text-emerald-700">Active</p>
-            <p className="mt-1 text-2xl font-extrabold text-emerald-900">{stats.active}</p>
+          <div className="rounded-xl border border-primary-200 bg-primary-50 p-4 shadow-sm">
+            <p className="text-xs font-semibold uppercase text-primary-700">Active</p>
+            <p className="mt-1 text-2xl font-extrabold text-primary-900">{stats.active}</p>
           </div>
           <div className="rounded-xl border border-sky-200 bg-sky-50 p-4 shadow-sm">
             <p className="text-xs font-semibold uppercase text-sky-700">Premium</p>
@@ -413,7 +413,7 @@ export default function SuperAdminRestaurants() {
               <option value="Inactive">Inactive</option>
             </select>
           </div>
-          {message && <p className="mt-3 text-sm font-semibold text-emerald-700">{message}</p>}
+          {message && <p className="mt-3 text-sm font-semibold text-primary-700">{message}</p>}
           {error && <p className="mt-3 text-sm font-semibold text-red-600">{error}</p>}
         </section>
 
@@ -471,7 +471,7 @@ export default function SuperAdminRestaurants() {
                         <td className="px-4 py-3 text-sm text-slate-700">{activeUsers}</td>
                         <td className="px-4 py-3">
                           {restaurant.status === "Active" ? (
-                            <span className="inline-flex items-center gap-1 rounded-full bg-emerald-100 px-2.5 py-1 text-xs font-bold text-emerald-700">
+                            <span className="inline-flex items-center gap-1 rounded-full bg-primary-100 px-2.5 py-1 text-xs font-bold text-primary-700">
                               <CheckCircle2 className="h-3.5 w-3.5" />
                               Active
                             </span>

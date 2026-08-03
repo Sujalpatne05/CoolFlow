@@ -254,13 +254,13 @@ export default function DailyTally() {
         {/* Header */}
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
           <div>
-            <h1 className="text-3xl font-bold text-emerald-600 flex items-center gap-2">
-              <Calendar className="text-emerald-500" /> Daily Tally Report
+            <h1 className="text-3xl font-bold text-primary-600 flex items-center gap-2">
+              <Calendar className="text-primary-500" /> Daily Tally Report
             </h1>
             <p className="text-gray-600 mt-1">Track your revenue and bills</p>
           </div>
           <div className="flex gap-2">
-            <Button onClick={() => handleExportReport("pdf")} className="flex items-center gap-2 bg-emerald-500 hover:bg-emerald-600 text-white">
+            <Button onClick={() => handleExportReport("pdf")} className="flex items-center gap-2 bg-primary-500 hover:bg-primary-600 text-white">
               <Download size={16} /> Export PDF
             </Button>
             <Button onClick={() => handleExportReport("csv")} variant="outline" className="flex items-center gap-2">
@@ -279,9 +279,9 @@ export default function DailyTally() {
         </Tabs>
 
         {/* Period Info */}
-        <Card className="bg-gradient-to-r from-emerald-50 to-yellow-50 border-emerald-200">
+        <Card className="bg-gradient-to-r from-primary-50 to-yellow-50 border-primary-200">
           <CardContent className="pt-6">
-            <p className="text-lg font-semibold text-emerald-700">{getPeriodLabel()}</p>
+            <p className="text-lg font-semibold text-primary-700">{getPeriodLabel()}</p>
           </CardContent>
         </Card>
 
@@ -364,9 +364,9 @@ export default function DailyTally() {
                 <p className="text-sm text-gray-600 mb-1">Dine-in</p>
                 <p className="text-2xl font-bold text-blue-600">₹{stats.orderTypes.dineIn.toLocaleString("en-IN")}</p>
               </div>
-              <div className="bg-emerald-50 p-4 rounded-lg border border-emerald-200">
+              <div className="bg-primary-50 p-4 rounded-lg border border-primary-200">
                 <p className="text-sm text-gray-600 mb-1">Takeaway</p>
-                <p className="text-2xl font-bold text-emerald-600">₹{stats.orderTypes.takeaway.toLocaleString("en-IN")}</p>
+                <p className="text-2xl font-bold text-primary-600">₹{stats.orderTypes.takeaway.toLocaleString("en-IN")}</p>
               </div>
               <div className="bg-purple-50 p-4 rounded-lg border border-purple-200">
                 <p className="text-sm text-gray-600 mb-1">Delivery</p>
@@ -402,14 +402,14 @@ export default function DailyTally() {
                   <tbody>
                     {filteredOrders.map((order) => (
                       <tr key={order.id} className="border-b hover:bg-gray-50">
-                        <td className="py-3 px-4 font-medium text-emerald-600">ORD-{order.id}</td>
+                        <td className="py-3 px-4 font-medium text-primary-600">ORD-{order.id}</td>
                         <td className="py-3 px-4">
                           <Badge
                             className={
                               order.orderType === "dine-in"
                                 ? "bg-blue-100 text-blue-800"
                                 : order.orderType === "take-away"
-                                ? "bg-emerald-100 text-emerald-800"
+                                ? "bg-primary-100 text-primary-800"
                                 : "bg-purple-100 text-purple-800"
                             }
                           >

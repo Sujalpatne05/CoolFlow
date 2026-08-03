@@ -284,7 +284,7 @@ export default function SuperAdminUsers() {
               onChange={(event) => setSearch(event.target.value)}
             />
           </label>
-          {message && <p className="mt-3 text-sm font-semibold text-emerald-700">{message}</p>}
+          {message && <p className="mt-3 text-sm font-semibold text-primary-700">{message}</p>}
           {error && <p className="mt-3 text-sm font-semibold text-red-600">{error}</p>}
         </div>
 
@@ -340,7 +340,7 @@ export default function SuperAdminUsers() {
                           <td className="px-4 py-3">
                             <span className={`inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-bold ${
                               user.role === "superadmin" ? "bg-purple-100 text-purple-800" :
-                              user.role === "admin" ? "bg-teal-100 text-teal-800" :
+                              user.role === "admin" ? "bg-secondary-100 text-secondary-800" :
                               user.role === "manager" ? "bg-blue-100 text-blue-800" :
                               "bg-green-100 text-green-800"
                             }`}>
@@ -350,7 +350,7 @@ export default function SuperAdminUsers() {
                           </td>
                           <td className="px-4 py-3 text-sm font-mono text-slate-700">{user.password || "-"}</td>
                           <td className="px-4 py-3">
-                            <span className={`inline-flex rounded-full px-2.5 py-1 text-xs font-bold ${user.is_active ? "bg-emerald-100 text-emerald-700" : "bg-slate-200 text-slate-700"}`}>
+                            <span className={`inline-flex rounded-full px-2.5 py-1 text-xs font-bold ${user.is_active ? "bg-primary-100 text-primary-700" : "bg-slate-200 text-slate-700"}`}>
                               {user.is_active ? "active" : "inactive"}
                             </span>
                           </td>
@@ -358,7 +358,7 @@ export default function SuperAdminUsers() {
                             {user.must_change_password ? (
                               <span className="rounded-full bg-red-100 px-2.5 py-1 text-red-700">Reset Required</span>
                             ) : (
-                              <span className="rounded-full bg-emerald-100 px-2.5 py-1 text-emerald-700">Compliant</span>
+                              <span className="rounded-full bg-primary-100 px-2.5 py-1 text-primary-700">Compliant</span>
                             )}
                           </td>
                           <td className="px-4 py-3 text-right">

@@ -303,12 +303,12 @@ const Reports = () => {
       <div className="space-y-4 sm:space-y-6 p-3 sm:p-4 md:p-6">
         {/* Header */}
         <div>
-          <h1 className="text-2xl sm:text-3xl font-bold text-emerald-600 flex items-center gap-2">
-            <BarChart3 className="text-teal-500 flex-shrink-0" size={24} /> Reports & Analytics
+          <h1 className="text-2xl sm:text-3xl font-bold text-primary-600 flex items-center gap-2">
+            <BarChart3 className="text-secondary-500 flex-shrink-0" size={24} /> Reports & Analytics
           </h1>
           <div className="flex flex-col sm:flex-row flex-wrap gap-2 mt-2 sm:mt-3">
             <button
-              className="px-3 sm:px-4 py-2 rounded bg-teal-500 text-white font-semibold text-xs sm:text-sm hover:bg-teal-600 flex items-center gap-2 w-full sm:w-auto justify-center"
+              className="px-3 sm:px-4 py-2 rounded bg-secondary-500 text-white font-semibold text-xs sm:text-sm hover:bg-secondary-600 flex items-center gap-2 w-full sm:w-auto justify-center"
               onClick={() => handleDownload("pdf")}
             >
               <Download size={14} /> Download PDF
@@ -324,14 +324,14 @@ const Reports = () => {
         </div>
 
         {/* Enhanced Date Filter */}
-        <Card className="bg-gradient-to-r from-teal-50 to-emerald-50 border-teal-200 shadow-md">
+        <Card className="bg-gradient-to-r from-secondary-50 to-primary-50 border-secondary-200 shadow-md">
           <CardContent className="p-4 sm:p-6">
             <div className="space-y-4">
               {/* Header */}
               <div className="flex items-center justify-between">
                 <div>
-                  <h3 className="text-sm sm:text-base font-bold text-emerald-600 flex items-center gap-2">
-                    <Calendar className="w-5 h-5 text-teal-600" />
+                  <h3 className="text-sm sm:text-base font-bold text-primary-600 flex items-center gap-2">
+                    <Calendar className="w-5 h-5 text-secondary-600" />
                     Smart Date Filter
                   </h3>
                   <p className="text-xs sm:text-sm text-gray-600 mt-1">Quick date selection</p>
@@ -357,8 +357,8 @@ const Reports = () => {
                         onClick={() => handleQuickDate(0)}
                         className={`px-3 py-2 rounded-lg text-xs font-semibold transition whitespace-nowrap ${
                           selectedDate?.toDateString() === new Date().toDateString()
-                            ? "bg-emerald-600 text-white shadow-md"
-                            : "bg-white border border-gray-300 text-gray-700 hover:bg-emerald-50"
+                            ? "bg-primary-600 text-white shadow-md"
+                            : "bg-white border border-gray-300 text-gray-700 hover:bg-primary-50"
                         }`}
                       >
                         Today
@@ -367,8 +367,8 @@ const Reports = () => {
                         onClick={() => handleQuickDate(1)}
                         className={`px-3 py-2 rounded-lg text-xs font-semibold transition whitespace-nowrap ${
                           selectedDate?.toDateString() === new Date(Date.now() - 86400000).toDateString()
-                            ? "bg-emerald-600 text-white shadow-md"
-                            : "bg-white border border-gray-300 text-gray-700 hover:bg-emerald-50"
+                            ? "bg-primary-600 text-white shadow-md"
+                            : "bg-white border border-gray-300 text-gray-700 hover:bg-primary-50"
                         }`}
                       >
                         Yesterday
@@ -402,7 +402,7 @@ const Reports = () => {
                           setFromDate(null);
                           setToDate(null);
                         }}
-                        className="px-3 py-2 border border-gray-300 rounded-lg text-xs focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                        className="px-3 py-2 border border-gray-300 rounded-lg text-xs focus:outline-none focus:ring-2 focus:ring-primary-500"
                         title="Single date"
                       />
                     </div>
@@ -415,7 +415,7 @@ const Reports = () => {
                           setFromDate(e.target.value ? new Date(e.target.value) : null);
                           setSelectedDate(null);
                         }}
-                        className="px-3 py-2 border border-gray-300 rounded-lg text-xs focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                        className="px-3 py-2 border border-gray-300 rounded-lg text-xs focus:outline-none focus:ring-2 focus:ring-primary-500"
                         title="From date"
                       />
                     </div>
@@ -428,7 +428,7 @@ const Reports = () => {
                           setToDate(e.target.value ? new Date(e.target.value) : null);
                           setSelectedDate(null);
                         }}
-                        className="px-3 py-2 border border-gray-300 rounded-lg text-xs focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                        className="px-3 py-2 border border-gray-300 rounded-lg text-xs focus:outline-none focus:ring-2 focus:ring-primary-500"
                         title="To date"
                       />
                     </div>
@@ -437,13 +437,13 @@ const Reports = () => {
               </div>
 
               {selectedDate && (
-                <p className="text-xs text-emerald-600 font-semibold">📅 {getDateLabel(selectedDate)}</p>
+                <p className="text-xs text-primary-600 font-semibold">📅 {getDateLabel(selectedDate)}</p>
               )}
 
               {/* Filter Status */}
               {selectedDate && (
-                <div className="bg-emerald-100 border border-emerald-300 rounded-lg p-3">
-                  <p className="text-xs sm:text-sm text-emerald-900 font-semibold">
+                <div className="bg-primary-100 border border-primary-300 rounded-lg p-3">
+                  <p className="text-xs sm:text-sm text-primary-900 font-semibold">
                     📊 Showing {filteredOrders.length} orders for {getDateLabel(selectedDate)}
                   </p>
                 </div>
@@ -531,12 +531,12 @@ const Reports = () => {
             onClick={() => setActiveTab("tally")}
             className={`p-3 sm:p-4 rounded-lg border-2 transition-all duration-200 flex flex-col items-center gap-2 ${
               activeTab === "tally"
-                ? "border-teal-500 bg-teal-50 shadow-lg"
-                : "border-gray-200 bg-white hover:border-teal-300 hover:shadow-md"
+                ? "border-secondary-500 bg-secondary-50 shadow-lg"
+                : "border-gray-200 bg-white hover:border-secondary-300 hover:shadow-md"
             }`}
           >
-            <FileText className={`w-6 h-6 sm:w-7 sm:h-7 ${activeTab === "tally" ? "text-teal-600" : "text-gray-600"}`} />
-            <span className={`text-xs sm:text-sm font-bold text-center ${activeTab === "tally" ? "text-teal-600" : "text-gray-700"}`}>
+            <FileText className={`w-6 h-6 sm:w-7 sm:h-7 ${activeTab === "tally" ? "text-secondary-600" : "text-gray-600"}`} />
+            <span className={`text-xs sm:text-sm font-bold text-center ${activeTab === "tally" ? "text-secondary-600" : "text-gray-700"}`}>
               Tally
             </span>
           </button>
@@ -552,7 +552,7 @@ const Reports = () => {
                 <Card>
                   <CardHeader>
                     <CardTitle className="text-lg flex items-center gap-2">
-                      <PieChartIcon size={20} className="text-emerald-500" /> Revenue by Order Type
+                      <PieChartIcon size={20} className="text-primary-500" /> Revenue by Order Type
                     </CardTitle>
                   </CardHeader>
                   <CardContent>
@@ -580,7 +580,7 @@ const Reports = () => {
                       {orderTypeDistribution.map((item, idx) => (
                         <div key={idx} className="flex items-center justify-between p-3 bg-gray-50 rounded">
                           <span className="font-medium">{item.name}</span>
-                          <Badge className="bg-emerald-100 text-emerald-800">{item.count} orders</Badge>
+                          <Badge className="bg-primary-100 text-primary-800">{item.count} orders</Badge>
                         </div>
                       ))}
                     </div>
@@ -632,11 +632,11 @@ const Reports = () => {
                           const percentage = ((item.count / total) * 100).toFixed(1);
                           return (
                             <tr key={idx} className="border-b hover:bg-gray-50">
-                              <td className="py-2 px-3 font-bold text-emerald-600">#{idx + 1}</td>
+                              <td className="py-2 px-3 font-bold text-primary-600">#{idx + 1}</td>
                               <td className="py-2 px-3">{item.name}</td>
                               <td className="py-2 px-3 text-right font-semibold">{item.count}</td>
                               <td className="py-2 px-3 text-right">
-                                <Badge className="bg-emerald-100 text-emerald-800">{percentage}%</Badge>
+                                <Badge className="bg-primary-100 text-primary-800">{percentage}%</Badge>
                               </td>
                             </tr>
                           );
@@ -674,7 +674,7 @@ const Reports = () => {
                   <Card key={idx}>
                     <CardContent className="pt-6">
                       <p className="text-sm text-gray-600 mb-2">{item.name}</p>
-                      <p className="text-2xl font-bold text-emerald-600">₹{item.value.toLocaleString("en-IN")}</p>
+                      <p className="text-2xl font-bold text-primary-600">₹{item.value.toLocaleString("en-IN")}</p>
                     </CardContent>
                   </Card>
                 ))}
@@ -712,19 +712,19 @@ const Reports = () => {
               <div className="flex gap-1 sm:gap-2">
                 <button
                   onClick={() => setPeriod("daily")}
-                  className={`flex-1 px-1 sm:px-3 py-1.5 sm:py-2 rounded text-xs sm:text-sm font-semibold transition ${period === "daily" ? "bg-emerald-500 text-white shadow-md" : "bg-gray-100 text-gray-700 hover:bg-gray-200"}`}
+                  className={`flex-1 px-1 sm:px-3 py-1.5 sm:py-2 rounded text-xs sm:text-sm font-semibold transition ${period === "daily" ? "bg-primary-500 text-white shadow-md" : "bg-gray-100 text-gray-700 hover:bg-gray-200"}`}
                 >
                   Daily
                 </button>
                 <button
                   onClick={() => setPeriod("weekly")}
-                  className={`flex-1 px-1 sm:px-3 py-1.5 sm:py-2 rounded text-xs sm:text-sm font-semibold transition ${period === "weekly" ? "bg-emerald-500 text-white shadow-md" : "bg-gray-100 text-gray-700 hover:bg-gray-200"}`}
+                  className={`flex-1 px-1 sm:px-3 py-1.5 sm:py-2 rounded text-xs sm:text-sm font-semibold transition ${period === "weekly" ? "bg-primary-500 text-white shadow-md" : "bg-gray-100 text-gray-700 hover:bg-gray-200"}`}
                 >
                   Weekly
                 </button>
                 <button
                   onClick={() => setPeriod("monthly")}
-                  className={`flex-1 px-1 sm:px-3 py-1.5 sm:py-2 rounded text-xs sm:text-sm font-semibold transition ${period === "monthly" ? "bg-emerald-500 text-white shadow-md" : "bg-gray-100 text-gray-700 hover:bg-gray-200"}`}
+                  className={`flex-1 px-1 sm:px-3 py-1.5 sm:py-2 rounded text-xs sm:text-sm font-semibold transition ${period === "monthly" ? "bg-primary-500 text-white shadow-md" : "bg-gray-100 text-gray-700 hover:bg-gray-200"}`}
                 >
                   Monthly
                 </button>
@@ -749,9 +749,9 @@ const Reports = () => {
                   </p>
                 </div>
 
-                <div className="bg-gradient-to-br from-emerald-50 to-emerald-100 p-2 sm:p-3 rounded-lg border border-emerald-200">
+                <div className="bg-gradient-to-br from-primary-50 to-primary-100 p-2 sm:p-3 rounded-lg border border-primary-200">
                   <p className="text-xs text-gray-600 mb-0.5">Customers</p>
-                  <p className="text-sm sm:text-xl lg:text-2xl font-bold text-emerald-600">{overview.totalCustomers}</p>
+                  <p className="text-sm sm:text-xl lg:text-2xl font-bold text-primary-600">{overview.totalCustomers}</p>
                 </div>
               </div>
 
@@ -765,7 +765,7 @@ const Reports = () => {
                     {paymentMethodBreakdown.map((item, idx) => (
                       <div key={idx} className="bg-gradient-to-br from-gray-50 to-gray-100 p-2 sm:p-3 rounded border">
                         <p className="text-xs text-gray-600 mb-0.5">{item.name}</p>
-                        <p className="text-xs sm:text-base lg:text-lg font-bold text-emerald-600">₹{item.value.toLocaleString("en-IN")}</p>
+                        <p className="text-xs sm:text-base lg:text-lg font-bold text-primary-600">₹{item.value.toLocaleString("en-IN")}</p>
                       </div>
                     ))}
                   </div>
@@ -813,14 +813,14 @@ const Reports = () => {
                       <tbody>
                         {filteredOrders.map((order) => (
                           <tr key={order.id} className="border-b hover:bg-gray-50">
-                            <td className="py-3 px-4 font-medium text-emerald-600">ORD-{order.id}</td>
+                            <td className="py-3 px-4 font-medium text-primary-600">ORD-{order.id}</td>
                             <td className="py-3 px-4 hidden sm:table-cell">
                               <Badge
                                 className={
                                   order.orderType === "dine-in"
                                     ? "bg-blue-100 text-blue-800"
                                     : order.orderType === "take-away"
-                                    ? "bg-emerald-100 text-emerald-800"
+                                    ? "bg-primary-100 text-primary-800"
                                     : "bg-purple-100 text-purple-800"
                                 }
                               >
@@ -864,8 +864,8 @@ const Reports = () => {
                         <div key={order.id} className="bg-gradient-to-r from-gray-50 to-gray-100 p-2 rounded border border-gray-200">
                           {/* Row 1: Bill ID and Amount */}
                           <div className="flex justify-between items-center mb-1">
-                            <span className="font-bold text-emerald-600 text-xs">ORD-{order.id}</span>
-                            <span className="font-bold text-sm text-emerald-600">₹{Number(order.total).toLocaleString("en-IN")}</span>
+                            <span className="font-bold text-primary-600 text-xs">ORD-{order.id}</span>
+                            <span className="font-bold text-sm text-primary-600">₹{Number(order.total).toLocaleString("en-IN")}</span>
                           </div>
 
                           {/* Row 2: Type and Payment */}
@@ -875,7 +875,7 @@ const Reports = () => {
                                 order.orderType === "dine-in"
                                   ? "bg-blue-100 text-blue-800 text-xs"
                                   : order.orderType === "take-away"
-                                  ? "bg-emerald-100 text-emerald-800 text-xs"
+                                  ? "bg-primary-100 text-primary-800 text-xs"
                                   : "bg-purple-100 text-purple-800 text-xs"
                               }
                             >

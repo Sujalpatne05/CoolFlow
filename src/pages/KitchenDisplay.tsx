@@ -97,7 +97,8 @@ const toItemStatus = (orderStatus: KitchenOrder["status"]): OrderItem["status"] 
 };
 
 const toKitchenStatus = (status?: KitchenOrder["status"]): KitchenOrder["status"] => {
-  return status === "preparing" ? "pending" : status || "pending";
+  // Don't convert "ready" to "pending" - keep it as is
+  return status || "pending";
 };
 
 export default function KitchenDisplay() {
@@ -253,7 +254,7 @@ export default function KitchenDisplay() {
     switch (station) {
       case "hot": return <Flame className="h-4 w-4 text-red-500" />;
       case "cold": return <Snowflake className="h-4 w-4 text-blue-500" />;
-      case "grill": return <ChefHat className="h-4 w-4 text-emerald-500" />;
+      case "grill": return <ChefHat className="h-4 w-4 text-primary-500" />;
       case "bar": return <Clock className="h-4 w-4 text-purple-500" />;
       default: return null;
     }
@@ -282,16 +283,21 @@ export default function KitchenDisplay() {
     const isOverdue = elapsed > order.estimatedTime && !isCompleted;
 
     return (
-      <Card key={order.id} className={cn("relative overflow-hidden", order.priority === "urgent" && !isCompleted && "ring-2 ring-red-500", isOverdue && "ring-2 ring-red-600 shadow-lg shadow-red-200", isCompleted && "opacity-75")}>
+      <Card key={order.id} className={cn(
+        "relative overflow-visible", // Changed from overflow-hidden to overflow-visible
+        order.priority === "urgent" && !isCompleted && "ring-2 ring-red-500", 
+        isOverdue && "ring-2 ring-red-600 shadow-lg shadow-red-200", 
+        isCompleted && "opacity-75"
+      )}>
         <div className={`absolute top-0 left-0 right-0 h-1 ${getStatusColor(order.status, isOverdue)}`} />
         <CardHeader className="pb-3">
           <div className="flex justify-between items-start">
             <div>
-              <div className="text-xs font-bold uppercase tracking-wide text-emerald-600">KOT</div>
+              <div className="text-xs font-bold uppercase tracking-wide text-primary-600">KOT</div>
               <CardTitle className="text-xl">{order.orderNumber}</CardTitle>
               <div className="text-sm mt-1">
                 {order.type === "dine-in" ? `Table ${order.tableNumber}` : (
-                  <Badge className={order.type === "takeout" ? "bg-emerald-500" : "bg-purple-500"}>
+                  <Badge className={order.type === "takeout" ? "bg-primary-500" : "bg-purple-500"}>
                     {order.type === "takeout" ? "TAKEAWAY" : "DELIVERY"}
                   </Badge>
                 )}
@@ -303,7 +309,7 @@ export default function KitchenDisplay() {
             </div>
           </div>
         </CardHeader>
-        <CardContent className="space-y-4">
+        <CardContent className="space-y-4 pb-6"> {/* Added pb-6 for bottom padding */}
           {/* Order Time Display with Live Timer */}
           <div className="flex items-center justify-between p-3 bg-blue-50 rounded-lg border border-blue-200">
             <div className="flex items-center gap-2">
@@ -340,8 +346,8 @@ export default function KitchenDisplay() {
                     <span className="text-sm">{item.name}</span>
                   </div>
                   {item.notes && (
-                    <div className="mt-2 p-2.5 bg-gradient-to-r from-emerald-100 to-teal-100 border-l-3 border-emerald-500 rounded">
-                      <p className="text-sm font-semibold text-gray-800"><span className="text-emerald-700">NOTE:</span> {item.notes}</p>
+                    <div className="mt-2 p-2.5 bg-gradient-to-r from-primary-100 to-secondary-100 border-l-3 border-primary-500 rounded">
+                      <p className="text-sm font-semibold text-gray-800"><span className="text-primary-700">NOTE:</span> {item.notes}</p>
                     </div>
                   )}
                 </div>
@@ -354,30 +360,50 @@ export default function KitchenDisplay() {
           </div>
 
           {order.notes && (
-            <div className="p-4 bg-gradient-to-r from-emerald-50 via-teal-50 to-cyan-50 border-l-4 border-emerald-400 rounded-lg shadow-sm">
+            <div className="p-4 bg-gradient-to-r from-primary-50 via-secondary-50 to-primary-50 border-l-4 border-primary-400 rounded-lg shadow-sm">
               <div className="flex items-start gap-3">
                 <div className="flex-shrink-0 mt-0.5">
-                  <div className="flex items-center justify-center h-8 w-8 rounded-full bg-emerald-100">
-                    <MessageSquare className="h-5 w-5 text-emerald-600" />
+                  <div className="flex items-center justify-center h-8 w-8 rounded-full bg-primary-100">
+                    <MessageSquare className="h-5 w-5 text-primary-600" />
                   </div>
                 </div>
                 <div className="flex-1">
-                  <p className="text-xs font-semibold text-emerald-600 mb-1.5 uppercase tracking-wider">Chef's Note</p>
+                  <p className="text-xs font-semibold text-primary-600 mb-1.5 uppercase tracking-wider">Chef's Note</p>
                   <p className="text-base font-semibold text-gray-800 break-words leading-relaxed">{order.notes}</p>
                 </div>
               </div>
             </div>
           )}
 
+          {/* Action Buttons */}
           {!isCompleted && (
-            <div className="flex gap-2 pt-2">
-              <Button 
-                className="flex-1 bg-emerald-600 hover:bg-emerald-700" 
-                onClick={() => updateOrderStatus(order.id, order.type === "dine-in" ? "served" : "completed")}
-              >
-                <CheckCircle2 className="h-4 w-4 mr-2" />
-                Serve Order
-              </Button>
+            <div className="flex flex-col gap-2 pt-4 mt-4">
+              {order.status === "pending" && (
+                <Button 
+                  className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3" 
+                  onClick={() => updateOrderStatus(order.id, "preparing")}
+                >
+                  <ChefHat className="h-5 w-5 mr-2" />
+                  Start Preparing
+                </Button>
+              )}
+              {order.status === "preparing" && (
+                <Button 
+                  className="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3" 
+                  onClick={() => updateOrderStatus(order.id, "ready")}
+                >
+                  <CheckCircle2 className="h-5 w-5 mr-2" />
+                  Mark Ready
+                </Button>
+              )}
+              {order.status === "ready" && (
+                <Button 
+                  className="w-full bg-orange-600 hover:bg-orange-700 text-white font-bold py-4 text-lg shadow-xl" 
+                  onClick={() => updateOrderStatus(order.id, order.type === "dine-in" ? "served" : "completed")}
+                >
+                  {order.type === "delivery" ? "🚚 Out for Delivery" : order.type === "takeout" ? "📦 Ready for Pickup" : "✅ Serve"}
+                </Button>
+              )}
             </div>
           )}
         </CardContent>
@@ -390,7 +416,7 @@ export default function KitchenDisplay() {
       <div className="p-4 md:p-6 space-y-6">
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
           <div>
-            <h1 className="text-2xl md:text-3xl font-bold text-emerald-600">Kitchen Display System</h1>
+            <h1 className="text-2xl md:text-3xl font-bold text-primary-600">Kitchen Display System</h1>
             <p className="text-gray-600 mt-1">Live order tracking for kitchen staff</p>
             <p className="text-sm text-gray-500 mt-1">Current Time: {currentTime.toLocaleTimeString()}</p>
           </div>
@@ -419,7 +445,7 @@ export default function KitchenDisplay() {
               <TabsTrigger value="active">
                 Active Orders
                 {activeOrders.length > 0 && (
-                  <Badge className="ml-2 bg-emerald-500 text-white text-xs">{activeOrders.length}</Badge>
+                  <Badge className="ml-2 bg-primary-500 text-white text-xs">{activeOrders.length}</Badge>
                 )}
               </TabsTrigger>
               <TabsTrigger value="completed">

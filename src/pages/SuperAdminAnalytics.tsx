@@ -66,7 +66,7 @@ export default function SuperAdminAnalytics() {
     <SuperAdminLayout>
       <div className="space-y-4 sm:space-y-6 p-3 sm:p-4 md:p-6">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-extrabold text-emerald-600">Platform Analytics</h1>
+          <h1 className="text-2xl sm:text-3xl font-extrabold text-primary-600">Platform Analytics</h1>
           <p className="text-xs sm:text-sm text-gray-500 mt-1">Comprehensive platform-wide performance metrics</p>
         </div>
 
@@ -84,7 +84,7 @@ export default function SuperAdminAnalytics() {
                 </span>
               </div>
               <p className="text-xs sm:text-sm text-gray-500">{kpi.title}</p>
-              <p className="text-lg sm:text-2xl font-extrabold text-emerald-600 mt-1">{loading ? "..." : kpi.value}</p>
+              <p className="text-lg sm:text-2xl font-extrabold text-primary-600 mt-1">{loading ? "..." : kpi.value}</p>
             </div>
           ))}
         </div>
@@ -92,7 +92,7 @@ export default function SuperAdminAnalytics() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 sm:gap-6">
           {/* Revenue Trend */}
           <div className="bg-white rounded-xl border p-3 sm:p-6 shadow-sm">
-            <h2 className="text-base sm:text-lg font-bold text-emerald-600 mb-3 sm:mb-4">Monthly Revenue Trend</h2>
+            <h2 className="text-base sm:text-lg font-bold text-primary-600 mb-3 sm:mb-4">Monthly Revenue Trend</h2>
             <div className="h-48 sm:h-64">
               <ResponsiveContainer width="100%" height="100%">
                 <LineChart data={monthlyData}>
@@ -108,7 +108,7 @@ export default function SuperAdminAnalytics() {
 
           {/* Orders Trend */}
           <div className="bg-white rounded-xl border p-3 sm:p-6 shadow-sm">
-            <h2 className="text-base sm:text-lg font-bold text-emerald-600 mb-3 sm:mb-4">Monthly Orders</h2>
+            <h2 className="text-base sm:text-lg font-bold text-primary-600 mb-3 sm:mb-4">Monthly Orders</h2>
             <div className="h-48 sm:h-64">
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={monthlyData}>
@@ -124,7 +124,7 @@ export default function SuperAdminAnalytics() {
 
           {/* Order Type Distribution */}
           <div className="bg-white rounded-xl border p-3 sm:p-6 shadow-sm">
-            <h2 className="text-base sm:text-lg font-bold text-emerald-600 mb-3 sm:mb-4">Order Type Distribution</h2>
+            <h2 className="text-base sm:text-lg font-bold text-primary-600 mb-3 sm:mb-4">Order Type Distribution</h2>
             {orderTypeData.length === 0 ? (
               <div className="h-48 sm:h-64 flex items-center justify-center text-gray-400 text-sm">No order data yet</div>
             ) : (
@@ -144,7 +144,7 @@ export default function SuperAdminAnalytics() {
 
           {/* Restaurant Growth */}
           <div className="bg-white rounded-xl border p-3 sm:p-6 shadow-sm">
-            <h2 className="text-base sm:text-lg font-bold text-emerald-600 mb-3 sm:mb-4">Restaurant Growth</h2>
+            <h2 className="text-base sm:text-lg font-bold text-primary-600 mb-3 sm:mb-4">Restaurant Growth</h2>
             <div className="h-48 sm:h-64">
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={monthlyData}>

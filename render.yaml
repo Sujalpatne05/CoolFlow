@@ -1,74 +1,38 @@
 services:
-  - type: static
-    name: restro-hub
-    buildCommand: npm run build
+  # Backend API Server
+  - type: web
+    name: hotel-backend
+    runtime: node
+    region: oregon
+    plan: free
+    buildCommand: npm install
+    startCommand: node server/prod/index.mjs
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 5001
+      - key: DATABASE_URL
+        value: postgresql://neondb_owner:npg_MRGW9S4TjHgQ@ep-aged-hat-ax6m7g0k-pooler.c-4.us-east-2.aws.neon.tech/neondb?sslmode=require
+      - key: JWT_SECRET
+        value: your_jwt_secret_change_this_in_production_2024
+      - key: SUPERADMIN_EMAIL
+        value: superadmin@ordernest.com
+      - key: SUPERADMIN_PASSWORD
+        value: super123
+    
+  # Frontend Static Site
+  - type: web
+    name: hotel-frontend
+    runtime: static
+    region: oregon
+    plan: free
+    buildCommand: npm install && npm run build
     staticPublishPath: dist
     envVars:
       - key: VITE_API_URL
-        value: https://hotel-vpuj.onrender.com
+        value: https://hotel-backend.onrender.com
     routes:
-      # Catch all routes and redirect to index.html for React Router
-      - path: /*
+      - type: rewrite
+        source: /*
         destination: /index.html
-        status: 200
-      # Specific routes
-      - path: /admin-login
-        destination: /index.html
-        status: 200
-      - path: /superadmin-login
-        destination: /index.html
-        status: 200
-      - path: /superadmin-dashboard
-        destination: /index.html
-        status: 200
-      - path: /dashboard
-        destination: /index.html
-        status: 200
-      - path: /billing
-        destination: /index.html
-        status: 200
-      - path: /orders
-        destination: /index.html
-        status: 200
-      - path: /menu
-        destination: /index.html
-        status: 200
-      - path: /kitchen-display
-        destination: /index.html
-        status: 200
-      - path: /table-management
-        destination: /index.html
-        status: 200
-      - path: /payroll
-        destination: /index.html
-        status: 200
-      - path: /tasks
-        destination: /index.html
-        status: 200
-      - path: /inventory
-        destination: /index.html
-        status: 200
-      - path: /crm
-        destination: /index.html
-        status: 200
-      - path: /reports
-        destination: /index.html
-        status: 200
-      - path: /payments-overview
-        destination: /index.html
-        status: 200
-      - path: /reservations
-        destination: /index.html
-        status: 200
-      - path: /delivery-management
-        destination: /index.html
-        status: 200
-      - path: /table-qr/*
-        destination: /index.html
-        status: 200
-      - path: /table-payment/*
-        destination: /index.html
-        status: 200
-      - path: /table-confirmation/*
-        destination: /index.html
-        status: 200

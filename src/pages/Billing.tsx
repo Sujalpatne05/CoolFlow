@@ -435,19 +435,26 @@ const Billing: React.FC = () => {
 
 	return (
 		<DashboardLayout>
-			<div className="min-h-[calc(100vh-80px)] bg-gradient-to-br from-emerald-50 via-teal-50 to-cyan-50 flex flex-col justify-between">
+			<div className="min-h-[calc(100vh-80px)] bg-gradient-to-br from-primary/3 via-primary/5 to-secondary/3 flex flex-col justify-between">
 				{/* Header */}
 				<div className="py-4 px-3 sm:py-6 sm:px-4 md:px-0 max-w-6xl mx-auto w-full">
-					<div className="flex flex-col gap-3 mb-6">
+					<div className="flex flex-col gap-4 mb-6 animate-fade-in">
 						<div>
-							<h1 className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent flex items-center gap-2 mb-1">
-								<ShoppingCart className="inline-block text-emerald-500 flex-shrink-0" size={24} /> POS Billing
+							<h1 className="text-2xl sm:text-4xl font-bold text-foreground flex items-center gap-3 mb-2">
+								<div className="h-10 w-10 rounded-xl gradient-brand-soft flex items-center justify-center">
+									<ShoppingCart className="inline-block text-primary flex-shrink-0" size={24} />
+								</div>
+								POS Billing
 							</h1>
-							<div className="text-muted-foreground text-xs sm:text-sm">Welcome to OrderNest! Please select items and complete the order below.</div>
+							<div className="text-muted-foreground text-sm">Welcome to OrderNest! Please select items and complete the order below.</div>
 						</div>
-						<div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
-							<span className="bg-gradient-to-r from-emerald-500 to-teal-500 text-white px-3 sm:px-4 py-1.5 rounded-full font-semibold text-xs sm:text-sm truncate shadow-lg">Restaurant: {getStoredRestaurantName() || "Restaurant"}</span>
-							<span className="bg-gradient-to-r from-emerald-500 to-teal-500 text-white px-3 sm:px-4 py-1.5 rounded-full font-semibold text-xs sm:text-sm flex items-center gap-1 w-fit shadow-lg">KDS <Monitor className="inline-block flex-shrink-0" size={14} /></span>
+						<div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3">
+							<span className="glass-card border border-primary/20 text-primary px-4 py-2 rounded-xl font-semibold text-xs sm:text-sm truncate shadow-sm hover:shadow-soft transition-shadow">
+								<span className="text-gray-600 font-normal">Restaurant:</span> {getStoredRestaurantName() || "Restaurant"}
+							</span>
+							<span className="bg-primary/10 border border-primary/30 text-primary px-3 py-2 rounded-xl font-medium text-xs sm:text-sm flex items-center gap-2 w-fit shadow-sm hover:shadow-soft transition-shadow">
+								<Monitor className="inline-block flex-shrink-0" size={16} /> KDS Enabled
+							</span>
 						</div>
 					</div>
 
@@ -456,7 +463,7 @@ const Billing: React.FC = () => {
 						<Card className="lg:col-span-2 bg-white/90 shadow-lg">
 							<CardHeader className="p-3 sm:p-6">
 								<CardTitle className="text-lg sm:text-xl flex items-center gap-2">
-									<UtensilsCrossed className="text-emerald-600 flex-shrink-0" /> Menu
+									<UtensilsCrossed className="text-primary-600 flex-shrink-0" /> Menu
 								</CardTitle>
 								<Tabs value={orderType} onValueChange={v => setOrderType(v as typeof orderType)}>
 									<TabsList className="mt-2 w-full grid grid-cols-3">
@@ -469,11 +476,11 @@ const Billing: React.FC = () => {
 								</Tabs>
 								{orderType === "dine-in" && (
 									<div className="my-4 sm:my-6">
-										<div className="border-t border-emerald-100 mb-4"></div>
-										<label className="block mb-2 text-sm sm:text-base font-semibold text-emerald-700">Table</label>
+										<div className="border-t border-primary-100 mb-4"></div>
+										<label className="block mb-2 text-sm sm:text-base font-semibold text-primary-700">Table</label>
 										<div className="flex gap-2 items-center">
 													<select
-														className="border-2 border-emerald-200 rounded-lg px-2 sm:px-3 py-2 bg-gradient-to-br from-white to-emerald-50 focus:border-emerald-400 focus:ring-2 focus:ring-emerald-300 transition-all text-sm w-full shadow-sm"
+														className="border-2 border-primary-200 rounded-lg px-2 sm:px-3 py-2 bg-gradient-to-br from-white to-primary-50 focus:border-primary-400 focus:ring-2 focus:ring-primary-300 transition-all text-sm w-full shadow-sm"
 														value={selectedTable ?? ""}
 														onChange={e => setSelectedTable(Number(e.target.value))}
 														disabled={loadingTables}
@@ -505,7 +512,7 @@ const Billing: React.FC = () => {
 								)}
 								{/* Banner when dine-in but no table selected */}
 								{orderType === "dine-in" && !selectedTable && (
-									<div className="mx-0 mb-2 px-3 py-2.5 bg-gradient-to-r from-emerald-100 to-teal-100 border-2 border-emerald-300 rounded-xl text-xs text-emerald-700 text-center font-semibold shadow-sm">
+									<div className="mx-0 mb-2 px-3 py-2.5 bg-gradient-to-r from-primary-100 to-secondary-100 border-2 border-primary-300 rounded-xl text-xs text-foreground font-semibold text-center font-semibold shadow-sm">
 										⚠️ Please select a table to add items
 									</div>
 								)}
@@ -527,8 +534,8 @@ const Billing: React.FC = () => {
 												onClick={() => setMenuCategory(category)}
 												className={
 													menuCategory === category
-														? "h-8 shrink-0 bg-gradient-to-r from-emerald-500 to-teal-500 px-3 text-xs text-white hover:from-emerald-600 hover:to-teal-600 shadow-md"
-														: "h-8 shrink-0 border-2 border-emerald-200 px-3 text-xs text-emerald-700 hover:bg-gradient-to-r hover:from-emerald-50 hover:to-teal-50 hover:text-gray-950"
+														? "h-8 shrink-0 bg-gradient-to-r from-primary-500 to-secondary-500 px-3 text-xs text-white hover:from-primary-600 hover:to-secondary-600 shadow-md"
+														: "h-8 shrink-0 border-2 border-primary-200 px-3 text-xs text-primary-700 hover:bg-gradient-to-r hover:from-primary-50 hover:to-secondary-50 hover:text-gray-950"
 												}
 											>
 												{category}
@@ -545,25 +552,25 @@ const Billing: React.FC = () => {
 										<div className="col-span-full text-center text-muted-foreground py-8 text-sm">No items found.</div>
 									) : (
 										filteredMenu.map(item => (
-											<Card key={item.id} className="relative flex flex-col items-center overflow-hidden border-2 border-emerald-200 bg-gradient-to-br from-white to-emerald-50/30 p-4 shadow-md transition-all hover:-translate-y-1 hover:shadow-xl hover:border-emerald-300 sm:min-h-[150px] sm:p-3">
+											<Card key={item.id} className="relative flex flex-col items-center overflow-hidden border-2 border-primary-200 bg-gradient-to-br from-white to-primary-50/30 p-4 shadow-md transition-all hover:-translate-y-1 hover:shadow-xl hover:border-primary-300 sm:min-h-[150px] sm:p-3">
 												{getItemQty(item.id) > 0 && (
-													<div className="absolute right-2 top-2 hidden rounded-full bg-gradient-to-r from-green-500 to-emerald-500 px-2 py-0.5 text-[11px] font-bold text-white sm:block shadow-lg">
+													<div className="absolute right-2 top-2 hidden rounded-full bg-gradient-to-r from-primary-500 to-primary-500 px-2 py-0.5 text-[11px] font-bold text-white sm:block shadow-lg">
 														{getItemQty(item.id)} in cart
 													</div>
 												)}
-												<div className="mb-2 text-2xl sm:text-3xl"><UtensilsCrossed className="text-emerald-600" /></div>
+												<div className="mb-2 text-2xl sm:text-3xl"><UtensilsCrossed className="text-primary-600" /></div>
 												<span className="font-semibold text-xs sm:text-base mb-1 text-center line-clamp-2">{item.name}</span>
-												<Badge className="mb-2 bg-gradient-to-r from-emerald-500 to-teal-500 text-white text-xs shadow-md">₹{item.price}</Badge>
+												<Badge className="mb-2 bg-primary text-white font-bold text-sm shadow-md">₹{item.price}</Badge>
 												{getItemQty(item.id) > 0 ? (
 													<div className="w-full space-y-2">
-														<div className="grid h-9 w-full grid-cols-3 overflow-hidden rounded-md border border-green-600 bg-green-50">
-															<Button size="sm" variant="ghost" onClick={(e) => removeItem(item.id, e)} className="h-9 rounded-none text-green-700 hover:bg-green-100">
+														<div className="grid h-9 w-full grid-cols-3 overflow-hidden rounded-md border border-primary-600 bg-primary-50">
+															<Button size="sm" variant="ghost" onClick={(e) => removeItem(item.id, e)} className="h-9 rounded-none text-primary-700 hover:bg-primary-100">
 																<Minus size={15} />
 															</Button>
-															<div className="flex items-center justify-center bg-white text-sm font-bold text-green-700">
+															<div className="flex items-center justify-center bg-white text-sm font-bold text-primary-700">
 																{getItemQty(item.id)}
 															</div>
-															<Button size="sm" variant="ghost" onClick={(e) => addItem(item, e)} className="h-9 rounded-none text-green-700 hover:bg-green-100">
+															<Button size="sm" variant="ghost" onClick={(e) => addItem(item, e)} className="h-9 rounded-none text-primary-700 hover:bg-primary-100">
 																<Plus size={15} />
 															</Button>
 														</div>
@@ -572,11 +579,11 @@ const Billing: React.FC = () => {
 															placeholder="Note: spicy, extra spicy..."
 															value={getItemNote(item.id)}
 															onChange={(e) => updateItemNote(item.id, e.target.value)}
-															className="h-8 bg-green-50 text-xs border-green-200 focus:border-green-500"
+															className="h-8 bg-primary-50 text-xs border-primary-200 focus:border-primary-500"
 														/>
 													</div>
 												) : (
-													<Button size="sm" onClick={() => addItem(item)} variant="outline" disabled={!item.available || (orderType === "dine-in" && !selectedTable)} className="h-9 w-full border-2 border-emerald-400 text-xs font-bold text-emerald-700 hover:bg-gradient-to-r hover:from-emerald-500 hover:to-teal-500 hover:text-white disabled:bg-emerald-100 disabled:text-gray-900 transition-all shadow-sm">Add</Button>
+													<Button size="sm" onClick={() => addItem(item)} variant="outline" disabled={!item.available || (orderType === "dine-in" && !selectedTable)} className="h-9 w-full border-2 border-primary-400 text-xs font-bold text-primary-700 hover:bg-gradient-to-r hover:from-primary-500 hover:to-secondary-500 hover:text-white disabled:bg-primary-100 disabled:text-gray-900 transition-all shadow-sm">Add</Button>
 												)}
 												{!item.available && <span className="text-xs text-red-500 mt-1">Unavailable</span>}
 											</Card>
@@ -587,11 +594,11 @@ const Billing: React.FC = () => {
 						</Card>
 
 						{/* Order Summary Section */}
-						<Card ref={orderSummaryRef} className="bg-gradient-to-br from-emerald-50 via-teal-50 to-white shadow-2xl border-2 border-emerald-300 lg:sticky lg:top-4 lg:self-start">
-							<CardHeader className="p-4 sm:p-6 bg-gradient-to-r from-emerald-500 via-emerald-600 to-teal-600 text-white rounded-t-lg shadow-lg">
+						<Card ref={orderSummaryRef} className="bg-gradient-to-br from-primary-50 via-secondary-50 to-white shadow-2xl border-2 border-primary-300 lg:sticky lg:top-4 lg:self-start">
+							<CardHeader className="p-4 sm:p-6 bg-gradient-to-r from-primary-500 via-primary-600 to-secondary-600 text-white rounded-t-lg shadow-lg">
 								<CardTitle className="text-lg sm:text-2xl flex items-center gap-2 flex-wrap">
 									<ShoppingCart className="flex-shrink-0" size={28} /> Order Summary
-									{existingOrder && existingOrder.status !== 'served' && existingOrder.status !== 'completed' && <Badge className="bg-white text-emerald-600 text-xs ml-auto font-bold shadow-md">Editing #{existingOrder.id}</Badge>}
+									{existingOrder && existingOrder.status !== 'served' && existingOrder.status !== 'completed' && <Badge className="bg-white text-primary-600 text-xs ml-auto font-bold shadow-md">Editing #{existingOrder.id}</Badge>}
 								</CardTitle>
 							</CardHeader>
 							<CardContent className="p-4 sm:p-6">
@@ -610,31 +617,31 @@ const Billing: React.FC = () => {
 											</div>
 											<div className="space-y-2 pr-2">
 												{orderItems.map((item, idx) => (
-													<div key={item.id} className="bg-gradient-to-br from-white to-emerald-50 border-2 border-emerald-300 rounded-xl p-3 hover:shadow-xl transition-all hover:border-emerald-400">
+													<div key={item.id} className="bg-gradient-to-br from-white to-primary-50 border-2 border-primary-300 rounded-xl p-3 hover:shadow-xl transition-all hover:border-primary-400">
 														<div className="flex items-start justify-between gap-2">
 															<div className="flex-1 min-w-0">
 																<div className="flex items-center gap-2 mb-1">
-																	<span className="inline-block bg-gradient-to-r from-emerald-500 to-teal-500 text-white text-xs font-bold rounded-full w-6 h-6 flex items-center justify-center shadow-md">{idx + 1}</span>
+																	<span className="inline-block bg-primary text-white text-sm font-bold font-bold rounded-full w-6 h-6 flex items-center justify-center shadow-md">{idx + 1}</span>
 																	<h4 className="font-semibold text-sm text-gray-800 truncate">{item.name}</h4>
 																</div>
 																<div className="flex items-center justify-between mb-2">
 																	<div className="flex items-center gap-2">
-																		<Button size="sm" variant="outline" onClick={(e) => removeItem(item.id, e)} className="h-7 w-7 p-0 text-emerald-700 border-2 border-emerald-400 hover:bg-gradient-to-r hover:from-emerald-500 hover:to-teal-500 hover:text-white transition-all">
+																		<Button size="sm" variant="outline" onClick={(e) => removeItem(item.id, e)} className="h-7 w-7 p-0 text-primary-700 border-2 border-primary-400 hover:bg-gradient-to-r hover:from-primary-500 hover:to-secondary-500 hover:text-white transition-all">
 																			<Minus size={16} />
 																		</Button>
-																		<span className="font-bold text-emerald-600 min-w-6 text-center">{item.qty}</span>
-																		<Button size="sm" variant="outline" onClick={(e) => addItem(item, e)} className="h-7 w-7 p-0 text-emerald-700 border-2 border-emerald-400 hover:bg-gradient-to-r hover:from-emerald-500 hover:to-teal-500 hover:text-white transition-all">
+																		<span className="font-bold text-primary-600 min-w-6 text-center">{item.qty}</span>
+																		<Button size="sm" variant="outline" onClick={(e) => addItem(item, e)} className="h-7 w-7 p-0 text-primary-700 border-2 border-primary-400 hover:bg-gradient-to-r hover:from-primary-500 hover:to-secondary-500 hover:text-white transition-all">
 																			<Plus size={16} />
 																		</Button>
 																	</div>
-																	<span className="font-bold text-emerald-700 text-sm">₹{item.price * item.qty}</span>
+																	<span className="font-bold text-primary-700 text-sm">₹{item.price * item.qty}</span>
 																</div>
 																<Input
 																	type="text"
 																	placeholder="Add note (optional)"
 																	value={item.notes || ""}
 																	onChange={(e) => updateItemNote(item.id, e.target.value)}
-																	className="text-xs h-7 bg-emerald-50 border-emerald-300 focus:border-emerald-500 shadow-sm"
+																	className="text-xs h-7 bg-primary-50 border-primary-300 focus:border-primary-500 shadow-sm"
 																/>
 																<div className="mt-2 flex gap-1.5 overflow-x-auto pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
 																	{quickNotes.map(note => (
@@ -646,8 +653,8 @@ const Billing: React.FC = () => {
 																			onClick={() => toggleQuickNote(item.id, note)}
 																			className={
 																				hasQuickNote(item.id, note)
-																					? "h-7 shrink-0 bg-gradient-to-r from-emerald-500 to-teal-500 px-2 text-[11px] text-white hover:from-emerald-600 hover:to-teal-600 shadow-md"
-																					: "h-7 shrink-0 border-2 border-emerald-300 px-2 text-[11px] text-emerald-700 hover:bg-gradient-to-r hover:from-emerald-50 hover:to-teal-50"
+																					? "h-7 shrink-0 bg-gradient-to-r from-primary-500 to-secondary-500 px-2 text-[11px] text-white hover:from-primary-600 hover:to-secondary-600 shadow-md"
+																					: "h-7 shrink-0 border-2 border-primary-300 px-2 text-[11px] text-primary-700 hover:bg-gradient-to-r hover:from-primary-50 hover:to-secondary-50"
 																			}
 																		>
 																			{note}
@@ -662,10 +669,10 @@ const Billing: React.FC = () => {
 										</div>
 
 										{/* Divider */}
-										<div className="border-t-2 border-emerald-300 my-4"></div>
+										<div className="border-t-2 border-primary-300 my-4"></div>
 
 										{/* Price Breakdown */}
-										<div className="bg-gradient-to-br from-emerald-100 via-teal-100 to-cyan-100 rounded-xl p-4 mb-4 space-y-3 border-2 border-emerald-300 shadow-inner">
+										<div className="bg-gradient-to-br from-primary-100 via-secondary-100 to-primary-100 rounded-xl p-4 mb-4 space-y-3 border-2 border-primary-300 shadow-inner">
 											{/* Subtotal */}
 											<div className="flex justify-between items-center">
 												<span className="text-gray-700 font-medium">Subtotal</span>
@@ -674,13 +681,13 @@ const Billing: React.FC = () => {
 											
 											{/* Tax - Highlighted */}
 											{tax > 0 && (
-												<div className="bg-white rounded-lg p-3 border-2 border-emerald-400 shadow-md">
+												<div className="bg-white rounded-lg p-3 border-2 border-primary-400 shadow-md">
 													<div className="flex justify-between items-center">
 														<div>
-															<span className="text-emerald-700 font-bold">Tax Applied</span>
-															<p className="text-xs text-emerald-600 mt-0.5">({taxRate}% of subtotal)</p>
+															<span className="text-primary-700 font-bold">Tax Applied</span>
+															<p className="text-xs text-primary-600 mt-0.5">({taxRate}% of subtotal)</p>
 														</div>
-														<span className="font-bold text-lg text-emerald-600">₹{tax}</span>
+														<span className="font-bold text-lg text-primary-600">₹{tax}</span>
 													</div>
 												</div>
 											)}
@@ -694,7 +701,7 @@ const Billing: React.FC = () => {
 											)}
 											
 											{/* Total Amount - Bold and Prominent */}
-											<div className="border-t-2 border-emerald-400 pt-3 flex justify-between items-center bg-gradient-to-r from-emerald-500 to-teal-500 text-white rounded-lg p-3 mt-3 shadow-lg">
+											<div className="border-t-2 border-primary-400 pt-3 flex justify-between items-center bg-gradient-to-r from-primary-500 to-secondary-500 text-white rounded-lg p-3 mt-3 shadow-lg">
 												<span className="font-bold text-white text-lg">Total Amount</span>
 												<span className="font-bold text-2xl text-white">₹{total}</span>
 											</div>
@@ -775,12 +782,12 @@ const Billing: React.FC = () => {
 										</div>
 									</div>
 								)}
-								<Button className="w-full bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-sm disabled:bg-emerald-100 disabled:text-gray-900 text-white font-bold shadow-lg" onClick={handlePlaceOrder} disabled={orderItems.length === 0}>
+								<Button className="w-full bg-gradient-to-r from-primary-500 to-secondary-500 hover:from-primary-600 hover:to-secondary-600 text-sm disabled:bg-primary-100 disabled:text-gray-900 text-white font-bold shadow-lg" onClick={handlePlaceOrder} disabled={orderItems.length === 0}>
 									{existingOrder && existingOrder.status !== 'served' && existingOrder.status !== 'completed' ? "Update Order" : "Place Order"}
 								</Button>
 								<Button 
 									variant="outline" 
-									className="w-full border-2 border-emerald-400 bg-white text-emerald-700 hover:bg-gradient-to-r hover:from-emerald-50 hover:to-teal-50 hover:text-gray-950 text-sm mt-2 font-semibold shadow-md"
+									className="w-full border-2 border-primary-400 bg-white text-primary-700 hover:bg-gradient-to-r hover:from-primary-50 hover:to-secondary-50 hover:text-gray-950 text-sm mt-2 font-semibold shadow-md"
 									onClick={handlePrintKOT}
 									aria-disabled={orderItems.length === 0}
 								>
@@ -791,19 +798,19 @@ const Billing: React.FC = () => {
 					</div>
 
 					{orderItems.length > 0 && (
-						<div className="fixed inset-x-3 bottom-3 z-40 rounded-lg border border-green-700 bg-green-700 p-3 text-white shadow-2xl lg:hidden">
+						<div className="fixed inset-x-3 bottom-3 z-40 rounded-lg border border-primary-700 bg-primary-700 p-3 text-white shadow-2xl lg:hidden">
 							<div className="flex items-center justify-between gap-3">
 								<div className="min-w-0">
 									<div className="flex items-center gap-2 text-sm font-bold">
 										<ShoppingCart size={18} />
 										<span>{totalItems} item{totalItems === 1 ? "" : "s"}</span>
 									</div>
-									<div className="text-xs text-green-50">Total: {"\u20b9"}{total}</div>
+									<div className="text-xs text-primary-50">Total: {"\u20b9"}{total}</div>
 								</div>
 								<Button
 									type="button"
 									size="sm"
-									className="h-9 shrink-0 bg-white px-4 text-xs font-bold text-green-700 hover:bg-green-50"
+									className="h-9 shrink-0 bg-white px-4 text-xs font-bold text-primary-700 hover:bg-primary-50"
 									onClick={() => orderSummaryRef.current?.scrollIntoView({ behavior: "smooth", block: "start" })}
 								>
 									View cart
@@ -818,7 +825,7 @@ const Billing: React.FC = () => {
 					<Card className="bg-white/90 shadow-lg">
 						<CardHeader className="p-3 sm:p-6">
 							<CardTitle className="text-base sm:text-lg flex items-center gap-2">
-								<ShoppingCart className="text-emerald-600 flex-shrink-0" size={20} /> Recent Orders
+								<ShoppingCart className="text-primary-600 flex-shrink-0" size={20} /> Recent Orders
 							</CardTitle>
 						</CardHeader>
 						<CardContent className="p-3 sm:p-6">
@@ -830,7 +837,7 @@ const Billing: React.FC = () => {
 								<div className="overflow-x-auto -mx-3 sm:-mx-6 px-3 sm:px-6">
 									<table className="w-full text-xs sm:text-sm">
 										<thead>
-											<tr className="border-b bg-gradient-to-r from-emerald-100 to-teal-100">
+											<tr className="border-b bg-gradient-to-r from-primary-100 to-secondary-100 text-foreground font-semibold">
 												<th className="text-left py-2 px-2 sm:px-3 font-semibold">Order ID</th>
 												<th className="text-left py-2 px-2 sm:px-3 font-semibold">Type</th>
 												<th className="text-left py-2 px-2 sm:px-3 font-semibold hidden sm:table-cell">Items</th>
@@ -840,12 +847,12 @@ const Billing: React.FC = () => {
 										</thead>
 										<tbody>
 											{recentOrders.map((order) => (
-												<tr key={order.id} className="border-b hover:bg-gradient-to-r hover:from-emerald-50 hover:to-teal-50 transition-colors">
-													<td className="py-2 px-2 sm:px-3 font-medium text-emerald-700">ORD-{order.id}</td>
+												<tr key={order.id} className="border-b hover:bg-gradient-to-r hover:from-primary-50 hover:to-secondary-50 transition-colors">
+													<td className="py-2 px-2 sm:px-3 font-medium text-primary-700">ORD-{order.id}</td>
 													<td className="py-2 px-2 sm:px-3">
 														<Badge className={
 															order.orderType === "dine-in" ? "bg-blue-100 text-blue-800 text-xs" :
-															order.orderType === "take-away" ? "bg-teal-100 text-teal-800 text-xs" :
+															order.orderType === "take-away" ? "bg-secondary-100 text-secondary-800 text-xs" :
 															"bg-purple-100 text-purple-800 text-xs"
 														}>
 															{order.orderType === "dine-in" ? "Dine-in" : order.orderType === "take-away" ? "Takeaway" : "Delivery"}
@@ -859,8 +866,8 @@ const Billing: React.FC = () => {
 														<Badge className={
 															order.status === "pending" ? "bg-yellow-100 text-yellow-800 text-xs" :
 															order.status === "preparing" ? "bg-blue-100 text-blue-800 text-xs" :
-															order.status === "ready" ? "bg-green-100 text-green-800 text-xs" :
-															order.status === "completed" ? "bg-green-600 text-white text-xs" :
+															order.status === "ready" ? "bg-primary-100 text-primary-800 text-xs" :
+															order.status === "completed" ? "bg-primary-600 text-white text-xs" :
 															"bg-gray-100 text-gray-800 text-xs"
 														}>
 															{order.status}

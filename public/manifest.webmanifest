@@ -4,7 +4,7 @@
   "start_url": "/",
   "display": "standalone",
   "background_color": "#1a1a2e",
-  "theme_color": "#40E0D0",
+  "theme_color": "#F97316",
   "description": "Complete Restaurant Management System - POS, Billing, Kitchen Display, Orders & More",
   "orientation": "portrait",
   "scope": "/",

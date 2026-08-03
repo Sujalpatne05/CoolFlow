@@ -43,8 +43,8 @@ type SubscriptionApiRow = {
 };
 
 function statusBadge(status: SubscriptionStatus) {
-  if (status === "Active") return "bg-emerald-100 text-emerald-700";
-  if (status === "Grace") return "bg-teal-100 text-teal-800";
+  if (status === "Active") return "bg-primary-100 text-primary-700";
+  if (status === "Grace") return "bg-secondary-100 text-secondary-800";
   if (status === "Suspended") return "bg-red-100 text-red-700";
   return "bg-slate-100 text-slate-700";
 }
@@ -164,26 +164,26 @@ export default function SuperAdminSubscriptions() {
   return (
     <SuperAdminLayout>
       <div className="space-y-6">
-        <section className="rounded-2xl border border-slate-200 bg-gradient-to-r from-indigo-900 via-slate-900 to-cyan-900 px-4 py-6 text-white sm:px-6">
+        <section className="rounded-2xl border border-slate-200 bg-gradient-to-r from-indigo-900 via-slate-900 to-primary-900 px-4 py-6 text-white sm:px-6">
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <div>
               <h1 className="text-2xl font-extrabold sm:text-3xl">Subscription Control Hub</h1>
               <p className="mt-1 text-sm text-slate-200">Track renewals, recover risky accounts, and automate grace-to-suspend lifecycle.</p>
             </div>
             <div className="rounded-lg border border-white/20 bg-white/10 px-3 py-2 text-xs font-semibold text-slate-100">
-              Churn Risk Today: <span className="text-teal-200">{stats.grace + stats.suspended}</span> accounts
+              Churn Risk Today: <span className="text-secondary-200">{stats.grace + stats.suspended}</span> accounts
             </div>
           </div>
         </section>
 
         <section className="grid grid-cols-1 gap-3 sm:grid-cols-3">
-          <article className="rounded-xl border border-emerald-200 bg-emerald-50 p-4 shadow-sm">
-            <p className="text-sm font-semibold text-emerald-700">Active</p>
-            <p className="mt-1 text-3xl font-extrabold text-emerald-900">{stats.active}</p>
+          <article className="rounded-xl border border-primary-200 bg-primary-50 p-4 shadow-sm">
+            <p className="text-sm font-semibold text-primary-700">Active</p>
+            <p className="mt-1 text-3xl font-extrabold text-primary-900">{stats.active}</p>
           </article>
-          <article className="rounded-xl border border-teal-200 bg-teal-50 p-4 shadow-sm">
-            <p className="text-sm font-semibold text-teal-700">Grace Period</p>
-            <p className="mt-1 text-3xl font-extrabold text-teal-900">{stats.grace}</p>
+          <article className="rounded-xl border border-secondary-200 bg-secondary-50 p-4 shadow-sm">
+            <p className="text-sm font-semibold text-secondary-700">Grace Period</p>
+            <p className="mt-1 text-3xl font-extrabold text-secondary-900">{stats.grace}</p>
           </article>
           <article className="rounded-xl border border-red-200 bg-red-50 p-4 shadow-sm">
             <p className="text-sm font-semibold text-red-700">Suspended</p>
@@ -213,7 +213,7 @@ export default function SuperAdminSubscriptions() {
           </div>
           {error && <p className="mt-3 text-sm font-semibold text-red-700">{error}</p>}
           {loading && <p className="mt-3 text-sm text-slate-500">Loading subscriptions...</p>}
-          {feedback && <p className="mt-3 text-sm font-semibold text-emerald-700">{feedback}</p>}
+          {feedback && <p className="mt-3 text-sm font-semibold text-primary-700">{feedback}</p>}
         </section>
 
         <section className="rounded-2xl border border-slate-200 bg-white shadow-sm">
@@ -254,7 +254,7 @@ export default function SuperAdminSubscriptions() {
                           {sub.overdueDays} days overdue
                         </span>
                       ) : (
-                        <span className="inline-flex items-center gap-1 rounded-full bg-emerald-100 px-2.5 py-1 text-xs font-bold text-emerald-700">Healthy</span>
+                        <span className="inline-flex items-center gap-1 rounded-full bg-primary-100 px-2.5 py-1 text-xs font-bold text-primary-700">Healthy</span>
                       )}
                     </td>
                     <td className="px-4 py-3">

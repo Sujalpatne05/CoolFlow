@@ -472,7 +472,7 @@ export default function TableManagement() {
                   </div>
                   <div>
                     <p className="text-xs text-gray-600 font-semibold">Payment Status</p>
-                    <Badge className={selectedOrderForView.paymentStatus === "paid" ? "bg-green-100 text-green-800" : "bg-emerald-100 text-emerald-800"}>
+                    <Badge className={selectedOrderForView.paymentStatus === "paid" ? "bg-green-100 text-green-800" : "bg-primary-100 text-primary-800"}>
                       {selectedOrderForView.paymentStatus === "paid" ? "Paid" : "Unpaid"}
                     </Badge>
                   </div>
@@ -534,7 +534,7 @@ export default function TableManagement() {
         {/* Header */}
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
           <div>
-            <h1 className="text-2xl md:text-3xl font-bold text-emerald-600">Table Management</h1>
+            <h1 className="text-2xl md:text-3xl font-bold text-primary-600">Table Management</h1>
             <p className="text-gray-600 mt-1">Manage restaurant seating and table availability</p>
           </div>
           <Dialog open={isAddDialogOpen} onOpenChange={(open) => {
@@ -720,7 +720,7 @@ export default function TableManagement() {
                 {openBillsByTable.get(table.number) ? (
                   <div className="text-sm">
                     <span className="font-medium">Open bill: </span>
-                    <span className="text-teal-700">Rs. {(openBillsByTable.get(table.number) || 0).toLocaleString("en-IN")}</span>
+                    <span className="text-secondary-700">Rs. {(openBillsByTable.get(table.number) || 0).toLocaleString("en-IN")}</span>
                   </div>
                 ) : null}
                 {reservationByTable.get(table.number) ? (

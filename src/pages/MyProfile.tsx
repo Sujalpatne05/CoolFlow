@@ -92,7 +92,7 @@ const MyProfile: React.FC = () => {
     <DashboardLayout>
       <div className="max-w-lg mx-auto py-8 px-4 space-y-6">
         <h1 className="text-2xl font-bold flex items-center gap-2">
-          <UserCog className="text-emerald-500" /> My Profile
+          <UserCog className="text-primary-500" /> My Profile
         </h1>
 
         {/* Profile Info */}
@@ -115,7 +115,7 @@ const MyProfile: React.FC = () => {
           <CardContent>
             <form onSubmit={handleSaveName} className="flex gap-2">
               <Input value={editName} onChange={e => setEditName(e.target.value)} placeholder="Your name" className="flex-1" />
-              <Button type="submit" disabled={savingName} className="bg-emerald-500 hover:bg-emerald-600">
+              <Button type="submit" disabled={savingName} className="bg-primary-500 hover:bg-primary-600">
                 {savingName ? "Saving..." : "Save"}
               </Button>
             </form>
@@ -141,7 +141,7 @@ const MyProfile: React.FC = () => {
                 <label className="text-sm font-medium mb-1 block">Confirm New Password</label>
                 <Input type="password" value={confirmPassword} onChange={e => setConfirmPassword(e.target.value)} placeholder="Repeat new password" />
               </div>
-              <Button type="submit" disabled={savingPassword} className="w-full bg-emerald-500 hover:bg-emerald-600">
+              <Button type="submit" disabled={savingPassword} className="w-full bg-primary-500 hover:bg-primary-600">
                 {savingPassword ? "Changing..." : "Change Password"}
               </Button>
             </form>

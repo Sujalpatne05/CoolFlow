@@ -51,6 +51,70 @@ router.delete('/inventory/:id', authenticate, async (req, res) => {
   } catch (err) { res.status(500).json({ error: err.message }); }
 });
 
+// ===== PAYMENT SETTINGS =====
+router.get('/payment-settings', authenticate, async (req, res) => {
+  try {
+    const { rows } = await query(
+      `SELECT razorpay_enabled, razorpay_key_id, razorpay_key_secret, 
+              upi_enabled, upi_id, upi_name, upi_qr_code
+       FROM restaurants WHERE id=$1`,
+      [req.user.restaurantId]
+    );
+    if (!rows[0]) return res.status(404).json({ error: 'Restaurant not found' });
+    res.json({
+      razorpayEnabled: rows[0].razorpay_enabled || false,
+      razorpayKeyId: rows[0].razorpay_key_id || '',
+      razorpayKeySecret: rows[0].razorpay_key_secret || '',
+      upiEnabled: rows[0].upi_enabled || false,
+      upiId: rows[0].upi_id || '',
+      upiName: rows[0].upi_name || '',
+      upiQrCode: rows[0].upi_qr_code || ''
+    });
+  } catch (err) { res.status(500).json({ error: err.message }); }
+});
+
+router.put('/payment-settings', authenticate, async (req, res) => {
+  try {
+    const { razorpayEnabled, razorpayKeyId, razorpayKeySecret, upiEnabled, upiId, upiName, upiQrCode } = req.body;
+    const { rows } = await query(
+      `UPDATE restaurants 
+       SET razorpay_enabled=$1, razorpay_key_id=$2, razorpay_key_secret=$3,
+           upi_enabled=$4, upi_id=$5, upi_name=$6, upi_qr_code=$7
+       WHERE id=$8 RETURNING *`,
+      [razorpayEnabled || false, razorpayKeyId || '', razorpayKeySecret || '', 
+       upiEnabled || false, upiId || '', upiName || '', upiQrCode || '', req.user.restaurantId]
+    );
+    if (!rows[0]) return res.status(404).json({ error: 'Restaurant not found' });
+    res.json({ success: true });
+  } catch (err) { res.status(500).json({ error: err.message }); }
+});
+
+// Get public payment settings (for customer checkout)
+router.get('/public/payment-settings', async (req, res) => {
+  try {
+    const { rows } = await query(
+      `SELECT razorpay_enabled, razorpay_key_id, upi_enabled, upi_id, upi_name, upi_qr_code
+       FROM restaurants WHERE status='Active' ORDER BY id LIMIT 1`
+    );
+    if (!rows[0]) return res.status(404).json({ error: 'Restaurant not found' });
+    res.json({
+      razorpayEnabled: rows[0].razorpay_enabled || false,
+      razorpayKeyId: rows[0].razorpay_key_id || '',
+      upiEnabled: rows[0].upi_enabled || false,
+      upiId: rows[0].upi_id || '',
+      upiName: rows[0].upi_name || '',
+      upiQrCode: rows[0].upi_qr_code || ''
+    });
+  } catch (err) { res.status(500).json({ error: err.message }); }
+});
+
+router.delete('/inventory/:id', authenticate, async (req, res) => {
+  try {
+    await query(`DELETE FROM inventory WHERE id=$1 AND restaurant_id=$2`, [req.params.id, req.user.restaurantId]);
+    res.json({ success: true });
+  } catch (err) { res.status(500).json({ error: err.message }); }
+});
+
 // ===== PAYROLL =====
 router.get('/payroll/staff', authenticate, async (req, res) => {
   try {

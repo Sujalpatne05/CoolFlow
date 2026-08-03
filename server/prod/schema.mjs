@@ -104,6 +104,37 @@ export async function setupSchema() {
         created_at TIMESTAMPTZ DEFAULT NOW()
       );
 
+      CREATE TABLE IF NOT EXISTS delivery_tokens (
+        id SERIAL PRIMARY KEY,
+        restaurant_id INTEGER NOT NULL REFERENCES restaurants(id) ON DELETE CASCADE,
+        token TEXT UNIQUE NOT NULL,
+        created_at TIMESTAMPTZ DEFAULT NOW()
+      );
+
+      CREATE TABLE IF NOT EXISTS customer_delivery_orders (
+        id SERIAL PRIMARY KEY,
+        restaurant_id INTEGER NOT NULL REFERENCES restaurants(id) ON DELETE CASCADE,
+        order_number TEXT NOT NULL,
+        customer_name TEXT NOT NULL,
+        customer_phone TEXT NOT NULL,
+        customer_email TEXT,
+        delivery_address TEXT NOT NULL,
+        landmark TEXT,
+        pincode TEXT,
+        items JSONB DEFAULT '[]',
+        subtotal NUMERIC(10,2) DEFAULT 0,
+        delivery_fee NUMERIC(10,2) DEFAULT 0,
+        tax NUMERIC(10,2) DEFAULT 0,
+        total NUMERIC(10,2) DEFAULT 0,
+        payment_status TEXT DEFAULT 'pending',
+        payment_method TEXT,
+        delivery_status TEXT DEFAULT 'pending',
+        special_instructions TEXT,
+        estimated_delivery_time TEXT,
+        created_at TIMESTAMPTZ DEFAULT NOW(),
+        updated_at TIMESTAMPTZ DEFAULT NOW()
+      );
+
       CREATE TABLE IF NOT EXISTS inventory (
         id SERIAL PRIMARY KEY,
         restaurant_id INTEGER NOT NULL REFERENCES restaurants(id) ON DELETE CASCADE,
@@ -193,6 +224,13 @@ export async function setupSchema() {
       ALTER TABLE restaurants ADD COLUMN IF NOT EXISTS kitchen_printer_port INTEGER DEFAULT 9100;
       ALTER TABLE restaurants ADD COLUMN IF NOT EXISTS counter_printer_ip TEXT;
       ALTER TABLE restaurants ADD COLUMN IF NOT EXISTS counter_printer_port INTEGER DEFAULT 9100;
+      ALTER TABLE restaurants ADD COLUMN IF NOT EXISTS razorpay_enabled BOOLEAN DEFAULT FALSE;
+      ALTER TABLE restaurants ADD COLUMN IF NOT EXISTS razorpay_key_id TEXT;
+      ALTER TABLE restaurants ADD COLUMN IF NOT EXISTS razorpay_key_secret TEXT;
+      ALTER TABLE restaurants ADD COLUMN IF NOT EXISTS upi_enabled BOOLEAN DEFAULT FALSE;
+      ALTER TABLE restaurants ADD COLUMN IF NOT EXISTS upi_id TEXT;
+      ALTER TABLE restaurants ADD COLUMN IF NOT EXISTS upi_name TEXT;
+      ALTER TABLE restaurants ADD COLUMN IF NOT EXISTS upi_qr_code TEXT;
     `);
     const existing = await client.query(`SELECT id FROM users WHERE email = 'superadmin@ordernest.com'`);
     if (existing.rows.length === 0) {

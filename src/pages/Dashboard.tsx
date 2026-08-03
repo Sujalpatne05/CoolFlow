@@ -154,41 +154,45 @@ export default function Dashboard() {
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-3 animate-fade-in">
           <div>
-            <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
+            <p className="text-xs font-semibold text-primary uppercase tracking-wider flex items-center gap-2">
+              <div className="h-1 w-1 rounded-full bg-primary animate-pulse" />
               {new Date().toLocaleDateString("en-IN", { weekday: "long", month: "long", day: "numeric" })}
             </p>
-            <h1 className="text-2xl sm:text-3xl font-bold tracking-tight mt-1">
+            <h1 className="text-3xl sm:text-4xl font-bold tracking-tight mt-2">
               Welcome back, <span className="text-gradient">{activeName}</span>
             </h1>
-            <p className="text-sm text-muted-foreground mt-1.5">Here's what's happening across your restaurant today.</p>
+            <p className="text-sm text-muted-foreground mt-2">Here's what's happening across your restaurant today.</p>
           </div>
-          <Button onClick={() => navigate("/billing")} className="gradient-brand text-white shadow-soft hover:shadow-elevated w-fit">
-            <UtensilsCrossed className="h-4 w-4 mr-2" />
+          <Button onClick={() => navigate("/billing")} size="lg" className="gradient-brand text-white shadow-soft hover:shadow-glow hover:scale-105 transition-all w-fit group">
+            <UtensilsCrossed className="h-5 w-5 mr-2 group-hover:rotate-12 transition-transform" />
             New Order
           </Button>
         </div>
 
         {/* Pending actions banner */}
         {(stats.unpaidOrders.length > 0 || stats.kitchenPending > 0 || stats.lowStock.length > 0) && (
-          <Card className="border-primary/20 bg-primary/5 animate-slide-up">
-            <CardContent className="p-4 flex flex-wrap items-center gap-3">
-              <div className="flex items-center gap-2 mr-2">
-                <AlertTriangle className="h-4 w-4 text-primary" />
-                <span className="text-sm font-semibold text-foreground">Needs attention</span>
+          <Card className="border-primary/30 bg-gradient-glow shadow-soft animate-slide-up overflow-hidden relative">
+            <div className="absolute top-0 right-0 w-32 h-32 bg-primary/10 rounded-full blur-3xl -z-10" />
+            <CardContent className="p-5 flex flex-wrap items-center gap-3">
+              <div className="flex items-center gap-2.5 mr-2">
+                <div className="h-10 w-10 rounded-full bg-primary/15 flex items-center justify-center animate-pulse-glow">
+                  <AlertTriangle className="h-5 w-5 text-primary" />
+                </div>
+                <span className="text-sm font-bold text-foreground">Needs attention</span>
               </div>
               <div className="flex flex-wrap gap-2">
                 {stats.unpaidOrders.length > 0 && (
-                  <button onClick={() => navigate("/bill-settlement")} className="rounded-lg border border-border bg-card px-3 py-1.5 text-xs font-medium hover:border-primary/40 transition-colors">
+                  <button onClick={() => navigate("/bill-settlement")} className="rounded-lg border-2 border-border bg-card px-4 py-2 text-sm font-medium hover:border-primary hover:bg-primary/5 transition-all hover-lift">
                     {stats.unpaidOrders.length} unpaid bills
                   </button>
                 )}
                 {stats.kitchenPending > 0 && (
-                  <button onClick={() => navigate("/kitchen-display")} className="rounded-lg border border-border bg-card px-3 py-1.5 text-xs font-medium hover:border-primary/40 transition-colors">
+                  <button onClick={() => navigate("/kitchen-display")} className="rounded-lg border-2 border-border bg-card px-4 py-2 text-sm font-medium hover:border-primary hover:bg-primary/5 transition-all hover-lift">
                     {stats.kitchenPending} in kitchen
                   </button>
                 )}
                 {stats.lowStock.length > 0 && (
-                  <button onClick={() => navigate("/inventory")} className="rounded-lg border border-border bg-card px-3 py-1.5 text-xs font-medium hover:border-primary/40 transition-colors">
+                  <button onClick={() => navigate("/inventory")} className="rounded-lg border-2 border-border bg-card px-4 py-2 text-sm font-medium hover:border-primary hover:bg-primary/5 transition-all hover-lift">
                     {stats.lowStock.length} low stock
                   </button>
                 )}
@@ -214,14 +218,14 @@ export default function Dashboard() {
         {/* Main grid */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Revenue chart */}
-          <Card className="lg:col-span-2 animate-slide-up">
+          <Card className="lg:col-span-2 animate-slide-up shadow-soft hover:shadow-elevated transition-shadow">
             <CardHeader>
               <div className="flex items-center justify-between">
                 <div>
-                  <CardTitle>Revenue this week</CardTitle>
+                  <CardTitle className="text-xl">Revenue this week</CardTitle>
                   <CardDescription>Daily revenue across all order types</CardDescription>
                 </div>
-                <Badge variant="outline" className="text-muted-foreground">Last 7 days</Badge>
+                <Badge variant="outline" className="border-primary/30 text-primary font-semibold">Last 7 days</Badge>
               </div>
             </CardHeader>
             <CardContent>
@@ -251,9 +255,9 @@ export default function Dashboard() {
           </Card>
 
           {/* Order type split */}
-          <Card className="animate-slide-up">
+          <Card className="animate-slide-up shadow-soft hover:shadow-elevated transition-shadow">
             <CardHeader>
-              <CardTitle>Revenue split</CardTitle>
+              <CardTitle className="text-xl">Revenue split</CardTitle>
               <CardDescription>By order type</CardDescription>
             </CardHeader>
             <CardContent>
@@ -312,11 +316,11 @@ export default function Dashboard() {
                       <button
                         key={table.id}
                         onClick={() => table.status === "occupied" ? navigate(`/billing?table=${table.table_number ?? table.number}`) : navigate("/table-management")}
-                        className={`rounded-lg border p-3 text-center transition-all hover:scale-[1.03] ${tableTextColor(table.status)}`}
+                        className={`rounded-xl border-2 p-4 text-center transition-all hover:scale-105 hover:shadow-soft ${tableTextColor(table.status)}`}
                       >
-                        <div className={`mx-auto mb-1.5 h-2 w-2 rounded-full ${tableDotColor(table.status)}`} />
-                        <p className="text-sm font-bold">T{table.table_number ?? table.number}</p>
-                        <p className="text-[10px] capitalize mt-0.5">{table.status}</p>
+                        <div className={`mx-auto mb-2 h-2.5 w-2.5 rounded-full ${tableDotColor(table.status)} animate-pulse`} />
+                        <p className="text-base font-bold">T{table.table_number ?? table.number}</p>
+                        <p className="text-[10px] capitalize mt-1 font-medium">{table.status}</p>
                       </button>
                     ))}
                   </div>
@@ -331,32 +335,36 @@ export default function Dashboard() {
           )}
 
           {/* Kitchen status */}
-          <Card className="animate-slide-up">
+          <Card className="animate-slide-up shadow-soft hover:shadow-elevated transition-shadow">
             <CardHeader>
               <div className="flex items-center justify-between">
                 <div>
-                  <CardTitle>Kitchen status</CardTitle>
+                  <CardTitle className="text-xl">Kitchen status</CardTitle>
                   <CardDescription>Current workload</CardDescription>
                 </div>
-                <Button variant="ghost" size="sm" onClick={() => navigate("/kitchen-display")} className="text-primary hover:text-primary">
+                <Button variant="ghost" size="sm" onClick={() => navigate("/kitchen-display")} className="text-primary hover:text-primary hover:bg-primary/10">
                   View <ArrowRight className="h-3.5 w-3.5 ml-1" />
                 </Button>
               </div>
             </CardHeader>
             <CardContent className="space-y-3">
-              <div className="flex items-center justify-between rounded-lg border border-warning/20 bg-warning/5 p-3.5">
-                <div className="flex items-center gap-2.5">
-                  <Clock className="h-4 w-4 text-warning" />
-                  <span className="text-sm font-medium">Pending</span>
+              <div className="flex items-center justify-between rounded-xl border-2 border-warning/30 bg-warning/10 p-4 shadow-sm hover:shadow-soft transition-shadow">
+                <div className="flex items-center gap-3">
+                  <div className="h-10 w-10 rounded-lg bg-warning/20 flex items-center justify-center">
+                    <Clock className="h-5 w-5 text-warning" />
+                  </div>
+                  <span className="text-sm font-semibold">Pending</span>
                 </div>
-                <span className="text-xl font-bold text-warning tabular-nums">{stats.kitchenPending}</span>
+                <span className="text-2xl font-bold text-warning tabular-nums">{stats.kitchenPending}</span>
               </div>
-              <div className="flex items-center justify-between rounded-lg border border-success/20 bg-success/5 p-3.5">
-                <div className="flex items-center gap-2.5">
-                  <CheckCircle className="h-4 w-4 text-success" />
-                  <span className="text-sm font-medium">Ready to serve</span>
+              <div className="flex items-center justify-between rounded-xl border-2 border-success/30 bg-success/10 p-4 shadow-sm hover:shadow-soft transition-shadow">
+                <div className="flex items-center gap-3">
+                  <div className="h-10 w-10 rounded-lg bg-success/20 flex items-center justify-center">
+                    <CheckCircle className="h-5 w-5 text-success" />
+                  </div>
+                  <span className="text-sm font-semibold">Ready to serve</span>
                 </div>
-                <span className="text-xl font-bold text-success tabular-nums">{stats.kitchenReady}</span>
+                <span className="text-2xl font-bold text-success tabular-nums">{stats.kitchenReady}</span>
               </div>
             </CardContent>
           </Card>
@@ -468,15 +476,16 @@ function StatCardLink({ title, value, icon, onClick }: { title: string; value: s
   return (
     <button
       onClick={onClick}
-      className="text-left rounded-xl border border-border bg-card p-5 shadow-soft transition-all duration-200 hover:border-primary/40 hover:shadow-elevated animate-slide-up disabled:opacity-60"
+      className="relative text-left rounded-2xl border-2 border-border bg-card p-6 shadow-soft transition-all duration-300 hover:border-primary/60 hover:shadow-elevated animate-slide-up disabled:opacity-60 overflow-hidden group"
       disabled={!onClick}
     >
+      <div className="absolute top-0 right-0 w-24 h-24 bg-primary/5 rounded-full blur-2xl opacity-0 group-hover:opacity-100 transition-opacity -z-10" />
       <div className="flex items-start justify-between">
         <div className="min-w-0">
-          <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">{title}</p>
-          <p className="text-2xl font-bold text-foreground mt-2 tabular-nums">{value}</p>
+          <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">{title}</p>
+          <p className="text-3xl font-bold text-foreground mt-3 tabular-nums">{value}</p>
         </div>
-        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary ring-1 ring-primary/15">
+        <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl gradient-brand-soft text-primary ring-2 ring-primary/20 group-hover:scale-110 group-hover:rotate-6 transition-transform">
           {icon}
         </div>
       </div>

@@ -11,6 +11,7 @@ import tablesRoutes from './routes/tables.mjs';
 import ordersRoutes from './routes/orders.mjs';
 import reservationsRoutes from './routes/reservations.mjs';
 import deliveriesRoutes from './routes/deliveries.mjs';
+import customerDeliveryRoutes from './routes/customer-delivery.mjs';
 import miscRoutes from './routes/misc.mjs';
 import superadminRoutes from './routes/superadmin.mjs';
 
@@ -42,6 +43,7 @@ app.use(tablesRoutes);
 app.use(ordersRoutes);
 app.use(reservationsRoutes);
 app.use(deliveriesRoutes);
+app.use(customerDeliveryRoutes);
 app.use(miscRoutes);
 app.use(superadminRoutes);
 

@@ -15,7 +15,7 @@ export default function TableConfirmation() {
   }, [navigate]);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-50 to-emerald-50 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gradient-to-br from-green-50 to-primary-50 flex items-center justify-center p-4">
       <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full p-8 text-center">
         {/* Success Icon */}
         <div className="mb-6">
@@ -25,7 +25,7 @@ export default function TableConfirmation() {
         </div>
 
         {/* Message */}
-        <h1 className="text-3xl font-bold text-emerald-600 mb-2">Order Confirmed!</h1>
+        <h1 className="text-3xl font-bold text-primary-600 mb-2">Order Confirmed!</h1>
         <p className="text-gray-600 mb-6">Your order has been sent to the kitchen</p>
 
         {/* Order Details */}

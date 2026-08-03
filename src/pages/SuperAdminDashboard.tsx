@@ -69,25 +69,25 @@ export default function SuperAdminDashboard() {
     <SuperAdminLayout>
       <div className="space-y-6">
         {/* Header */}
-        <div className="rounded-2xl bg-gradient-to-br from-slate-900 via-slate-800 to-cyan-900 p-6 text-white relative overflow-hidden">
-          <div className="absolute -top-16 -right-16 w-48 h-48 rounded-full bg-cyan-400/20 blur-3xl" />
-          <div className="absolute -bottom-16 left-0 w-48 h-48 rounded-full bg-emerald-400/20 blur-3xl" />
+        <div className="rounded-2xl bg-gradient-to-br from-slate-900 via-slate-800 to-primary-900 p-6 text-white relative overflow-hidden">
+          <div className="absolute -top-16 -right-16 w-48 h-48 rounded-full bg-primary-400/20 blur-3xl" />
+          <div className="absolute -bottom-16 left-0 w-48 h-48 rounded-full bg-primary-400/20 blur-3xl" />
           <div className="relative z-10 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
             <div>
               <span className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-3 py-1 text-xs font-semibold uppercase tracking-wide mb-3">
                 <Activity className="h-3 w-3" /> Live Command Center
               </span>
               <h1 className="text-2xl font-extrabold sm:text-3xl">Super Admin Control Tower</h1>
-              <p className="mt-2 text-sm text-cyan-100">
+              <p className="mt-2 text-sm text-primary-100">
                 Manage all restaurants, subscriptions, users and platform health from one place.
               </p>
-              <p className="text-xs text-cyan-200 mt-1">Last refreshed: {lastRefresh.toLocaleTimeString()}</p>
+              <p className="text-xs text-primary-200 mt-1">Last refreshed: {lastRefresh.toLocaleTimeString()}</p>
             </div>
             <div className="flex gap-3">
               <button onClick={load} className="flex items-center gap-2 rounded-lg border border-white/20 bg-white/10 px-4 py-2 text-sm font-semibold hover:bg-white/20 transition">
                 <RefreshCw className="h-4 w-4" /> Refresh
               </button>
-              <button onClick={() => navigate("/superadmin-restaurants")} className="flex items-center gap-2 rounded-lg bg-cyan-500 px-4 py-2 text-sm font-semibold hover:bg-cyan-400 transition">
+              <button onClick={() => navigate("/superadmin-restaurants")} className="flex items-center gap-2 rounded-lg bg-primary-500 px-4 py-2 text-sm font-semibold hover:bg-primary-400 transition">
                 Manage Restaurants <ArrowRight className="h-4 w-4" />
               </button>
             </div>
@@ -147,7 +147,7 @@ export default function SuperAdminDashboard() {
                 { label: "Add New Restaurant", icon: Building, color: "text-blue-600 bg-blue-50", route: "/superadmin-restaurants" },
                 { label: "Manage Subscriptions", icon: CreditCard, color: "text-green-600 bg-green-50", route: "/superadmin-subscriptions" },
                 { label: "View All Users", icon: Users, color: "text-purple-600 bg-purple-50", route: "/superadmin-users" },
-                { label: "Revenue Reports", icon: BarChart2, color: "text-emerald-600 bg-emerald-50", route: "/superadmin-revenue" },
+                { label: "Revenue Reports", icon: BarChart2, color: "text-primary-600 bg-primary-50", route: "/superadmin-revenue" },
                 { label: "Support Tickets", icon: AlertTriangle, color: "text-red-600 bg-red-50", route: "/superadmin-support" },
                 { label: "System Settings", icon: ShieldCheck, color: "text-slate-600 bg-slate-50", route: "/superadmin-settings" },
               ].map(action => (
